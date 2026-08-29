@@ -1,0 +1,2738 @@
+{
+  "policy_version": "dqn-export-4748",
+  "hours_buckets": [
+    "0_6",
+    "6_24",
+    "24_72"
+  ],
+  "contact_buckets": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "reasons": {
+    "insufficient_funds": {
+      "0_6": {
+        "0": {
+          "selected_action": "offer_partial",
+          "q_values": {
+            "wait": 3.079,
+            "retry_checkout": 3.0911,
+            "suggest_alt_method": -4.1913,
+            "create_payment_link": 3.0058,
+            "resend_link": -4.3585,
+            "notify_customer": -4.2607,
+            "request_method_update": 2.9893,
+            "offer_partial": 3.2675,
+            "escalate_human": -1.3898,
+            "reconcile": 3.1187,
+            "stop": 0.0311
+          },
+          "ranked": [
+            {
+              "action": "offer_partial",
+              "q": 3.2675
+            },
+            {
+              "action": "reconcile",
+              "q": 3.1187
+            },
+            {
+              "action": "retry_checkout",
+              "q": 3.0911
+            },
+            {
+              "action": "wait",
+              "q": 3.079
+            },
+            {
+              "action": "create_payment_link",
+              "q": 3.0058
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -11.0836,
+            "retry_checkout": -10.7383,
+            "suggest_alt_method": -19.8288,
+            "create_payment_link": -11.4658,
+            "resend_link": -19.6228,
+            "notify_customer": -19.3131,
+            "request_method_update": -10.716,
+            "offer_partial": -11.154,
+            "escalate_human": -12.9684,
+            "reconcile": -10.2446,
+            "stop": -5.2001
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -5.2001
+            },
+            {
+              "action": "reconcile",
+              "q": -10.2446
+            },
+            {
+              "action": "request_method_update",
+              "q": -10.716
+            },
+            {
+              "action": "retry_checkout",
+              "q": -10.7383
+            },
+            {
+              "action": "wait",
+              "q": -11.0836
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -24.6586,
+            "retry_checkout": -24.1312,
+            "suggest_alt_method": -32.0373,
+            "create_payment_link": -23.3287,
+            "resend_link": -29.6188,
+            "notify_customer": -30.0193,
+            "request_method_update": -24.6018,
+            "offer_partial": -24.7026,
+            "escalate_human": -26.9733,
+            "reconcile": -28.2045,
+            "stop": -12.4082
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -12.4082
+            },
+            {
+              "action": "create_payment_link",
+              "q": -23.3287
+            },
+            {
+              "action": "retry_checkout",
+              "q": -24.1312
+            },
+            {
+              "action": "request_method_update",
+              "q": -24.6018
+            },
+            {
+              "action": "wait",
+              "q": -24.6586
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -22.2959,
+            "retry_checkout": -24.3653,
+            "create_payment_link": -23.1498,
+            "request_method_update": -24.1021,
+            "offer_partial": -25.1697,
+            "escalate_human": -24.8584,
+            "reconcile": -26.7967,
+            "stop": -11.1599
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -11.1599
+            },
+            {
+              "action": "wait",
+              "q": -22.2959
+            },
+            {
+              "action": "create_payment_link",
+              "q": -23.1498
+            },
+            {
+              "action": "request_method_update",
+              "q": -24.1021
+            },
+            {
+              "action": "retry_checkout",
+              "q": -24.3653
+            }
+          ]
+        }
+      },
+      "6_24": {
+        "0": {
+          "selected_action": "offer_partial",
+          "q_values": {
+            "wait": 5.6202,
+            "retry_checkout": 5.528,
+            "suggest_alt_method": 2.7473,
+            "create_payment_link": 5.7635,
+            "resend_link": 1.7161,
+            "notify_customer": 2.8593,
+            "request_method_update": 5.5627,
+            "offer_partial": 5.9988,
+            "escalate_human": 1.337,
+            "reconcile": 5.8112,
+            "stop": 0.3566
+          },
+          "ranked": [
+            {
+              "action": "offer_partial",
+              "q": 5.9988
+            },
+            {
+              "action": "reconcile",
+              "q": 5.8112
+            },
+            {
+              "action": "create_payment_link",
+              "q": 5.7635
+            },
+            {
+              "action": "wait",
+              "q": 5.6202
+            },
+            {
+              "action": "request_method_update",
+              "q": 5.5627
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -4.8807,
+            "retry_checkout": -5.4532,
+            "suggest_alt_method": -13.5575,
+            "create_payment_link": -5.3199,
+            "resend_link": -14.0736,
+            "notify_customer": -13.9584,
+            "request_method_update": -5.6042,
+            "offer_partial": -5.9529,
+            "escalate_human": -7.1485,
+            "reconcile": -5.4101,
+            "stop": -2.7913
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -2.7913
+            },
+            {
+              "action": "wait",
+              "q": -4.8807
+            },
+            {
+              "action": "create_payment_link",
+              "q": -5.3199
+            },
+            {
+              "action": "reconcile",
+              "q": -5.4101
+            },
+            {
+              "action": "retry_checkout",
+              "q": -5.4532
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -24.4143,
+            "retry_checkout": -23.6038,
+            "suggest_alt_method": -30.4534,
+            "create_payment_link": -22.2107,
+            "resend_link": -27.9512,
+            "notify_customer": -29.7136,
+            "request_method_update": -24.4526,
+            "offer_partial": -24.3535,
+            "escalate_human": -23.7839,
+            "reconcile": -26.3398,
+            "stop": -12.3284
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -12.3284
+            },
+            {
+              "action": "create_payment_link",
+              "q": -22.2107
+            },
+            {
+              "action": "retry_checkout",
+              "q": -23.6038
+            },
+            {
+              "action": "escalate_human",
+              "q": -23.7839
+            },
+            {
+              "action": "offer_partial",
+              "q": -24.3535
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -26.563,
+            "retry_checkout": -27.9635,
+            "create_payment_link": -23.887,
+            "request_method_update": -29.0415,
+            "offer_partial": -29.1141,
+            "escalate_human": -33.3399,
+            "reconcile": -32.3966,
+            "stop": -14.0796
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -14.0796
+            },
+            {
+              "action": "create_payment_link",
+              "q": -23.887
+            },
+            {
+              "action": "wait",
+              "q": -26.563
+            },
+            {
+              "action": "retry_checkout",
+              "q": -27.9635
+            },
+            {
+              "action": "request_method_update",
+              "q": -29.0415
+            }
+          ]
+        }
+      },
+      "24_72": {
+        "0": {
+          "selected_action": "create_payment_link",
+          "q_values": {
+            "wait": 2.2688,
+            "retry_checkout": 2.3251,
+            "suggest_alt_method": -2.1695,
+            "create_payment_link": 2.7462,
+            "resend_link": -2.699,
+            "notify_customer": -2.2371,
+            "request_method_update": 2.3657,
+            "offer_partial": 2.2584,
+            "escalate_human": -1.1834,
+            "reconcile": 2.6365,
+            "stop": -0.0565
+          },
+          "ranked": [
+            {
+              "action": "create_payment_link",
+              "q": 2.7462
+            },
+            {
+              "action": "reconcile",
+              "q": 2.6365
+            },
+            {
+              "action": "request_method_update",
+              "q": 2.3657
+            },
+            {
+              "action": "retry_checkout",
+              "q": 2.3251
+            },
+            {
+              "action": "wait",
+              "q": 2.2688
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -14.6784,
+            "retry_checkout": -15.9717,
+            "suggest_alt_method": -20.8237,
+            "create_payment_link": -13.2536,
+            "resend_link": -20.1544,
+            "notify_customer": -20.934,
+            "request_method_update": -15.0174,
+            "offer_partial": -16.1591,
+            "escalate_human": -17.288,
+            "reconcile": -15.6568,
+            "stop": -9.1222
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -9.1222
+            },
+            {
+              "action": "create_payment_link",
+              "q": -13.2536
+            },
+            {
+              "action": "wait",
+              "q": -14.6784
+            },
+            {
+              "action": "request_method_update",
+              "q": -15.0174
+            },
+            {
+              "action": "reconcile",
+              "q": -15.6568
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -18.8709,
+            "retry_checkout": -19.6856,
+            "suggest_alt_method": -26.3447,
+            "create_payment_link": -19.8409,
+            "resend_link": -26.2559,
+            "notify_customer": -23.7823,
+            "request_method_update": -18.9945,
+            "offer_partial": -20.29,
+            "escalate_human": -18.6095,
+            "reconcile": -20.984,
+            "stop": -10.548
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -10.548
+            },
+            {
+              "action": "escalate_human",
+              "q": -18.6095
+            },
+            {
+              "action": "wait",
+              "q": -18.8709
+            },
+            {
+              "action": "request_method_update",
+              "q": -18.9945
+            },
+            {
+              "action": "retry_checkout",
+              "q": -19.6856
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -18.7323,
+            "retry_checkout": -20.0335,
+            "create_payment_link": -18.092,
+            "request_method_update": -18.1503,
+            "offer_partial": -19.9084,
+            "escalate_human": -17.8978,
+            "reconcile": -22.8332,
+            "stop": -10.0826
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -10.0826
+            },
+            {
+              "action": "escalate_human",
+              "q": -17.8978
+            },
+            {
+              "action": "create_payment_link",
+              "q": -18.092
+            },
+            {
+              "action": "request_method_update",
+              "q": -18.1503
+            },
+            {
+              "action": "wait",
+              "q": -18.7323
+            }
+          ]
+        }
+      }
+    },
+    "payment_cancelled": {
+      "0_6": {
+        "0": {
+          "selected_action": "reconcile",
+          "q_values": {
+            "wait": 5.7362,
+            "retry_checkout": 5.7019,
+            "suggest_alt_method": 1.3472,
+            "create_payment_link": 5.8261,
+            "resend_link": 0.6354,
+            "notify_customer": 1.9375,
+            "request_method_update": 5.7603,
+            "offer_partial": 5.6455,
+            "escalate_human": 2.0012,
+            "reconcile": 5.9427,
+            "stop": 0.1781
+          },
+          "ranked": [
+            {
+              "action": "reconcile",
+              "q": 5.9427
+            },
+            {
+              "action": "create_payment_link",
+              "q": 5.8261
+            },
+            {
+              "action": "request_method_update",
+              "q": 5.7603
+            },
+            {
+              "action": "wait",
+              "q": 5.7362
+            },
+            {
+              "action": "retry_checkout",
+              "q": 5.7019
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -2.3608,
+            "retry_checkout": -2.0922,
+            "suggest_alt_method": -9.7321,
+            "create_payment_link": -3.6178,
+            "resend_link": -10.4647,
+            "notify_customer": -9.5557,
+            "request_method_update": -2.4727,
+            "offer_partial": -2.8807,
+            "escalate_human": -7.2558,
+            "reconcile": -2.2844,
+            "stop": -1.3803
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -1.3803
+            },
+            {
+              "action": "retry_checkout",
+              "q": -2.0922
+            },
+            {
+              "action": "reconcile",
+              "q": -2.2844
+            },
+            {
+              "action": "wait",
+              "q": -2.3608
+            },
+            {
+              "action": "request_method_update",
+              "q": -2.4727
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -12.8047,
+            "retry_checkout": -11.9904,
+            "suggest_alt_method": -17.1151,
+            "create_payment_link": -12.2445,
+            "resend_link": -19.4078,
+            "notify_customer": -17.8994,
+            "request_method_update": -13.7668,
+            "offer_partial": -13.4593,
+            "escalate_human": -18.5078,
+            "reconcile": -13.4634,
+            "stop": -5.2515
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -5.2515
+            },
+            {
+              "action": "retry_checkout",
+              "q": -11.9904
+            },
+            {
+              "action": "create_payment_link",
+              "q": -12.2445
+            },
+            {
+              "action": "wait",
+              "q": -12.8047
+            },
+            {
+              "action": "offer_partial",
+              "q": -13.4593
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -31.4653,
+            "retry_checkout": -33.52,
+            "create_payment_link": -28.5149,
+            "request_method_update": -28.4567,
+            "offer_partial": -27.3352,
+            "escalate_human": -35.4502,
+            "reconcile": -32.4659,
+            "stop": -15.6923
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -15.6923
+            },
+            {
+              "action": "offer_partial",
+              "q": -27.3352
+            },
+            {
+              "action": "request_method_update",
+              "q": -28.4567
+            },
+            {
+              "action": "create_payment_link",
+              "q": -28.5149
+            },
+            {
+              "action": "wait",
+              "q": -31.4653
+            }
+          ]
+        }
+      },
+      "6_24": {
+        "0": {
+          "selected_action": "retry_checkout",
+          "q_values": {
+            "wait": 2.068,
+            "retry_checkout": 2.2132,
+            "suggest_alt_method": -6.4848,
+            "create_payment_link": 1.3744,
+            "resend_link": -7.1517,
+            "notify_customer": -6.2272,
+            "request_method_update": 1.9305,
+            "offer_partial": 1.8294,
+            "escalate_human": -2.4153,
+            "reconcile": 2.1135,
+            "stop": -0.2589
+          },
+          "ranked": [
+            {
+              "action": "retry_checkout",
+              "q": 2.2132
+            },
+            {
+              "action": "reconcile",
+              "q": 2.1135
+            },
+            {
+              "action": "wait",
+              "q": 2.068
+            },
+            {
+              "action": "request_method_update",
+              "q": 1.9305
+            },
+            {
+              "action": "offer_partial",
+              "q": 1.8294
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -11.1397,
+            "retry_checkout": -10.8404,
+            "suggest_alt_method": -17.4326,
+            "create_payment_link": -11.0783,
+            "resend_link": -19.6209,
+            "notify_customer": -18.0458,
+            "request_method_update": -12.5585,
+            "offer_partial": -12.7926,
+            "escalate_human": -15.2154,
+            "reconcile": -11.7331,
+            "stop": -5.7983
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -5.7983
+            },
+            {
+              "action": "retry_checkout",
+              "q": -10.8404
+            },
+            {
+              "action": "create_payment_link",
+              "q": -11.0783
+            },
+            {
+              "action": "wait",
+              "q": -11.1397
+            },
+            {
+              "action": "reconcile",
+              "q": -11.7331
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -28.2717,
+            "retry_checkout": -28.2514,
+            "suggest_alt_method": -34.21,
+            "create_payment_link": -26.047,
+            "resend_link": -34.4646,
+            "notify_customer": -32.3072,
+            "request_method_update": -25.5309,
+            "offer_partial": -25.0762,
+            "escalate_human": -28.3738,
+            "reconcile": -27.2771,
+            "stop": -14.2804
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -14.2804
+            },
+            {
+              "action": "offer_partial",
+              "q": -25.0762
+            },
+            {
+              "action": "request_method_update",
+              "q": -25.5309
+            },
+            {
+              "action": "create_payment_link",
+              "q": -26.047
+            },
+            {
+              "action": "reconcile",
+              "q": -27.2771
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -26.5866,
+            "retry_checkout": -28.2401,
+            "create_payment_link": -24.1154,
+            "request_method_update": -23.329,
+            "offer_partial": -22.75,
+            "escalate_human": -28.0942,
+            "reconcile": -26.8909,
+            "stop": -13.0589
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -13.0589
+            },
+            {
+              "action": "offer_partial",
+              "q": -22.75
+            },
+            {
+              "action": "request_method_update",
+              "q": -23.329
+            },
+            {
+              "action": "create_payment_link",
+              "q": -24.1154
+            },
+            {
+              "action": "wait",
+              "q": -26.5866
+            }
+          ]
+        }
+      },
+      "24_72": {
+        "0": {
+          "selected_action": "create_payment_link",
+          "q_values": {
+            "wait": 4.9068,
+            "retry_checkout": 4.9157,
+            "suggest_alt_method": -1.142,
+            "create_payment_link": 5.2898,
+            "resend_link": -1.3615,
+            "notify_customer": -0.2544,
+            "request_method_update": 4.9299,
+            "offer_partial": 4.779,
+            "escalate_human": 1.3071,
+            "reconcile": 5.0139,
+            "stop": -0.0029
+          },
+          "ranked": [
+            {
+              "action": "create_payment_link",
+              "q": 5.2898
+            },
+            {
+              "action": "reconcile",
+              "q": 5.0139
+            },
+            {
+              "action": "request_method_update",
+              "q": 4.9299
+            },
+            {
+              "action": "retry_checkout",
+              "q": 4.9157
+            },
+            {
+              "action": "wait",
+              "q": 4.9068
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -13.5341,
+            "retry_checkout": -12.7425,
+            "suggest_alt_method": -19.8525,
+            "create_payment_link": -13.5825,
+            "resend_link": -19.4861,
+            "notify_customer": -16.0684,
+            "request_method_update": -13.4353,
+            "offer_partial": -12.9832,
+            "escalate_human": -18.8663,
+            "reconcile": -14.6822,
+            "stop": -7.3983
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -7.3983
+            },
+            {
+              "action": "retry_checkout",
+              "q": -12.7425
+            },
+            {
+              "action": "offer_partial",
+              "q": -12.9832
+            },
+            {
+              "action": "request_method_update",
+              "q": -13.4353
+            },
+            {
+              "action": "wait",
+              "q": -13.5341
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "request_method_update",
+          "q_values": {
+            "wait": -0.9559,
+            "retry_checkout": -1.9698,
+            "suggest_alt_method": -3.8153,
+            "create_payment_link": -0.935,
+            "resend_link": -5.8088,
+            "notify_customer": -0.9989,
+            "request_method_update": 1.087,
+            "offer_partial": 0.3206,
+            "escalate_human": -4.3336,
+            "reconcile": -0.8892,
+            "stop": -0.8642
+          },
+          "ranked": [
+            {
+              "action": "request_method_update",
+              "q": 1.087
+            },
+            {
+              "action": "offer_partial",
+              "q": 0.3206
+            },
+            {
+              "action": "stop",
+              "q": -0.8642
+            },
+            {
+              "action": "reconcile",
+              "q": -0.8892
+            },
+            {
+              "action": "create_payment_link",
+              "q": -0.935
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -15.1392,
+            "retry_checkout": -16.7089,
+            "create_payment_link": -14.2896,
+            "request_method_update": -15.1836,
+            "offer_partial": -16.0393,
+            "escalate_human": -18.6883,
+            "reconcile": -17.8335,
+            "stop": -7.4265
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -7.4265
+            },
+            {
+              "action": "create_payment_link",
+              "q": -14.2896
+            },
+            {
+              "action": "wait",
+              "q": -15.1392
+            },
+            {
+              "action": "request_method_update",
+              "q": -15.1836
+            },
+            {
+              "action": "offer_partial",
+              "q": -16.0393
+            }
+          ]
+        }
+      }
+    },
+    "authentication_failed": {
+      "0_6": {
+        "0": {
+          "selected_action": "wait",
+          "q_values": {
+            "wait": 5.9183,
+            "retry_checkout": 5.0913,
+            "suggest_alt_method": -5.3853,
+            "create_payment_link": 5.7493,
+            "resend_link": -4.9545,
+            "notify_customer": -5.3681,
+            "request_method_update": 5.4339,
+            "offer_partial": 5.4671,
+            "escalate_human": 1.8562,
+            "reconcile": 4.9709,
+            "stop": 0.2532
+          },
+          "ranked": [
+            {
+              "action": "wait",
+              "q": 5.9183
+            },
+            {
+              "action": "create_payment_link",
+              "q": 5.7493
+            },
+            {
+              "action": "offer_partial",
+              "q": 5.4671
+            },
+            {
+              "action": "request_method_update",
+              "q": 5.4339
+            },
+            {
+              "action": "retry_checkout",
+              "q": 5.0913
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -0.6775,
+            "retry_checkout": -0.6895,
+            "suggest_alt_method": -5.3035,
+            "create_payment_link": -0.6373,
+            "resend_link": -6.1781,
+            "notify_customer": -5.3318,
+            "request_method_update": -1.1434,
+            "offer_partial": -0.9424,
+            "escalate_human": -6.1084,
+            "reconcile": -2.0894,
+            "stop": 0.3095
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": 0.3095
+            },
+            {
+              "action": "create_payment_link",
+              "q": -0.6373
+            },
+            {
+              "action": "wait",
+              "q": -0.6775
+            },
+            {
+              "action": "retry_checkout",
+              "q": -0.6895
+            },
+            {
+              "action": "offer_partial",
+              "q": -0.9424
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -21.8965,
+            "retry_checkout": -23.1455,
+            "suggest_alt_method": -31.4702,
+            "create_payment_link": -21.0493,
+            "resend_link": -30.5784,
+            "notify_customer": -25.7772,
+            "request_method_update": -19.5749,
+            "offer_partial": -19.1219,
+            "escalate_human": -28.1096,
+            "reconcile": -24.1374,
+            "stop": -11.4879
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -11.4879
+            },
+            {
+              "action": "offer_partial",
+              "q": -19.1219
+            },
+            {
+              "action": "request_method_update",
+              "q": -19.5749
+            },
+            {
+              "action": "create_payment_link",
+              "q": -21.0493
+            },
+            {
+              "action": "wait",
+              "q": -21.8965
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -39.1981,
+            "retry_checkout": -40.4557,
+            "create_payment_link": -35.5501,
+            "request_method_update": -39.791,
+            "offer_partial": -38.6018,
+            "escalate_human": -52.2058,
+            "reconcile": -47.5326,
+            "stop": -21.7667
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -21.7667
+            },
+            {
+              "action": "create_payment_link",
+              "q": -35.5501
+            },
+            {
+              "action": "offer_partial",
+              "q": -38.6018
+            },
+            {
+              "action": "wait",
+              "q": -39.1981
+            },
+            {
+              "action": "request_method_update",
+              "q": -39.791
+            }
+          ]
+        }
+      },
+      "6_24": {
+        "0": {
+          "selected_action": "create_payment_link",
+          "q_values": {
+            "wait": 2.8283,
+            "retry_checkout": 2.4893,
+            "suggest_alt_method": -4.3179,
+            "create_payment_link": 2.8397,
+            "resend_link": -5.3153,
+            "notify_customer": -4.6524,
+            "request_method_update": 2.4299,
+            "offer_partial": 2.4008,
+            "escalate_human": -2.0597,
+            "reconcile": 2.6299,
+            "stop": 0.3221
+          },
+          "ranked": [
+            {
+              "action": "create_payment_link",
+              "q": 2.8397
+            },
+            {
+              "action": "wait",
+              "q": 2.8283
+            },
+            {
+              "action": "reconcile",
+              "q": 2.6299
+            },
+            {
+              "action": "retry_checkout",
+              "q": 2.4893
+            },
+            {
+              "action": "request_method_update",
+              "q": 2.4299
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -12.0312,
+            "retry_checkout": -12.4365,
+            "suggest_alt_method": -17.7171,
+            "create_payment_link": -10.9478,
+            "resend_link": -17.7432,
+            "notify_customer": -18.0151,
+            "request_method_update": -12.9324,
+            "offer_partial": -13.6547,
+            "escalate_human": -16.7783,
+            "reconcile": -13.6081,
+            "stop": -6.3563
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -6.3563
+            },
+            {
+              "action": "create_payment_link",
+              "q": -10.9478
+            },
+            {
+              "action": "wait",
+              "q": -12.0312
+            },
+            {
+              "action": "retry_checkout",
+              "q": -12.4365
+            },
+            {
+              "action": "request_method_update",
+              "q": -12.9324
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -20.3803,
+            "retry_checkout": -20.331,
+            "suggest_alt_method": -27.6217,
+            "create_payment_link": -19.9777,
+            "resend_link": -27.3707,
+            "notify_customer": -22.537,
+            "request_method_update": -20.2998,
+            "offer_partial": -19.9394,
+            "escalate_human": -29.9748,
+            "reconcile": -25.8232,
+            "stop": -10.3647
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -10.3647
+            },
+            {
+              "action": "offer_partial",
+              "q": -19.9394
+            },
+            {
+              "action": "create_payment_link",
+              "q": -19.9777
+            },
+            {
+              "action": "request_method_update",
+              "q": -20.2998
+            },
+            {
+              "action": "retry_checkout",
+              "q": -20.331
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -31.6746,
+            "retry_checkout": -32.9186,
+            "create_payment_link": -31.1025,
+            "request_method_update": -31.5219,
+            "offer_partial": -33.8339,
+            "escalate_human": -38.9302,
+            "reconcile": -39.7487,
+            "stop": -17.5545
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -17.5545
+            },
+            {
+              "action": "create_payment_link",
+              "q": -31.1025
+            },
+            {
+              "action": "request_method_update",
+              "q": -31.5219
+            },
+            {
+              "action": "wait",
+              "q": -31.6746
+            },
+            {
+              "action": "retry_checkout",
+              "q": -32.9186
+            }
+          ]
+        }
+      },
+      "24_72": {
+        "0": {
+          "selected_action": "create_payment_link",
+          "q_values": {
+            "wait": 1.9394,
+            "retry_checkout": 1.878,
+            "suggest_alt_method": -3.8574,
+            "create_payment_link": 2.6756,
+            "resend_link": -5.031,
+            "notify_customer": -3.4243,
+            "request_method_update": 2.1773,
+            "offer_partial": 1.9453,
+            "escalate_human": -1.7355,
+            "reconcile": 2.2487,
+            "stop": 0.112
+          },
+          "ranked": [
+            {
+              "action": "create_payment_link",
+              "q": 2.6756
+            },
+            {
+              "action": "reconcile",
+              "q": 2.2487
+            },
+            {
+              "action": "request_method_update",
+              "q": 2.1773
+            },
+            {
+              "action": "offer_partial",
+              "q": 1.9453
+            },
+            {
+              "action": "wait",
+              "q": 1.9394
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -10.4226,
+            "retry_checkout": -9.7192,
+            "suggest_alt_method": -16.1634,
+            "create_payment_link": -10.4051,
+            "resend_link": -16.0673,
+            "notify_customer": -14.088,
+            "request_method_update": -10.4597,
+            "offer_partial": -10.7144,
+            "escalate_human": -15.3034,
+            "reconcile": -11.3748,
+            "stop": -5.1298
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -5.1298
+            },
+            {
+              "action": "retry_checkout",
+              "q": -9.7192
+            },
+            {
+              "action": "create_payment_link",
+              "q": -10.4051
+            },
+            {
+              "action": "wait",
+              "q": -10.4226
+            },
+            {
+              "action": "request_method_update",
+              "q": -10.4597
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -19.2262,
+            "retry_checkout": -20.2122,
+            "suggest_alt_method": -23.6923,
+            "create_payment_link": -18.5863,
+            "resend_link": -26.3953,
+            "notify_customer": -22.3713,
+            "request_method_update": -19.756,
+            "offer_partial": -22.1632,
+            "escalate_human": -28.2556,
+            "reconcile": -23.6494,
+            "stop": -10.6659
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -10.6659
+            },
+            {
+              "action": "create_payment_link",
+              "q": -18.5863
+            },
+            {
+              "action": "wait",
+              "q": -19.2262
+            },
+            {
+              "action": "request_method_update",
+              "q": -19.756
+            },
+            {
+              "action": "retry_checkout",
+              "q": -20.2122
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -27.4321,
+            "retry_checkout": -29.8918,
+            "create_payment_link": -25.7291,
+            "request_method_update": -22.2949,
+            "offer_partial": -22.116,
+            "escalate_human": -34.6021,
+            "reconcile": -29.9068,
+            "stop": -15.0717
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -15.0717
+            },
+            {
+              "action": "offer_partial",
+              "q": -22.116
+            },
+            {
+              "action": "request_method_update",
+              "q": -22.2949
+            },
+            {
+              "action": "create_payment_link",
+              "q": -25.7291
+            },
+            {
+              "action": "wait",
+              "q": -27.4321
+            }
+          ]
+        }
+      }
+    },
+    "gateway_error": {
+      "0_6": {
+        "0": {
+          "selected_action": "retry_checkout",
+          "q_values": {
+            "wait": 4.6356,
+            "retry_checkout": 4.9406,
+            "suggest_alt_method": -6.0888,
+            "create_payment_link": 3.3311,
+            "resend_link": -5.3625,
+            "notify_customer": -6.5023,
+            "request_method_update": 4.0279,
+            "offer_partial": 4.2002,
+            "escalate_human": 0.2427,
+            "reconcile": 4.3214,
+            "stop": 0.131
+          },
+          "ranked": [
+            {
+              "action": "retry_checkout",
+              "q": 4.9406
+            },
+            {
+              "action": "wait",
+              "q": 4.6356
+            },
+            {
+              "action": "reconcile",
+              "q": 4.3214
+            },
+            {
+              "action": "offer_partial",
+              "q": 4.2002
+            },
+            {
+              "action": "request_method_update",
+              "q": 4.0279
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "retry_checkout",
+          "q_values": {
+            "wait": 0.4629,
+            "retry_checkout": 0.8085,
+            "suggest_alt_method": -5.9533,
+            "create_payment_link": 0.3043,
+            "resend_link": -6.6167,
+            "notify_customer": -7.0843,
+            "request_method_update": -0.4906,
+            "offer_partial": 0.407,
+            "escalate_human": -4.0256,
+            "reconcile": -0.0673,
+            "stop": -0.0992
+          },
+          "ranked": [
+            {
+              "action": "retry_checkout",
+              "q": 0.8085
+            },
+            {
+              "action": "wait",
+              "q": 0.4629
+            },
+            {
+              "action": "offer_partial",
+              "q": 0.407
+            },
+            {
+              "action": "create_payment_link",
+              "q": 0.3043
+            },
+            {
+              "action": "reconcile",
+              "q": -0.0673
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -23.6863,
+            "retry_checkout": -24.4834,
+            "suggest_alt_method": -30.5634,
+            "create_payment_link": -20.9845,
+            "resend_link": -31.7274,
+            "notify_customer": -33.1823,
+            "request_method_update": -28.9488,
+            "offer_partial": -28.4797,
+            "escalate_human": -33.034,
+            "reconcile": -28.7971,
+            "stop": -13.2872
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -13.2872
+            },
+            {
+              "action": "create_payment_link",
+              "q": -20.9845
+            },
+            {
+              "action": "wait",
+              "q": -23.6863
+            },
+            {
+              "action": "retry_checkout",
+              "q": -24.4834
+            },
+            {
+              "action": "offer_partial",
+              "q": -28.4797
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -44.5266,
+            "retry_checkout": -46.8858,
+            "create_payment_link": -39.2333,
+            "request_method_update": -49.5405,
+            "offer_partial": -47.7802,
+            "escalate_human": -54.274,
+            "reconcile": -49.7805,
+            "stop": -24.3372
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -24.3372
+            },
+            {
+              "action": "create_payment_link",
+              "q": -39.2333
+            },
+            {
+              "action": "wait",
+              "q": -44.5266
+            },
+            {
+              "action": "retry_checkout",
+              "q": -46.8858
+            },
+            {
+              "action": "offer_partial",
+              "q": -47.7802
+            }
+          ]
+        }
+      },
+      "6_24": {
+        "0": {
+          "selected_action": "wait",
+          "q_values": {
+            "wait": 5.6115,
+            "retry_checkout": 5.4986,
+            "suggest_alt_method": -4.6966,
+            "create_payment_link": 5.4991,
+            "resend_link": -5.3594,
+            "notify_customer": -5.0224,
+            "request_method_update": 5.1463,
+            "offer_partial": 5.3857,
+            "escalate_human": 0.5022,
+            "reconcile": 5.5749,
+            "stop": -0.0605
+          },
+          "ranked": [
+            {
+              "action": "wait",
+              "q": 5.6115
+            },
+            {
+              "action": "reconcile",
+              "q": 5.5749
+            },
+            {
+              "action": "create_payment_link",
+              "q": 5.4991
+            },
+            {
+              "action": "retry_checkout",
+              "q": 5.4986
+            },
+            {
+              "action": "offer_partial",
+              "q": 5.3857
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -8.1723,
+            "retry_checkout": -8.8893,
+            "suggest_alt_method": -16.3827,
+            "create_payment_link": -7.9515,
+            "resend_link": -18.0518,
+            "notify_customer": -17.2563,
+            "request_method_update": -10.8088,
+            "offer_partial": -10.5927,
+            "escalate_human": -13.2475,
+            "reconcile": -9.8868,
+            "stop": -5.0792
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -5.0792
+            },
+            {
+              "action": "create_payment_link",
+              "q": -7.9515
+            },
+            {
+              "action": "wait",
+              "q": -8.1723
+            },
+            {
+              "action": "retry_checkout",
+              "q": -8.8893
+            },
+            {
+              "action": "reconcile",
+              "q": -9.8868
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -26.2717,
+            "retry_checkout": -26.2601,
+            "suggest_alt_method": -35.1032,
+            "create_payment_link": -21.9941,
+            "resend_link": -35.7844,
+            "notify_customer": -36.044,
+            "request_method_update": -33.3019,
+            "offer_partial": -29.8756,
+            "escalate_human": -39.0741,
+            "reconcile": -32.3286,
+            "stop": -14.3376
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -14.3376
+            },
+            {
+              "action": "create_payment_link",
+              "q": -21.9941
+            },
+            {
+              "action": "retry_checkout",
+              "q": -26.2601
+            },
+            {
+              "action": "wait",
+              "q": -26.2717
+            },
+            {
+              "action": "offer_partial",
+              "q": -29.8756
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -15.8806,
+            "retry_checkout": -17.4379,
+            "create_payment_link": -10.7228,
+            "request_method_update": -21.0653,
+            "offer_partial": -16.4531,
+            "escalate_human": -29.6476,
+            "reconcile": -23.078,
+            "stop": -7.315
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -7.315
+            },
+            {
+              "action": "create_payment_link",
+              "q": -10.7228
+            },
+            {
+              "action": "wait",
+              "q": -15.8806
+            },
+            {
+              "action": "offer_partial",
+              "q": -16.4531
+            },
+            {
+              "action": "retry_checkout",
+              "q": -17.4379
+            }
+          ]
+        }
+      },
+      "24_72": {
+        "0": {
+          "selected_action": "retry_checkout",
+          "q_values": {
+            "wait": 1.1635,
+            "retry_checkout": 1.5502,
+            "suggest_alt_method": -5.2024,
+            "create_payment_link": 0.4147,
+            "resend_link": -5.8952,
+            "notify_customer": -4.6294,
+            "request_method_update": 0.4158,
+            "offer_partial": 0.9963,
+            "escalate_human": -1.8054,
+            "reconcile": 0.7068,
+            "stop": -0.7112
+          },
+          "ranked": [
+            {
+              "action": "retry_checkout",
+              "q": 1.5502
+            },
+            {
+              "action": "wait",
+              "q": 1.1635
+            },
+            {
+              "action": "offer_partial",
+              "q": 0.9963
+            },
+            {
+              "action": "reconcile",
+              "q": 0.7068
+            },
+            {
+              "action": "request_method_update",
+              "q": 0.4158
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -4.6228,
+            "retry_checkout": -4.6249,
+            "suggest_alt_method": -11.9855,
+            "create_payment_link": -5.1657,
+            "resend_link": -12.2418,
+            "notify_customer": -10.996,
+            "request_method_update": -6.193,
+            "offer_partial": -6.1672,
+            "escalate_human": -8.3134,
+            "reconcile": -5.6598,
+            "stop": -3.2419
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -3.2419
+            },
+            {
+              "action": "wait",
+              "q": -4.6228
+            },
+            {
+              "action": "retry_checkout",
+              "q": -4.6249
+            },
+            {
+              "action": "create_payment_link",
+              "q": -5.1657
+            },
+            {
+              "action": "reconcile",
+              "q": -5.6598
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -6.6679,
+            "retry_checkout": -6.8909,
+            "suggest_alt_method": -13.8342,
+            "create_payment_link": -7.734,
+            "resend_link": -16.0614,
+            "notify_customer": -10.8874,
+            "request_method_update": -6.846,
+            "offer_partial": -6.4407,
+            "escalate_human": -8.7764,
+            "reconcile": -7.9405,
+            "stop": -4.0291
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -4.0291
+            },
+            {
+              "action": "offer_partial",
+              "q": -6.4407
+            },
+            {
+              "action": "wait",
+              "q": -6.6679
+            },
+            {
+              "action": "request_method_update",
+              "q": -6.846
+            },
+            {
+              "action": "retry_checkout",
+              "q": -6.8909
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -29.1303,
+            "retry_checkout": -30.6396,
+            "create_payment_link": -23.1297,
+            "request_method_update": -36.6963,
+            "offer_partial": -32.7457,
+            "escalate_human": -45.3049,
+            "reconcile": -37.563,
+            "stop": -16.501
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -16.501
+            },
+            {
+              "action": "create_payment_link",
+              "q": -23.1297
+            },
+            {
+              "action": "wait",
+              "q": -29.1303
+            },
+            {
+              "action": "retry_checkout",
+              "q": -30.6396
+            },
+            {
+              "action": "offer_partial",
+              "q": -32.7457
+            }
+          ]
+        }
+      }
+    },
+    "upi_timeout": {
+      "0_6": {
+        "0": {
+          "selected_action": "reconcile",
+          "q_values": {
+            "wait": -0.3043,
+            "suggest_alt_method": -4.8201,
+            "resend_link": -5.9373,
+            "notify_customer": -5.2949,
+            "request_method_update": -0.5278,
+            "offer_partial": -0.4018,
+            "escalate_human": -5.0832,
+            "reconcile": 0.0168,
+            "stop": -0.1899
+          },
+          "ranked": [
+            {
+              "action": "reconcile",
+              "q": 0.0168
+            },
+            {
+              "action": "stop",
+              "q": -0.1899
+            },
+            {
+              "action": "wait",
+              "q": -0.3043
+            },
+            {
+              "action": "offer_partial",
+              "q": -0.4018
+            },
+            {
+              "action": "request_method_update",
+              "q": -0.5278
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -10.2268,
+            "suggest_alt_method": -16.7383,
+            "resend_link": -19.1005,
+            "notify_customer": -16.8425,
+            "request_method_update": -11.8862,
+            "offer_partial": -11.6366,
+            "escalate_human": -14.0427,
+            "reconcile": -11.2476,
+            "stop": -5.2022
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -5.2022
+            },
+            {
+              "action": "wait",
+              "q": -10.2268
+            },
+            {
+              "action": "reconcile",
+              "q": -11.2476
+            },
+            {
+              "action": "offer_partial",
+              "q": -11.6366
+            },
+            {
+              "action": "request_method_update",
+              "q": -11.8862
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -18.8963,
+            "suggest_alt_method": -22.0232,
+            "resend_link": -24.6781,
+            "notify_customer": -22.9454,
+            "request_method_update": -21.5809,
+            "offer_partial": -22.0737,
+            "escalate_human": -28.8664,
+            "reconcile": -21.8222,
+            "stop": -9.9813
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -9.9813
+            },
+            {
+              "action": "wait",
+              "q": -18.8963
+            },
+            {
+              "action": "request_method_update",
+              "q": -21.5809
+            },
+            {
+              "action": "reconcile",
+              "q": -21.8222
+            },
+            {
+              "action": "suggest_alt_method",
+              "q": -22.0232
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -21.0648,
+            "request_method_update": -22.2853,
+            "offer_partial": -24.8442,
+            "escalate_human": -27.2717,
+            "reconcile": -25.0813,
+            "stop": -11.6445
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -11.6445
+            },
+            {
+              "action": "wait",
+              "q": -21.0648
+            },
+            {
+              "action": "request_method_update",
+              "q": -22.2853
+            },
+            {
+              "action": "offer_partial",
+              "q": -24.8442
+            },
+            {
+              "action": "reconcile",
+              "q": -25.0813
+            }
+          ]
+        }
+      },
+      "6_24": {
+        "0": {
+          "selected_action": "create_payment_link",
+          "q_values": {
+            "wait": 1.1604,
+            "retry_checkout": 0.8951,
+            "suggest_alt_method": -5.0126,
+            "create_payment_link": 1.3982,
+            "resend_link": -4.8584,
+            "notify_customer": -5.2316,
+            "request_method_update": 0.9492,
+            "offer_partial": 0.9811,
+            "escalate_human": -2.6548,
+            "reconcile": 1.2595,
+            "stop": -0.1361
+          },
+          "ranked": [
+            {
+              "action": "create_payment_link",
+              "q": 1.3982
+            },
+            {
+              "action": "reconcile",
+              "q": 1.2595
+            },
+            {
+              "action": "wait",
+              "q": 1.1604
+            },
+            {
+              "action": "offer_partial",
+              "q": 0.9811
+            },
+            {
+              "action": "request_method_update",
+              "q": 0.9492
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -4.0869,
+            "retry_checkout": -4.3879,
+            "suggest_alt_method": -7.0853,
+            "create_payment_link": -4.2205,
+            "resend_link": -8.5863,
+            "notify_customer": -7.3022,
+            "request_method_update": -4.1275,
+            "offer_partial": -4.8799,
+            "escalate_human": -10.146,
+            "reconcile": -4.5669,
+            "stop": -1.5021
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -1.5021
+            },
+            {
+              "action": "wait",
+              "q": -4.0869
+            },
+            {
+              "action": "request_method_update",
+              "q": -4.1275
+            },
+            {
+              "action": "create_payment_link",
+              "q": -4.2205
+            },
+            {
+              "action": "retry_checkout",
+              "q": -4.3879
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -13.0125,
+            "retry_checkout": -13.6466,
+            "suggest_alt_method": -15.8309,
+            "create_payment_link": -13.5966,
+            "resend_link": -17.3379,
+            "notify_customer": -15.5334,
+            "request_method_update": -13.0502,
+            "offer_partial": -15.2196,
+            "escalate_human": -20.0733,
+            "reconcile": -15.8546,
+            "stop": -6.7597
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -6.7597
+            },
+            {
+              "action": "wait",
+              "q": -13.0125
+            },
+            {
+              "action": "request_method_update",
+              "q": -13.0502
+            },
+            {
+              "action": "create_payment_link",
+              "q": -13.5966
+            },
+            {
+              "action": "retry_checkout",
+              "q": -13.6466
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -35.289,
+            "retry_checkout": -38.1844,
+            "create_payment_link": -33.5623,
+            "request_method_update": -29.4658,
+            "offer_partial": -32.4062,
+            "escalate_human": -33.6087,
+            "reconcile": -35.3259,
+            "stop": -18.7777
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -18.7777
+            },
+            {
+              "action": "request_method_update",
+              "q": -29.4658
+            },
+            {
+              "action": "offer_partial",
+              "q": -32.4062
+            },
+            {
+              "action": "create_payment_link",
+              "q": -33.5623
+            },
+            {
+              "action": "escalate_human",
+              "q": -33.6087
+            }
+          ]
+        }
+      },
+      "24_72": {
+        "0": {
+          "selected_action": "create_payment_link",
+          "q_values": {
+            "wait": -0.1703,
+            "retry_checkout": -0.718,
+            "suggest_alt_method": -6.4883,
+            "create_payment_link": 0.5751,
+            "resend_link": -6.9383,
+            "notify_customer": -6.0806,
+            "request_method_update": -0.0823,
+            "offer_partial": -0.4071,
+            "escalate_human": -3.8694,
+            "reconcile": 0.1228,
+            "stop": -0.9863
+          },
+          "ranked": [
+            {
+              "action": "create_payment_link",
+              "q": 0.5751
+            },
+            {
+              "action": "reconcile",
+              "q": 0.1228
+            },
+            {
+              "action": "request_method_update",
+              "q": -0.0823
+            },
+            {
+              "action": "wait",
+              "q": -0.1703
+            },
+            {
+              "action": "offer_partial",
+              "q": -0.4071
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -14.1594,
+            "retry_checkout": -13.7673,
+            "suggest_alt_method": -18.8181,
+            "create_payment_link": -13.3372,
+            "resend_link": -20.6525,
+            "notify_customer": -18.3846,
+            "request_method_update": -13.2725,
+            "offer_partial": -14.5027,
+            "escalate_human": -17.3643,
+            "reconcile": -13.2296,
+            "stop": -6.9277
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -6.9277
+            },
+            {
+              "action": "reconcile",
+              "q": -13.2296
+            },
+            {
+              "action": "request_method_update",
+              "q": -13.2725
+            },
+            {
+              "action": "create_payment_link",
+              "q": -13.3372
+            },
+            {
+              "action": "retry_checkout",
+              "q": -13.7673
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -7.2865,
+            "retry_checkout": -7.5103,
+            "suggest_alt_method": -9.0591,
+            "create_payment_link": -7.3321,
+            "resend_link": -11.4198,
+            "notify_customer": -7.9405,
+            "request_method_update": -6.8266,
+            "offer_partial": -7.9513,
+            "escalate_human": -12.6747,
+            "reconcile": -8.1611,
+            "stop": -3.4526
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -3.4526
+            },
+            {
+              "action": "request_method_update",
+              "q": -6.8266
+            },
+            {
+              "action": "wait",
+              "q": -7.2865
+            },
+            {
+              "action": "create_payment_link",
+              "q": -7.3321
+            },
+            {
+              "action": "retry_checkout",
+              "q": -7.5103
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -22.7285,
+            "retry_checkout": -25.1119,
+            "create_payment_link": -23.1747,
+            "request_method_update": -15.4792,
+            "offer_partial": -18.3993,
+            "escalate_human": -23.4509,
+            "reconcile": -22.9249,
+            "stop": -11.8069
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -11.8069
+            },
+            {
+              "action": "request_method_update",
+              "q": -15.4792
+            },
+            {
+              "action": "offer_partial",
+              "q": -18.3993
+            },
+            {
+              "action": "wait",
+              "q": -22.7285
+            },
+            {
+              "action": "reconcile",
+              "q": -22.9249
+            }
+          ]
+        }
+      }
+    },
+    "bank_outage": {
+      "0_6": {
+        "0": {
+          "selected_action": "wait",
+          "q_values": {
+            "wait": 2.9637,
+            "retry_checkout": 2.4827,
+            "suggest_alt_method": -7.2605,
+            "create_payment_link": 2.3398,
+            "resend_link": -7.1519,
+            "notify_customer": -7.7871,
+            "request_method_update": 2.5551,
+            "offer_partial": 2.6104,
+            "escalate_human": -1.8501,
+            "reconcile": 2.6791,
+            "stop": 0.0369
+          },
+          "ranked": [
+            {
+              "action": "wait",
+              "q": 2.9637
+            },
+            {
+              "action": "reconcile",
+              "q": 2.6791
+            },
+            {
+              "action": "offer_partial",
+              "q": 2.6104
+            },
+            {
+              "action": "request_method_update",
+              "q": 2.5551
+            },
+            {
+              "action": "retry_checkout",
+              "q": 2.4827
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -12.5268,
+            "retry_checkout": -11.3892,
+            "suggest_alt_method": -18.9098,
+            "create_payment_link": -12.9905,
+            "resend_link": -18.387,
+            "notify_customer": -18.661,
+            "request_method_update": -14.108,
+            "offer_partial": -13.4348,
+            "escalate_human": -18.0673,
+            "reconcile": -13.0113,
+            "stop": -6.3937
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -6.3937
+            },
+            {
+              "action": "retry_checkout",
+              "q": -11.3892
+            },
+            {
+              "action": "wait",
+              "q": -12.5268
+            },
+            {
+              "action": "create_payment_link",
+              "q": -12.9905
+            },
+            {
+              "action": "reconcile",
+              "q": -13.0113
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -19.8502,
+            "retry_checkout": -18.6492,
+            "suggest_alt_method": -25.0455,
+            "create_payment_link": -19.9786,
+            "resend_link": -24.0634,
+            "notify_customer": -24.2069,
+            "request_method_update": -20.5873,
+            "offer_partial": -20.6144,
+            "escalate_human": -24.941,
+            "reconcile": -22.4632,
+            "stop": -9.6106
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -9.6106
+            },
+            {
+              "action": "retry_checkout",
+              "q": -18.6492
+            },
+            {
+              "action": "wait",
+              "q": -19.8502
+            },
+            {
+              "action": "create_payment_link",
+              "q": -19.9786
+            },
+            {
+              "action": "request_method_update",
+              "q": -20.5873
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -31.2892,
+            "retry_checkout": -32.8028,
+            "create_payment_link": -29.539,
+            "request_method_update": -34.8204,
+            "offer_partial": -36.4686,
+            "escalate_human": -36.6108,
+            "reconcile": -36.9667,
+            "stop": -16.7762
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -16.7762
+            },
+            {
+              "action": "create_payment_link",
+              "q": -29.539
+            },
+            {
+              "action": "wait",
+              "q": -31.2892
+            },
+            {
+              "action": "retry_checkout",
+              "q": -32.8028
+            },
+            {
+              "action": "request_method_update",
+              "q": -34.8204
+            }
+          ]
+        }
+      },
+      "6_24": {
+        "0": {
+          "selected_action": "reconcile",
+          "q_values": {
+            "wait": 2.5707,
+            "retry_checkout": 2.6622,
+            "suggest_alt_method": -0.3503,
+            "create_payment_link": 2.5883,
+            "resend_link": -1.9048,
+            "notify_customer": -0.2142,
+            "request_method_update": 2.7012,
+            "offer_partial": 2.5602,
+            "escalate_human": -1.5354,
+            "reconcile": 2.9561,
+            "stop": 0.2383
+          },
+          "ranked": [
+            {
+              "action": "reconcile",
+              "q": 2.9561
+            },
+            {
+              "action": "request_method_update",
+              "q": 2.7012
+            },
+            {
+              "action": "retry_checkout",
+              "q": 2.6622
+            },
+            {
+              "action": "create_payment_link",
+              "q": 2.5883
+            },
+            {
+              "action": "wait",
+              "q": 2.5707
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -11.7631,
+            "retry_checkout": -10.5524,
+            "suggest_alt_method": -17.7857,
+            "create_payment_link": -12.4327,
+            "resend_link": -17.3572,
+            "notify_customer": -17.1737,
+            "request_method_update": -12.9161,
+            "offer_partial": -12.4586,
+            "escalate_human": -17.0792,
+            "reconcile": -12.0826,
+            "stop": -6.0227
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -6.0227
+            },
+            {
+              "action": "retry_checkout",
+              "q": -10.5524
+            },
+            {
+              "action": "wait",
+              "q": -11.7631
+            },
+            {
+              "action": "reconcile",
+              "q": -12.0826
+            },
+            {
+              "action": "create_payment_link",
+              "q": -12.4327
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -20.7501,
+            "retry_checkout": -20.1353,
+            "suggest_alt_method": -25.4178,
+            "create_payment_link": -18.902,
+            "resend_link": -26.1856,
+            "notify_customer": -26.6388,
+            "request_method_update": -23.7493,
+            "offer_partial": -23.4005,
+            "escalate_human": -27.4041,
+            "reconcile": -23.4864,
+            "stop": -10.5965
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -10.5965
+            },
+            {
+              "action": "create_payment_link",
+              "q": -18.902
+            },
+            {
+              "action": "retry_checkout",
+              "q": -20.1353
+            },
+            {
+              "action": "wait",
+              "q": -20.7501
+            },
+            {
+              "action": "offer_partial",
+              "q": -23.4005
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -9.6899,
+            "retry_checkout": -9.9903,
+            "create_payment_link": -10.3241,
+            "request_method_update": -10.8758,
+            "offer_partial": -10.4658,
+            "escalate_human": -18.2876,
+            "reconcile": -14.2013,
+            "stop": -3.6313
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -3.6313
+            },
+            {
+              "action": "wait",
+              "q": -9.6899
+            },
+            {
+              "action": "retry_checkout",
+              "q": -9.9903
+            },
+            {
+              "action": "create_payment_link",
+              "q": -10.3241
+            },
+            {
+              "action": "offer_partial",
+              "q": -10.4658
+            }
+          ]
+        }
+      },
+      "24_72": {
+        "0": {
+          "selected_action": "reconcile",
+          "q_values": {
+            "wait": 1.5417,
+            "retry_checkout": 1.5759,
+            "suggest_alt_method": -5.8172,
+            "create_payment_link": 1.0792,
+            "resend_link": -6.7979,
+            "notify_customer": -5.9713,
+            "request_method_update": 1.2089,
+            "offer_partial": 1.1813,
+            "escalate_human": -3.0794,
+            "reconcile": 1.9605,
+            "stop": -0.235
+          },
+          "ranked": [
+            {
+              "action": "reconcile",
+              "q": 1.9605
+            },
+            {
+              "action": "retry_checkout",
+              "q": 1.5759
+            },
+            {
+              "action": "wait",
+              "q": 1.5417
+            },
+            {
+              "action": "request_method_update",
+              "q": 1.2089
+            },
+            {
+              "action": "offer_partial",
+              "q": 1.1813
+            }
+          ]
+        },
+        "1": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -6.5877,
+            "retry_checkout": -7.0479,
+            "suggest_alt_method": -12.8772,
+            "create_payment_link": -7.3244,
+            "resend_link": -13.6609,
+            "notify_customer": -12.0763,
+            "request_method_update": -7.5137,
+            "offer_partial": -7.7839,
+            "escalate_human": -9.7023,
+            "reconcile": -6.8674,
+            "stop": -3.9234
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -3.9234
+            },
+            {
+              "action": "wait",
+              "q": -6.5877
+            },
+            {
+              "action": "reconcile",
+              "q": -6.8674
+            },
+            {
+              "action": "retry_checkout",
+              "q": -7.0479
+            },
+            {
+              "action": "create_payment_link",
+              "q": -7.3244
+            }
+          ]
+        },
+        "2": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -22.1055,
+            "retry_checkout": -22.8461,
+            "suggest_alt_method": -25.6954,
+            "create_payment_link": -21.2746,
+            "resend_link": -27.6206,
+            "notify_customer": -26.542,
+            "request_method_update": -23.0288,
+            "offer_partial": -25.2577,
+            "escalate_human": -26.4823,
+            "reconcile": -24.3159,
+            "stop": -12.2138
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -12.2138
+            },
+            {
+              "action": "create_payment_link",
+              "q": -21.2746
+            },
+            {
+              "action": "wait",
+              "q": -22.1055
+            },
+            {
+              "action": "retry_checkout",
+              "q": -22.8461
+            },
+            {
+              "action": "request_method_update",
+              "q": -23.0288
+            }
+          ]
+        },
+        "3": {
+          "selected_action": "stop",
+          "q_values": {
+            "wait": -30.294,
+            "retry_checkout": -32.1182,
+            "create_payment_link": -30.3881,
+            "request_method_update": -29.65,
+            "offer_partial": -31.6268,
+            "escalate_human": -27.122,
+            "reconcile": -32.818,
+            "stop": -16.2343
+          },
+          "ranked": [
+            {
+              "action": "stop",
+              "q": -16.2343
+            },
+            {
+              "action": "escalate_human",
+              "q": -27.122
+            },
+            {
+              "action": "request_method_update",
+              "q": -29.65
+            },
+            {
+              "action": "wait",
+              "q": -30.294
+            },
+            {
+              "action": "create_payment_link",
+              "q": -30.3881
+            }
+          ]
+        }
+      }
+    }
+  }
+}
