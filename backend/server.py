@@ -13,7 +13,7 @@ from typing import List
 import uuid
 from datetime import datetime, timezone
 
-from case_data import CASE_PAYLOAD, AMBIENT_EVENTS
+from case_data import CASE_PAYLOAD, AMBIENT_EVENTS, recommend
 
 
 ROOT_DIR = Path(__file__).parent
@@ -73,8 +73,21 @@ async def get_status_checks():
 
 @api_router.get("/case/current")
 async def get_current_case():
-    """Full mock case narrative for the Recovery Operating Theater."""
+    """Full mock case narrative for the RazorStitch recovery console."""
     return CASE_PAYLOAD
+
+
+class PolicyRequest(BaseModel):
+    tick: int = 0
+    contacts_used: int = 0
+    method: str = "card"
+    hours_since_failure: float = 0.0
+
+
+@api_router.post("/policy/recommend")
+async def policy_recommend(req: PolicyRequest):
+    """DQN policy recommendation for the current case state (mock export)."""
+    return recommend(req.tick, req.contacts_used, req.method, req.hours_since_failure)
 
 
 @api_router.get("/events/stream")

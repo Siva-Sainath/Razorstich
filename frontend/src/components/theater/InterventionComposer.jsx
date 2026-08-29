@@ -1,112 +1,97 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wand2, MessageCircle, MessageSquareText, Cog, BadgePercent, Clock3 } from 'lucide-react';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { useTimeline } from '@/lib/timelineContext';
 import { Panel } from './Panel';
 
-const CHANNEL_ICON = { WhatsApp: MessageCircle, SMS: MessageSquareText, Internal: Cog };
+const ACTION_LABEL = {
+  wait: 'Hold — strategic wait',
+  notify_whatsapp: 'Send a WhatsApp reminder with a UPI link',
+  create_payment_link: 'Send a UPI-preselected payment link',
+  offer_incentive: 'Text a ₹40 cashback offer',
+  retry_upi: 'Fire a UPI collect request',
+  stop: 'Close the episode — recovered',
+};
 
 export const InterventionComposer = ({ className }) => {
-  const { intervention, policy } = useTimeline();
+  const { intervention } = useTimeline();
   if (!intervention) return null;
-  const Icon = CHANNEL_ICON[intervention.channel] || Cog;
   const confidence = Math.round((intervention.confidence || 0) * 100);
 
   return (
     <Panel
-      title="Intervention Composer"
-      icon={Wand2}
+      title="AI’s next step"
+      subtitle="Approve it in one click — or edit before it goes out."
       testId="intervention-composer"
-      index="08"
       className={className}
-      right={
-        <Badge className="bg-cyan-500/15 text-cyan-200 border border-cyan-400/20 font-mono text-[10px]">
-          AGENT DRAFTED
-        </Badge>
-      }
+      variant="focus"
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={intervention.action}
           initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+          animate={{ opacity: 1, y: 0, transition: { duration: 0.28, ease: 'easeOut' } }}
           exit={{ opacity: 0, y: -6, transition: { duration: 0.15 } }}
+          className="flex flex-col h-full"
         >
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <div data-testid="agent-chosen-action" className="font-mono text-[15px] font-semibold text-cyan-200">
-              {intervention.action}
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-white/[0.06] text-white/75 border border-white/10 font-mono text-[10px]">
-                <Icon size={10} className="mr-1" aria-hidden="true" /> {intervention.channel}
-              </Badge>
-              <Badge className="bg-white/[0.06] text-white/75 border border-white/10 font-mono text-[10px]">
-                <Clock3 size={10} className="mr-1" aria-hidden="true" /> {intervention.timing}
-              </Badge>
-            </div>
-          </div>
+          <p data-testid="agent-chosen-action" className="text-[19px] font-semibold text-white leading-snug">
+            {ACTION_LABEL[intervention.action] || intervention.action}
+          </p>
+          <p className="text-sm text-white/50 mt-1.5">
+            Via {intervention.channel} · scheduled {intervention.timing}
+            {intervention.incentive && (
+              <span data-testid="intervention-incentive" className="text-warning"> · {intervention.incentive}</span>
+            )}
+          </p>
 
-          <div className="mt-3.5 rounded-xl border border-white/10 bg-black/25 p-3.5">
-            <div className="label-caps mb-2">Message payload</div>
-            <p data-testid="intervention-message" className="text-[13px] leading-relaxed text-white/80">
-              {intervention.message}
+          <div className="mt-5 rounded-[16px] bg-white/[0.03] border border-white/[0.08] p-5">
+            <p data-testid="intervention-message" className="text-[15px] leading-relaxed text-white/85">
+              “{intervention.message}”
             </p>
           </div>
 
-          {intervention.incentive && (
-            <div className="mt-3 flex items-center gap-2 rounded-lg border border-amber-400/20 bg-amber-500/[0.08] px-3 py-2">
-              <BadgePercent size={13} className="text-amber-300" aria-hidden="true" />
-              <span data-testid="intervention-incentive" className="font-mono text-[11px] text-amber-200">
-                {intervention.incentive}
-              </span>
-              <span className="font-mono text-[10px] text-white/40 ml-auto">cap ₹60</span>
-            </div>
-          )}
-
-          <div className="mt-4">
-            <div className="flex items-baseline justify-between mb-1.5">
-              <span className="label-caps">Agent confidence</span>
-              <span data-testid="agent-confidence" className="font-mono text-[13px] text-cyan-200">
+          <div className="mt-5">
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-sm text-white/55">AI confidence</span>
+              <span data-testid="agent-confidence" className="text-lg font-semibold tabular-nums text-white">
                 {confidence}%
               </span>
             </div>
-            <Progress value={confidence} className="h-1.5 bg-white/[0.07]" />
-            {policy && (
-              <p className="font-mono text-[10px] text-white/40 mt-1.5">
-                argmax Q over {policy.candidates.length} candidates · snapshot t={policy.t}
-              </p>
-            )}
+            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${confidence}%` }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </div>
+            <p className="text-[13px] text-white/40 mt-2">Best of 11 actions, re-evaluated every 6 hours</p>
           </div>
 
-          <div className="mt-4 flex gap-2">
+          <div className="mt-6 flex gap-3">
             <Button
               data-testid="approve-intervention-btn"
-              size="sm"
               onClick={() =>
-                toast.success('Intervention approved', {
-                  description: `${intervention.action} · ${intervention.channel} · dispatched by policy v0.9.3`,
+                toast.success('Next step approved', {
+                  description: `The ${intervention.channel} message will go out as recommended.`,
                 })
               }
-              className="rounded-xl bg-cyan-400/15 hover:bg-cyan-400/25 border border-cyan-400/25 text-cyan-100 focus-visible:ring-2 focus-visible:ring-cyan-400"
+              className="flex-1 h-9 rounded-[12px] bg-primary text-primary-foreground hover:bg-primary/90 text-[13px] font-semibold transition-colors duration-150 active:scale-[0.98]"
             >
-              Approve
+              Approve next step
             </Button>
             <Button
               data-testid="override-intervention-btn"
-              size="sm"
               variant="ghost"
               onClick={() =>
-                toast('Override requested', {
-                  description: 'Manual override queued for operator review.',
+                toast('Sent for manual review', {
+                  description: 'You can edit the message before it goes out.',
                 })
               }
-              className="rounded-xl text-white/65 hover:text-white/90 hover:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-cyan-400"
+              className="h-9 px-4 rounded-[12px] bg-white/[0.05] border border-white/10 text-white/75 hover:text-white hover:bg-white/[0.09] text-[13px] font-medium transition-colors duration-150 active:scale-[0.98]"
             >
-              Override
+              Edit
             </Button>
           </div>
         </motion.div>

@@ -1,12 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RadioTower } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useTimeline, API } from '@/lib/timelineContext';
 import { Panel, SEV_STYLES } from './Panel';
 
 const MAX_AMBIENT = 40;
+
+const Row = ({ time, severity, text, active = false, testId, typeId, typeLabel }) => (
+  <motion.div
+    layout
+    initial={{ opacity: 0, y: -6 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.2, ease: 'easeOut' }}
+    data-testid={testId}
+    className={`flex items-center gap-3 px-2 py-2.5 border-b border-white/[0.06] last:border-b-0 rounded-[6px] ${
+      active ? 'bg-white/[0.05]' : ''
+    }`}
+  >
+    <span data-testid={typeId} title={typeLabel} className={`h-1.5 w-1.5 rounded-full shrink-0 ${SEV_STYLES[severity] || SEV_STYLES.info}`} />
+    <span className={`text-[13px] leading-relaxed truncate flex-1 ${active ? 'text-white/90' : 'text-white/70'}`}>{text}</span>
+    <span className="font-mono text-[11px] text-white/40 shrink-0 tabular-nums">{time}</span>
+  </motion.div>
+);
 
 export const LiveEventTicker = ({ className }) => {
   const { events, activeEventIndex, t, clockAt } = useTimeline();
@@ -49,102 +65,71 @@ export const LiveEventTicker = ({ className }) => {
 
   return (
     <Panel
-      title="Live Event Ticker"
-      icon={RadioTower}
+      title="Live updates"
+      subtitle="The payment journey and system activity, as it happens."
       testId="live-event-ticker"
-      index="07"
       className={className}
       bodyClassName="flex flex-col"
       right={
-        <Badge
+        <span
           data-testid="sse-connection-status"
-          className={
-            connState === 'live'
-              ? 'bg-emerald-500/15 text-emerald-200 border border-emerald-400/20 font-mono text-[10px]'
-              : 'bg-amber-500/15 text-amber-200 border border-amber-400/20 font-mono text-[10px]'
-          }
+          className="inline-flex items-center gap-2 text-[12px] leading-4 shrink-0 text-white/70"
         >
           <motion.span
-            className={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 ${connState === 'live' ? 'bg-emerald-300' : 'bg-amber-300'}`}
-            animate={{ opacity: [0.35, 1, 0.35] }}
-            transition={{ repeat: Infinity, duration: 2.2 }}
+            className={`inline-block w-1.5 h-1.5 rounded-full ${connState === 'live' ? 'bg-[rgba(45,212,191,0.85)]' : 'bg-warning/85'}`}
+            animate={{ opacity: [0.45, 1, 0.45] }}
+            transition={{ repeat: Infinity, duration: 3 }}
+            aria-hidden="true"
           />
-          {connState === 'live' ? 'SSE LIVE' : 'RECONNECTING'}
-        </Badge>
+          {connState === 'live' ? 'Live' : 'Reconnecting'}
+        </span>
       }
     >
-      <div className="grid md:grid-cols-2 gap-4 flex-1 min-h-0">
-        {/* Case timeline events (driven by scrubber) */}
-        <div className="min-h-0 flex flex-col">
-          <div className="label-caps mb-2">Case timeline · unlocked by playhead</div>
-          <ScrollArea className="h-56 pr-3">
-            <div className="space-y-1.5">
+      <div className="grid md:grid-cols-2 gap-6 flex-1 min-h-0">
+          <div className="min-h-0 flex flex-col">
+          <p className="text-[12px] leading-4 font-medium text-white/55 mb-2">Payment journey</p>
+          <ScrollArea className="h-60 -mx-1 px-1">
+            <div>
               <AnimatePresence initial={false}>
-                {visibleCase.map((ev) => {
-                  const isActive = ev.idx === activeEventIndex;
-                  return (
-                    <motion.div
-                      key={ev.t}
-                      layout
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.22, ease: 'easeOut' }}
-                      data-testid="event-row"
-                      className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 ${
-                        isActive
-                          ? 'border-cyan-400/30 bg-cyan-500/[0.07]'
-                          : 'border-white/[0.06] bg-white/[0.02]'
-                      }`}
-                    >
-                      <span className="font-mono text-[10px] text-white/40 shrink-0 w-[54px]">{clockAt(ev.t)}</span>
-                      <Badge data-testid="event-type" className={`font-mono text-[9px] shrink-0 px-1.5 ${SEV_STYLES[ev.severity] || SEV_STYLES.info}`}>
-                        {ev.type.toUpperCase()}
-                      </Badge>
-                      <span className={`text-[12px] truncate ${isActive ? 'text-white/95' : 'text-white/65'}`}>
-                        {ev.label}
-                      </span>
-                    </motion.div>
-                  );
-                })}
+                {visibleCase.map((ev) => (
+                  <Row
+                    key={ev.t}
+                    testId="event-row"
+                    typeId="event-type"
+                    typeLabel={ev.type}
+                    time={clockAt(ev.t)}
+                    severity={ev.severity}
+                    text={ev.label}
+                    active={ev.idx === activeEventIndex}
+                  />
+                ))}
               </AnimatePresence>
               {visibleCase.length === 0 && (
-                <p className="font-mono text-[11px] text-white/35 py-3 text-center">playhead at t=0 · press play</p>
+                <p className="text-sm text-white/40 py-4 text-center">Press play to replay the journey.</p>
               )}
             </div>
           </ScrollArea>
         </div>
 
-        {/* Ambient ops stream */}
-        <div className="min-h-0 flex flex-col">
-          <div className="label-caps mb-2">Ops telemetry · streaming</div>
-          <ScrollArea className="h-56 pr-3">
-            <div className="space-y-1.5">
+        <div className="min-h-0 flex flex-col md:border-l md:border-white/[0.07] md:pl-6">
+          <p className="text-[12px] leading-4 font-medium text-white/55 mb-2">System activity</p>
+          <ScrollArea className="h-60 -mx-1 px-1">
+            <div>
               <AnimatePresence initial={false}>
                 {ambient.map((ev) => (
-                  <motion.div
+                  <Row
                     key={ev.id}
-                    layout
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.22, ease: 'easeOut' }}
-                    data-testid="ambient-event-row"
-                    className="flex items-center gap-2.5 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2"
-                  >
-                    <span className="font-mono text-[10px] text-white/40 shrink-0 w-[54px]">
-                      {new Date(ev.ts).toLocaleTimeString('en-IN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                    </span>
-                    <Badge className={`font-mono text-[9px] shrink-0 px-1.5 ${SEV_STYLES[ev.severity] || SEV_STYLES.info}`}>
-                      {ev.type.toUpperCase()}
-                    </Badge>
-                    <span className="text-[12px] text-white/65 truncate">{ev.summary}</span>
-                  </motion.div>
+                    testId="ambient-event-row"
+                    typeLabel={ev.type}
+                    time={new Date(ev.ts).toLocaleTimeString('en-IN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    severity={ev.severity}
+                    text={ev.summary}
+                  />
                 ))}
               </AnimatePresence>
               {ambient.length === 0 && (
-                <p className="font-mono text-[11px] text-white/35 py-3 text-center">
-                  {connState === 'live' ? 'awaiting telemetry…' : 'connecting to stream…'}
+                <p className="text-sm text-white/40 py-4 text-center">
+                  {connState === 'live' ? 'Waiting for activity…' : 'Connecting…'}
                 </p>
               )}
             </div>

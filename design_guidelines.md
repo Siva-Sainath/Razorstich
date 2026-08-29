@@ -1,338 +1,472 @@
 {
   "brand": {
-    "product_name": "Midnight Operating Theater",
-    "elevated_brand_name": "M.O.T. — Midnight Operating Theater",
-    "tagline": "Payment Resuscitation Console",
-    "brand_attributes": [
-      "cinematic",
-      "clinical-precise",
-      "high-stakes",
-      "companion-like intelligence",
-      "instrument-grade",
-      "recognizable at a glance"
-    ],
-    "wordmark_treatment": {
-      "structure": "Two-line lockup: 'MIDNIGHT' (mono caps) above 'OPERATING THEATER' (serif), with a thin ECG baseline running through the gap.",
-      "typography": {
-        "primary": "Newsreader (keep)",
-        "support": "IBM Plex Mono (keep)",
-        "styling": "Use mono for labels/telemetry; serif for narrative headings. Add subtle tracking and small-caps feel via uppercase + letterspacing."
+    "name": "RazorStitch",
+    "design_philosophy": "RazorSense-aligned: calm, intelligent, premium, cohesive. Deep-ink surfaces, hairline borders, restrained glow, generous whitespace, minimal iconography. No badge/pill noise; status is contextual and sentence-like.",
+    "do_not": [
+      "No fixed top health bar (remove entirely).",
+      "No generic SaaS dashboard patterns (over-bento, loud badges, random pills).",
+      "No anxiety styling (no red floods, no alarm icons).",
+      "No purple/pink; no saturated gradients; gradients <= 20% viewport and never on reading areas.",
+      "No mixed radii/paddings/text scales—use the unified tokens below."
+    ]
+  },
+
+  "token_sheet": {
+    "typography": {
+      "font_stack": {
+        "display": "Newsreader, Georgia, serif",
+        "sans": "Inter, ui-sans-serif, system-ui, sans-serif",
+        "mono": "IBM Plex Mono, ui-monospace, SFMono-Regular, Menlo, monospace"
       },
-      "implementation_hint": "Create a <Wordmark /> component that renders text + inline SVG ECG line. Keep it static by default; animate only the ECG stroke-dashoffset in hero/topbar."
-    },
-    "logo_mark_concept_svg_buildable": {
-      "concept": "ECG + Razor-glyph-inspired corner geometry: a rounded-rect 'monitor' frame with one corner notched (existing motif), containing a single ECG spike that doubles as an upward recovery arrow.",
-      "geometry_rules": [
-        "Angles derived from a consistent 12°/24° chamfer system (echo RazorSense 'glyph-derived edges').",
-        "Stroke-only mark (no fills) so it reads like etched instrument labeling.",
-        "Use 2 strokes: outer frame (muted) + ECG trace (accent)."
+      "usage_rules": [
+        "Newsreader only for: hero title, panel titles, key narrative phrases (1 line).",
+        "Inter for: body, labels, helper text, buttons.",
+        "IBM Plex Mono for: amounts, timestamps, IDs, odds %, chart axis ticks, deltas. Always tabular-nums."
       ],
-      "svg_spec": {
-        "viewBox": "0 0 64 64",
-        "strokes": {
-          "frame": "hsl(var(--border) / 0.9)",
-          "trace": "hsl(var(--accent-cyan))"
+      "type_scale_px": {
+        "display": {
+          "name": "display",
+          "tailwind": "text-4xl sm:text-5xl lg:text-6xl",
+          "exact": { "size_px": 44, "line_height_px": 52, "weight": 600, "tracking": "-0.015em" },
+          "notes": "Use sparingly: only the main hero headline."
         },
-        "strokeWidth": 2,
-        "linecap": "round",
-        "linejoin": "round",
-        "paths": [
-          "Frame: rounded rect with one notched corner",
-          "Trace: baseline -> spike -> baseline -> small recovery uptick"
+        "h_panel": {
+          "name": "h-panel",
+          "exact": { "size_px": 18, "line_height_px": 24, "weight": 600, "tracking": "-0.01em" },
+          "notes": "Panel titles (Newsreader)."
+        },
+        "h_section": {
+          "name": "h-section",
+          "exact": { "size_px": 16, "line_height_px": 22, "weight": 600, "tracking": "-0.005em" },
+          "notes": "Subheads inside panels (Inter)."
+        },
+        "body": {
+          "name": "body",
+          "exact": { "size_px": 14, "line_height_px": 20, "weight": 500, "tracking": "0em" },
+          "notes": "Default reading size."
+        },
+        "body_sm": {
+          "name": "body-sm",
+          "exact": { "size_px": 13, "line_height_px": 18, "weight": 500, "tracking": "0em" }
+        },
+        "meta": {
+          "name": "meta",
+          "exact": { "size_px": 12, "line_height_px": 16, "weight": 500, "tracking": "0em" },
+          "notes": "Quiet labels; sentence case; no uppercase."
+        },
+        "micro": {
+          "name": "micro",
+          "exact": { "size_px": 11, "line_height_px": 14, "weight": 500, "tracking": "0.01em" },
+          "notes": "Chart ticks, tiny helper text."
+        },
+        "data_mono": {
+          "name": "data-mono",
+          "exact": { "size_px": 12, "line_height_px": 16, "weight": 500, "tracking": "0em" },
+          "notes": "All numeric UI; apply .font-mono + .tabular-nums."
+        },
+        "data_mono_lg": {
+          "name": "data-mono-lg",
+          "exact": { "size_px": 16, "line_height_px": 20, "weight": 600, "tracking": "-0.005em" },
+          "notes": "Hero amount + key odds number."
+        }
+      },
+      "text_color_ladder_white_alpha": {
+        "w90": "rgba(255,255,255,0.90)",
+        "w70": "rgba(255,255,255,0.70)",
+        "w55": "rgba(255,255,255,0.55)",
+        "w40": "rgba(255,255,255,0.40)",
+        "rule": "Use w90 for primary text, w70 for secondary, w55 for meta labels, w40 for disabled/placeholder only."
+      }
+    },
+
+    "spacing_scale_px": {
+      "scale": [4, 8, 12, 16, 20, 24, 32, 40, 48],
+      "panel_padding": {
+        "reference_card": 32,
+        "standard_panel": 24,
+        "dense_panel": 20,
+        "nested_block": 16
+      },
+      "gaps": {
+        "tight": 8,
+        "default": 12,
+        "roomy": 16,
+        "hero": 20
+      },
+      "rules": [
+        "All major panels use ONE of: p-6 (24px) or p-8 (32px). No px-5/7.",
+        "Inside panels: default gap-3 (12px); use gap-4 (16px) for hero blocks."
+      ]
+    },
+
+    "radius_scale_px": {
+      "card": 24,
+      "nested": 16,
+      "control": 12,
+      "pill": 999,
+      "rules": [
+        "Cards/panels: rounded-[24px] only.",
+        "Nested surfaces (inner charts, inset blocks): rounded-[16px].",
+        "Controls (buttons/inputs/chips): rounded-[12px].",
+        "Avoid arbitrary 14/20/22 mixes."
+      ]
+    },
+
+    "borders": {
+      "hairline_default": {
+        "width": "1px",
+        "color": "rgba(255,255,255,0.10)",
+        "use": "Most panels, inset blocks, separators."
+      },
+      "hairline_muted": {
+        "width": "1px",
+        "color": "rgba(255,255,255,0.07)",
+        "use": "Chart frames, table rows, quiet dividers."
+      },
+      "reference_gradient_hairline": {
+        "css_utility": "gradient-border",
+        "definition": "Use existing .gradient-border (padding-box + border-box) as the signature border.",
+        "use": [
+          "Hero odds card",
+          "Primary AI panels (Policy Brain, AI Next Step) when they are the focus",
+          "Dock (only the outer shell)"
+        ],
+        "avoid": [
+          "Every panel at once (too loud)",
+          "Small elements (<100px)"
         ]
-      },
-      "animation": "On load: trace draws in (stroke-dasharray/dashoffset). Idle: subtle pulse glow via filter drop-shadow opacity (no transform)."
-    }
-  },
-
-  "design_personality": {
-    "style_fusion": [
-      "Operating-room vital monitor UI (clinical hierarchy, green/amber/red semantics)",
-      "RazorSense-like pulse responsiveness (alive at every touchpoint)",
-      "Cinematic noir + instrument tray labeling",
-      "Subtle CRT/phosphor hints (scanline + bloom) used as overlay only"
-    ],
-    "signature_visual_devices": [
-      {
-        "name": "Vital Top Bar (Monitor Rail)",
-        "what": "A thin fixed top rail that looks like a patient monitor header: left wordmark, center live ECG trace, right 'Vitals' chips (P(recover), amount, latency).",
-        "where": "Global header above CaseHeader; does not change existing layout, just wraps/frames it.",
-        "implementation": {
-          "tailwind": "fixed top-0 inset-x-0 z-[120] h-12 px-4 flex items-center gap-4 bg-[hsl(var(--background)/0.72)] backdrop-blur-md border-b border-[hsl(var(--border)/0.7)]",
-          "notes": "Keep height small; avoid stealing vertical space. Use pointer-events-none for the ECG canvas/SVG so it doesn't block interactions."
-        }
-      },
-      {
-        "name": "Instrument Tray Indexing",
-        "what": "Every panel gets an 'INSTRUMENT 01' mono label + a thin vertical tick ruler on the left edge.",
-        "where": "All glass panels (FailureAnatomy, RecoveryWindow, etc.).",
-        "implementation": {
-          "pattern": "Add a PanelChrome wrapper component that renders: top-left label, left ruler, corner-notch, and optional status dot.",
-          "tailwind": "relative corner-notch glass-panel px-4 pt-4 pb-3",
-          "ruler_css": ".panel-ruler{position:absolute;left:10px;top:44px;bottom:14px;width:1px;background:linear-gradient(to bottom, transparent, hsl(var(--border)/0.9), transparent);} .panel-ruler::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(to bottom, rgba(255,255,255,0.0) 0, rgba(255,255,255,0.0) 10px, rgba(94,234,212,0.22) 10px, rgba(94,234,212,0.22) 11px);opacity:.55;}"
-        }
-      },
-      {
-        "name": "ECG Probability Trace",
-        "what": "A live ECG-like line whose amplitude maps to P(recover). Flatline at low probability; stronger spikes as probability rises.",
-        "where": "Top bar center + optionally faint watermark behind RecoveryWindow.",
-        "implementation": {
-          "svg": "Use an SVG path updated at ~10–15fps max. Animate stroke-dashoffset for 'moving' feel; do not animate layout.",
-          "css": "stroke: hsl(var(--accent-green)); filter: drop-shadow(0 0 10px rgba(52,211,153,.25)); opacity:.9;",
-          "accessibility": "Provide aria-label and a text fallback: 'Recovery trace'."
-        }
-      },
-      {
-        "name": "Crosshair Cursor for Charts",
-        "what": "Charts feel like instruments: on hover, show a thin crosshair + coordinate readout in mono.",
-        "where": "RecoveryWindow, CounterfactualGhostRuns, TrustBudget.",
-        "implementation": {
-          "css": ".chart-scope{cursor:crosshair;} .crosshair-x,.crosshair-y{position:absolute;background:rgba(94,234,212,.22);} .crosshair-x{height:1px;left:0;right:0;} .crosshair-y{width:1px;top:0;bottom:0;}"
-        }
-      },
-      {
-        "name": "Giant Watermark Type",
-        "what": "Large, ultra-low-opacity serif watermark behind the grid: 'RESUSCITATION' / 'RECOVERY PROTOCOL'.",
-        "where": "Background layer only.",
-        "implementation": {
-          "tailwind": "pointer-events-none fixed inset-0 z-[0]",
-          "css": ".bg-watermark{font-family:var(--font-heading);font-weight:600;letter-spacing:.02em;color:rgba(255,255,255,.04);text-transform:uppercase;}"
-        }
-      },
-      {
-        "name": "Sterilization Boot Sequence (Intro)",
-        "what": "A 900ms intro overlay: 'Sterilizing instruments…', progress ticks, then fades. Feels like powering on an OR console.",
-        "where": "On initial mount only; must not block SSE or interactions beyond 1s.",
-        "implementation": {
-          "motion": "Framer Motion overlay opacity 0->1->0; progress bar uses scaleX only.",
-          "reduced_motion": "If prefers-reduced-motion: skip overlay entirely."
-        }
-      },
-      {
-        "name": "CRT Scanline + Phosphor Hint (Subtle)",
-        "what": "A very subtle scanline overlay + occasional vertical sweep at 0.02–0.04 opacity.",
-        "where": "Global overlay (like existing noise-overlay), capped to be decorative only.",
-        "implementation": {
-          "css": ".scanlines::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.035;background:repeating-linear-gradient(to bottom, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, rgba(0,0,0,0) 3px, rgba(0,0,0,0) 6px);mix-blend-mode:overlay;} .phosphor-sweep::after{content:'';position:fixed;inset:-20% 0;pointer-events:none;z-index:2;background:linear-gradient(to bottom, transparent, rgba(52,211,153,.08), transparent);transform:translateY(-60%);animation:sweep 9s linear infinite;opacity:.25;} @keyframes sweep{0%{transform:translateY(-60%);}100%{transform:translateY(60%);}}",
-          "rule": "Disable sweep animation under prefers-reduced-motion."
-        }
       }
-    ]
-  },
-
-  "color_system": {
-    "notes": "Keep existing base (ink background + cyan/emerald/amber). Refine into semantic OR monitor palette with strict roles.",
-    "tokens_css_variables": {
-      "background": "210 25% 4%",
-      "surface_1": "210 22% 7%",
-      "surface_2": "210 18% 12%",
-      "border": "210 15% 18%",
-      "text_primary": "0 0% 96%",
-      "text_muted": "0 0% 64%",
-      "accent_cyan": "186 100% 55%",
-      "accent_green": "152 84% 52%",
-      "accent_amber": "38 92% 56%",
-      "danger": "0 78% 58%",
-      "info_blue": "199 92% 60%",
-      "sterile_white": "0 0% 98%"
     },
-    "allowed_gradients_under_20pct_viewport": [
-      {
-        "use": "theater-wash background only",
-        "css": "radial-gradient(900px circle at 18% 8%, rgba(0, 255, 200, 0.07), transparent 55%), radial-gradient(720px circle at 82% 12%, rgba(255, 184, 72, 0.05), transparent 55%), radial-gradient(1000px circle at 50% 110%, rgba(0, 180, 255, 0.05), transparent 60%)"
+
+    "elevation": {
+      "tiers": {
+        "e0": "none",
+        "e1": "var(--shadow-1) (default panel)",
+        "e2": "var(--shadow-2) (hero + dock only)"
+      },
+      "rule": "No heavy drop shadows on every card; reserve e2 for hero + dock to create hierarchy."
+    },
+
+    "color_tokens": {
+      "base": {
+        "bg": "hsl(218 62% 7%)",
+        "bg_2": "hsl(218 55% 10%)",
+        "surface_glass": "rgba(255,255,255,0.055)",
+        "surface_glass_stronger": "rgba(255,255,255,0.078)",
+        "border": "rgba(255,255,255,0.10)",
+        "border_2": "rgba(255,255,255,0.07)"
+      },
+      "brand": {
+        "primary_azure": "hsl(213 89% 56%)",
+        "accent_teal": "hsl(199 92% 60%)",
+        "support_teal_soft": "rgba(45,212,191,0.18)",
+        "ink": "hsl(218 62% 7%)"
+      },
+      "semantic": {
+        "success": "hsl(152 62% 45%)",
+        "warning": "hsl(38 92% 55%)",
+        "destructive": "hsl(0 78% 58%)",
+        "rule": "Semantic colors are accents only (dots, thin strokes, small numbers). Never full backgrounds."
+      },
+      "focus": {
+        "ring": "0 0 0 3px rgba(43,138,247,0.35)",
+        "ring_inner": "0 0 0 1px rgba(255,255,255,0.14)",
+        "rule": "Focus-visible must be obvious on dark glass; use dual ring (inner hairline + outer azure glow)."
+      },
+      "gradients_allowed": {
+        "ambient_lightfield": [
+          "radial-gradient(900px 520px at 14% -10%, rgba(43,138,247,0.22), transparent 58%)",
+          "radial-gradient(760px 520px at 86% -14%, rgba(56,189,248,0.16), transparent 56%)"
+        ],
+        "border_gradient": "linear-gradient(135deg, rgba(43, 138, 247, 0.55), rgba(45, 212, 191, 0.22), rgba(255, 255, 255, 0.08))",
+        "rule": "Gradients only as ambient wash + hairline borders; never as big blocks behind text."
       }
-    ],
-    "semantic_mapping": {
-      "ok": "accent_green",
-      "caution": "accent_amber",
-      "critical": "danger",
-      "active_focus_ring": "accent_cyan"
-    }
-  },
-
-  "typography": {
-    "font_pairing": {
-      "headings": "Newsreader",
-      "mono": "IBM Plex Mono",
-      "optional_swap_if_needed": "If you want more 'product recognizable' headings without losing editorial feel: swap headings to 'Spectral' (Google Font) but only if Newsreader feels too literary. Default: keep Newsreader."
     },
-    "scale": {
-      "h1": "text-4xl sm:text-5xl lg:text-6xl",
-      "h2": "text-base md:text-lg",
-      "body": "text-sm md:text-base",
-      "label_caps": "text-[11px] tracking-[0.18em] uppercase font-mono"
-    },
-    "styling_rules": [
-      "Use mono for numbers, probabilities, timestamps, and panel indices.",
-      "Use serif for section titles and narrative explanations.",
-      "Avoid center alignment; left-align for scanability."
-    ]
-  },
 
-  "layout_and_grid": {
-    "desktop_first": {
-      "target": "1920x1080 projector",
-      "grid": "Keep existing grid; add chrome layers that do not change panel sizes.",
-      "spacing": "Increase internal padding by +4px to +8px per panel if safe; prefer whitespace over extra borders."
-    },
-    "panel_chrome_wrapper": {
-      "goal": "Add consistent identity without touching inner component logic or data-testids.",
-      "structure": [
-        "Outer: glass-panel + corner-notch",
-        "Top row: instrument label + status chip",
-        "Left: ruler",
-        "Optional: faint watermark glyph"
-      ]
-    }
-  },
-
-  "components": {
-    "component_path": {
-      "shadcn_primary": [
-        "/app/frontend/src/components/ui/button.jsx",
-        "/app/frontend/src/components/ui/badge.jsx",
-        "/app/frontend/src/components/ui/card.jsx",
-        "/app/frontend/src/components/ui/tooltip.jsx",
-        "/app/frontend/src/components/ui/tabs.jsx",
-        "/app/frontend/src/components/ui/slider.jsx",
-        "/app/frontend/src/components/ui/progress.jsx",
-        "/app/frontend/src/components/ui/separator.jsx",
-        "/app/frontend/src/components/ui/scroll-area.jsx",
-        "/app/frontend/src/components/ui/sonner.jsx"
+    "motion": {
+      "principles": [
+        "Animate only transform/opacity/filter blur; avoid layout thrash.",
+        "Use one easing: var(--ease-out) for entrances; linear for scrubber-linked motion.",
+        "Durations: 120ms hover, 180ms press, 240ms panel entrance, 320ms hero intro.",
+        "Reduced motion: respect prefers-reduced-motion (already in index.css)."
       ],
-      "new_wrappers_to_add": [
-        "src/components/brand/Wordmark.js",
-        "src/components/brand/LogoMark.js",
-        "src/components/brand/VitalTopBar.js",
-        "src/components/brand/PanelChrome.js",
-        "src/components/brand/ECGTrace.js",
-        "src/components/brand/SterilizeIntro.js"
-      ]
-    },
-    "button_system": {
-      "style": "Professional / instrument-grade",
-      "variants": {
-        "primary": "Cyan outline + subtle fill on hover; focus ring cyan.",
-        "secondary": "Glass ghost button; border + blur; hover increases border opacity.",
-        "danger": "Solid danger with reduced saturation; no gradients."
-      },
-      "tailwind_examples": {
-        "primary": "bg-[hsl(var(--primary)/0.12)] text-[hsl(var(--foreground))] border border-[hsl(var(--primary)/0.45)] hover:bg-[hsl(var(--primary)/0.18)] hover:border-[hsl(var(--primary)/0.7)] focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))]",
-        "ghost": "bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20",
-        "press_motion": "active:scale-[0.98] transition-[background-color,border-color,box-shadow,opacity] duration-150"
-      },
-      "data_testid_rule": "Do not remove existing data-testids. Any new buttons must add data-testid in kebab-case."
-    },
-    "badges_and_chips": {
-      "vitals_chip": "Use Badge with mono text; color by semantic mapping (ok/caution/critical).",
-      "tailwind": "font-mono text-[11px] tracking-[0.12em] uppercase bg-white/5 border-white/10"
+      "micro_interactions": {
+        "hover": "translateY(-1px) + subtle border brighten (rgba white 0.10 -> 0.14)",
+        "press": "scale(0.98)",
+        "focus": "dual ring (see focus tokens)",
+        "scrub": "dock pulse wave animates only while playing; otherwise static"
+      }
     }
   },
 
-  "motion_identity": {
-    "principles": [
-      "Pulse, not float: motion should feel like a monitor heartbeat (periodic, purposeful).",
-      "Animate opacity/transform only for performance.",
-      "Use short durations (120–220ms) for UI responses; longer (600–1200ms) for ambient pulses.",
-      "No universal transitions; specify properties."
+  "contextual_status_replacement": {
+    "goal": "Replace removed fixed top bar with a quiet console header + inline status sentence that feels editorial, not alarmist.",
+    "structure": {
+      "placement": "Top of the single screen content, inside the main container (not fixed).",
+      "layout": "Left: brand mark + case identifier. Right: contextual status sentence + last update time (mono).",
+      "components": ["/app/frontend/src/components/ui/separator.jsx", "/app/frontend/src/components/ui/tooltip.jsx", "/app/frontend/src/components/ui/button.jsx"],
+      "copy_pattern": {
+        "brand": "RazorStitch",
+        "status_sentence": "Recovery is tracking {trend_word}; next best action is {action_phrase}.",
+        "trend_word_examples": ["within range", "slightly behind", "ahead of baseline"],
+        "action_phrase_examples": ["send the second reminder", "switch to voice follow-up", "pause outreach for 2h"],
+        "timestamp": "Updated {HH:MM} · {n} events in last 10m"
+      },
+      "status_visual": {
+        "style": "Inline dot + text (no pill).",
+        "dot": "6px circle; color uses semantic accent at 70% alpha.",
+        "example": "• within range"
+      }
+    },
+    "tailwind_scaffold": {
+      "container": "flex flex-col gap-3 md:flex-row md:items-end md:justify-between",
+      "left": "flex items-center gap-3",
+      "right": "flex items-center gap-3 text-[12px] leading-4 text-white/70",
+      "dot": "inline-block h-1.5 w-1.5 rounded-full bg-emerald-400/70"
+    },
+    "where_live_pulse_moves": "Pulse wave moves to the floating dock only (small, mono-line)."
+  },
+
+  "component_redesign_notes": {
+    "global_panel_language": {
+      "panel_shell": {
+        "class_recipe": "glass-panel rounded-[24px] p-6 md:p-6",
+        "hero_variant": "glass-2 gradient-border rounded-[24px] p-8 shadow-[var(--shadow-2)]",
+        "nested_inset": "rounded-[16px] border border-white/10 bg-white/[0.03]"
+      },
+      "panel_header": {
+        "title": "Newsreader 18/24 600 (font-display)",
+        "meta": "Inter 12/16 500 (text-white/55)",
+        "actions": "One quiet secondary button max; no icon clusters."
+      },
+      "badge_pill_unification": {
+        "single_style_if_needed": "Only one pill style allowed: control radius 12px, height 28px, bg white/6, border white/10, text white/70, no gradients.",
+        "default": "Prefer inline dot + sentence-case text instead of pills."
+      }
+    },
+
+    "hero_case_odds": {
+      "keep": ["Gradient hairline border", "Generous 32px padding", "Odds ring as the single focused visual"],
+      "change": [
+        "Remove any 'Recovering' pill -> replace with inline dot + 'Recovering' text in meta row.",
+        "Ensure amount + odds % are mono and tabular.",
+        "Secondary button: one only (ghost/quiet)."
+      ],
+      "states": {
+        "loading": "Use shadcn Skeleton blocks inside the hero; keep ring placeholder as faint circle stroke.",
+        "hover": "Border brighten + translateY(-1px) only.",
+        "focus": "If hero is focusable, apply dual ring."
+      }
+    },
+
+    "policy_brain": {
+      "change": [
+        "Q-value bars: use calm strokes; no neon fills. Bars should be 6px height with 3px radius.",
+        "Guardrail callouts: convert badges to inline 'Guardrail: …' with a small teal dot.",
+        "Policy version badge -> inline meta text 'Policy v{n}' (mono)"
+      ],
+      "components": ["/app/frontend/src/components/ui/card.jsx", "/app/frontend/src/components/ui/button.jsx", "/app/frontend/src/components/ui/tooltip.jsx", "/app/frontend/src/components/ui/skeleton.jsx"]
+    },
+
+    "failure_anatomy": {
+      "tone": "Informative, forensic. No red blocks; use neutral ink + thin semantic accents.",
+      "change": [
+        "Stats row: mono numbers, labels in meta.",
+        "Accordions: use shadcn Accordion; headers are sentence-case; chevron subtle.",
+        "Any 'At risk' pill -> inline dot + 'At risk' only when truly needed; otherwise 'Needs attention'."
+      ],
+      "components": ["/app/frontend/src/components/ui/accordion.jsx", "/app/frontend/src/components/ui/separator.jsx"]
+    },
+
+    "recovery_curve": {
+      "change": [
+        "Curve stroke 2px; baseline 1px; gridlines 1px at white/6.",
+        "Draggable playhead: 10px handle with 2px stroke; hit area 32px (invisible).",
+        "Labels: mono 11px white/55; avoid bold axis titles."
+      ],
+      "interaction": "On drag: show a small tooltip (HoverCard) with time + odds delta (mono)."
+    },
+
+    "ghost_runs": {
+      "change": [
+        "Comparison lines: primary azure 2px, ghost line white/25 2px dashed (4 4).",
+        "Hover reasons: use HoverCard; no badges; show bullet list with subtle dots.",
+        "Legend: inline text row, no boxed legend."
+      ],
+      "components": ["/app/frontend/src/components/ui/hover-card.jsx"]
+    },
+
+    "customer_plane_phone_preview": {
+      "change": [
+        "Phone frame: rounded-[24px] outer, inner screen rounded-[16px].",
+        "State badge -> inline dot + 'Customer sees: …'",
+        "Morph animation: opacity/transform only; keep it calm (<=240ms)."
+      ],
+      "responsive": "On mobile: phone preview becomes a collapsible Drawer section."
+    },
+
+    "ai_next_step_card": {
+      "change": [
+        "Make this a 'primary focus' panel: use gradient-border like hero when it is the current recommended step.",
+        "Approve/Edit buttons: primary + quiet secondary; both radius 12, height 36.",
+        "No badges like 'AI'—title already implies it."
+      ],
+      "components": ["/app/frontend/src/components/ui/button.jsx", "/app/frontend/src/components/ui/dialog.jsx", "/app/frontend/src/components/ui/textarea.jsx"]
+    },
+
+    "trust_budget_3_contacts": {
+      "change": [
+        "Represent as 3 slots with subtle progress (not loud).",
+        "Each slot: name (body), channel (meta), remaining budget (mono).",
+        "No pill tags; use small dot for channel type (sms/whatsapp/voice)."
+      ],
+      "components": ["/app/frontend/src/components/ui/progress.jsx", "/app/frontend/src/components/ui/tooltip.jsx"]
+    },
+
+    "live_updates_feeds": {
+      "change": [
+        "Remove 'Live' pill -> inline dot + 'Live updates' in header meta.",
+        "Feed rows: 44px min height, hairline separators, mono timestamps.",
+        "New event highlight: 1.5s fade from bg-white/6 to transparent (no flashing)."
+      ],
+      "components": ["/app/frontend/src/components/ui/scroll-area.jsx", "/app/frontend/src/components/ui/separator.jsx"]
+    },
+
+    "floating_timeline_dock": {
+      "role": "Carries the 'system heartbeat' now that the top bar is removed.",
+      "change": [
+        "Dock shell uses gradient-border + glass-2 + shadow e2.",
+        "Pulse wave: tiny (height 10-12px), white/40 stroke; only animates while playing.",
+        "Mode label pill -> inline text 'Mode: Replay' (meta)"
+      ],
+      "interaction": [
+        "Slider thumb: 12px visual, 32px hit area.",
+        "Buttons: icon-only with Tooltip; 36x36 min.",
+        "Dock should never cover critical content; on mobile it becomes a bottom Sheet with peek handle."
+      ],
+      "components": ["/app/frontend/src/components/ui/slider.jsx", "/app/frontend/src/components/ui/tooltip.jsx", "/app/frontend/src/components/ui/sheet.jsx", "/app/frontend/src/components/ui/button.jsx"]
+    },
+
+    "boot_intro": {
+      "change": [
+        "Fast (<=900ms).",
+        "Use one line of Newsreader + one mono line for 'Initializing timeline…'.",
+        "No big gradients; use ambient lightfield only."
+      ],
+      "motion": "Opacity + slight translateY(6px) entrance; respect reduced motion."
+    },
+
+    "toasts": {
+      "library": "sonner",
+      "style": [
+        "Toast surface: bg-white/8, border white/12, radius 16, shadow e1.",
+        "No emoji icons; use lucide-react icons if needed.",
+        "Copy: sentence-case, calm."
+      ],
+      "component": "/app/frontend/src/components/ui/sonner.jsx"
+    }
+  },
+
+  "responsive_rules": {
+    "grid": {
+      "desktop_12col": {
+        "container": "max-w-[1320px] mx-auto px-4 lg:px-6",
+        "layout": "12-col grid with 24px gaps; hero spans 7, right rail spans 5; lower panels in 6/6 split."
+      },
+      "tablet": {
+        "breakpoint": "md",
+        "rule": "Collapse to 8 columns; hero becomes full width; right rail becomes 2-up grid."
+      },
+      "mobile": {
+        "breakpoint": "sm",
+        "rule": "Single column; panels become stacked; keep p-5/p-6 equivalent (20–24px)."
+      }
+    },
+    "dock_mobile_behavior": {
+      "rule": "Dock becomes bottom Sheet (shadcn Sheet) with a compact collapsed bar showing time + play/pause + scrub thumb.",
+      "tap_targets": "Minimum 44x44 for all dock controls."
+    },
+    "phone_preview": {
+      "desktop": "Max width 360px; keep aspect ratio; never exceed 40% of viewport height.",
+      "mobile": "Move into Drawer/Collapsible; default collapsed to reduce scroll fatigue."
+    }
+  },
+
+  "chart_restraint_spec": {
+    "strokes": {
+      "primary_line": "2px rgba(43,138,247,0.9)",
+      "secondary_line": "2px rgba(255,255,255,0.25)",
+      "gridline": "1px rgba(255,255,255,0.06)",
+      "axis": "1px rgba(255,255,255,0.10)",
+      "marker": "4px radius dot; fill rgba(255,255,255,0.85) with 2px azure stroke"
+    },
+    "labels": {
+      "tick": "11px mono, white/55",
+      "annotation": "12px Inter, white/70",
+      "title": "Avoid chart titles; use panel title instead."
+    },
+    "fills": {
+      "rule": "Prefer no area fills. If needed, max alpha 0.10 and only under the primary curve."
+    }
+  },
+
+  "accessibility": {
+    "contrast_pairs": [
+      { "fg": "white/90", "bg": "bg ink", "note": "Primary reading" },
+      { "fg": "white/70", "bg": "glass surface", "note": "Secondary text" },
+      { "fg": "azure", "bg": "ink", "note": "Links/interactive" }
     ],
-    "framer_motion_patterns": {
-      "panel_enter": {
-        "initial": "{ opacity: 0, y: 10 }",
-        "animate": "{ opacity: 1, y: 0 }",
-        "transition": "{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }"
-      },
-      "pulse_glow": {
-        "animate": "{ opacity: [0.55, 0.9, 0.55] }",
-        "transition": "{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }",
-        "use": "Apply to small accent dots, not whole panels."
-      },
-      "thinking_state": {
-        "animate": "{ opacity: [0.35, 0.75, 0.35] }",
-        "transition": "{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }",
-        "use": "Skeleton loaders / 'AI evaluating' labels."
-      },
-      "ecg_trace": {
-        "technique": "stroke-dashoffset animation on SVG path; update path points from probability.",
-        "transition": "Use requestAnimationFrame throttled; keep under 15fps."
-      },
-      "scrubber_feedback": {
-        "animate": "On drag: scaleX highlight bar to 1.02 and increase opacity; on release: spring back.",
-        "transition": "{ type: 'spring', stiffness: 380, damping: 30 }"
-      }
-    },
-    "hover_microinteractions": {
-      "buttons": "hover: slight border brighten + subtle glow shadow; active: scale 0.98",
-      "panels": "hover: border opacity increases; do NOT translate panels (avoid layout jitter)",
-      "charts": "hover: crosshair fades in (opacity transition only)"
-    }
-  },
-
-  "css_svg_implementation_hints": {
-    "global_overlays": {
-      "order": "Background wash (z0) -> watermark (z0) -> app content (z10+) -> noise overlay (z1 fixed) -> scanlines (z2 fixed)",
-      "note": "Ensure overlays are pointer-events:none and do not interfere with clicks."
-    },
-    "panel_edges": {
-      "rule": "Keep existing corner-notch but refine: reduce opacity, add inner hairline via box-shadow inset.",
-      "css": ".glass-panel{box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 18px 60px rgba(0,0,0,0.55);}"
-    },
-    "svg_chart_style": {
-      "strokes": "Use 1.5–2px strokes; dashed for counterfactual ghosts; solid for primary.",
-      "colors": "Primary curve: accent-cyan; probability/ok: accent-green; warnings: amber; failures: danger.",
-      "glow": "Use filter drop-shadow only; avoid heavy blur."
-    }
-  },
-
-  "libraries": {
-    "required": [
-      {
-        "name": "No new libraries required",
-        "reason": "All signature devices can be built with CSS + SVG + framer-motion already present."
-      }
+    "keyboard_nav": [
+      "All interactive elements must be reachable via Tab in a logical order (left-to-right, top-to-bottom).",
+      "Timeline scrubber: arrow keys adjust by small step; Shift+arrow for larger step; announce time via aria-live polite.",
+      "Accordions: use shadcn defaults (Enter/Space toggles)."
     ],
-    "optional": [
-      {
-        "name": "vault66-crt-effect",
-        "reason": "If you want a turnkey CRT preset; otherwise implement CSS scanlines manually.",
-        "install": "npm i vault66-crt-effect",
-        "usage_note": "Keep opacity extremely low; do not let CRT effect reduce readability."
-      }
+    "reduced_motion": [
+      "Disable pulse animation and curve shimmer when prefers-reduced-motion is set.",
+      "Keep scrubber updates instantaneous (no tween) in reduced motion."
     ]
   },
 
   "image_urls": {
-    "note": "This dashboard is mostly vector/typography driven. Avoid stock photos; use SVG devices instead.",
-    "categories": [
+    "rule": "No stock photography needed; this is a console. Use code-crafted ambient + subtle noise only.",
+    "ambient": [
       {
-        "category": "background_texture",
-        "description": "Optional subtle grain/noise already implemented via data-uri SVG. No external images needed.",
-        "urls": []
+        "category": "background",
+        "description": "Use existing .rs-lightfield__mesh + .noise-overlay; do not add raster images.",
+        "image_url": null
       }
     ]
   },
 
-  "instructions_to_main_agent": [
-    "Do NOT change existing component logic or remove/rename any existing data-testid attributes.",
-    "Implement brand elevation as wrappers/overlays: VitalTopBar, PanelChrome, Wordmark, LogoMark, ECGTrace, SterilizeIntro.",
-    "Keep gradients limited to the existing theater-wash background (<=20% viewport impact). No purple/pink gradients.",
-    "All new interactive elements must include data-testid in kebab-case.",
-    "Prefer CSS + SVG + framer-motion; animate opacity/transform only. For ECG line, animate stroke-dashoffset and update path points at low FPS.",
-    "Ensure overlays (noise/scanlines/watermark) are pointer-events:none and z-indexed so they never block interactions.",
-    "Maintain dark-only color-scheme; ensure WCAG AA contrast for text on glass panels (increase text opacity rather than brightening backgrounds).",
-    "Use shadcn/ui components from /app/frontend/src/components/ui (Button, Badge, Tooltip, Tabs, Slider, Progress, ScrollArea, Sonner)."
-  ],
-
-  "citations": {
-    "razorsense": [
-      "https://razorpay.com/razorsense/",
-      "https://blade.razorpay.com/?path=/story/components-razorsense--default"
+  "component_path": {
+    "primary": [
+      "/app/frontend/src/components/ui/card.jsx",
+      "/app/frontend/src/components/ui/button.jsx",
+      "/app/frontend/src/components/ui/slider.jsx",
+      "/app/frontend/src/components/ui/accordion.jsx",
+      "/app/frontend/src/components/ui/hover-card.jsx",
+      "/app/frontend/src/components/ui/tooltip.jsx",
+      "/app/frontend/src/components/ui/sheet.jsx",
+      "/app/frontend/src/components/ui/drawer.jsx",
+      "/app/frontend/src/components/ui/scroll-area.jsx",
+      "/app/frontend/src/components/ui/skeleton.jsx",
+      "/app/frontend/src/components/ui/separator.jsx",
+      "/app/frontend/src/components/ui/sonner.jsx"
     ],
-    "crt_reference": [
-      "https://github.com/mdombrov-33/vault66-crt-effect",
-      "https://github.com/TheGreatGildo/nerv-ui"
-    ]
+    "note": "Use existing shadcn components; restyle via tokens/classes. JS files only (no TSX guidance)."
   },
 
-  "general_ui_ux_design_guidelines_appendix": "<General UI UX Design Guidelines>  \n    - You must **not** apply universal transition. Eg: `transition: all`. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms\n    - You must **not** center align the app container, ie do not add `.App { text-align: center; }` in the css file. This disrupts the human natural reading flow of text\n   - NEVER: use AI assistant Emoji characters like`🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons. Always use **FontAwesome cdn** or **lucid-react** library already installed in the package.json\n\n **GRADIENT RESTRICTION RULE**\nNEVER use dark/saturated gradient combos (e.g., purple/pink) on any UI element.  Prohibited gradients: blue-500 to purple 600, purple 500 to pink-500, green-500 to blue-500, red to pink etc\nNEVER use dark gradients for logo, testimonial, footer etc\nNEVER let gradients cover more than 20% of the viewport.\nNEVER apply gradients to text-heavy content or reading areas.\nNEVER use gradients on small UI elements (<100px width).\nNEVER stack multiple gradient layers in the same viewport.\n\n**ENFORCEMENT RULE:**\n    • Id gradient area exceeds 20% of viewport OR affects readability, **THEN** use solid colors\n\n**How and where to use:**\n   • Section backgrounds (not content backgrounds)\n   • Hero section header content. Eg: dark to light to dark color\n   • Decorative overlays and accent elements only\n   • Hero section with 2-3 mild color\n   • Gradients creation can be done for any angle say horizontal, vertical or diagonal\n\n- For AI chat, voice application, **do not use purple color. Use color like light green, ocean blue, peach orange etc**\n\n</Font Guidelines>\n\n- Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead. \n   \n- Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.\n\n- Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.\n   \n- Before generating UI, infer the visual style from the problem statement (palette, contrast, mood, motion) and immediately instantiate it by setting global design tokens (primary, secondary/accent, background, foreground, ring, state colors), rather than relying on any library defaults. Don't make the background dark as a default step, always understand problem first and define colors accordingly\n    Eg: - if it implies playful/energetic, choose a colorful scheme\n           - if it implies monochrome/minimal, choose a black–white/neutral scheme\n\n**Component Reuse:**\n\t- Prioritize using pre-existing components from src/components/ui when applicable\n\t- Create new components that match the style and conventions of existing components when needed\n\t- Examine existing components to understand the project's component patterns before creating new ones\n\n**IMPORTANT**: Do not use HTML based component like dropdown, calendar, toast etc. You **MUST** always use `/app/frontend/src/components/ui/ ` only as a primary components as these are modern and stylish component\n\n**Best Practices:**\n\t- Use Shadcn/UI as the primary component library for consistency and accessibility\n\t- Import path: ./components/[component-name]\n\n**Export Conventions:**\n\t- Components MUST use named exports (export const ComponentName = ...)\n\t- Pages MUST use default exports (export default function PageName() {...})\n\n**Toasts:**\n  - Use `sonner` for toasts\"\n  - Sonner component are located in `/app/src/components/ui/sonner.tsx`\n\nUse 2–4 color gradients, subtle textures/noise overlays, or CSS-based noise to avoid flat visuals.\n</General UI UX Design Guidelines>"
+  "instructions_to_main_agent": [
+    "Remove the fixed top bar entirely; implement the contextual console header described above.",
+    "Systematize the hero reference card language across all panels: radius 24, padding 24/32, hairline borders, restrained glow.",
+    "Unify tokens: remove mixed radii and old token dialects; prefer the white-alpha glass recipe already present in index.css.",
+    "Demote pills/badges: replace with inline dot + sentence-case text everywhere except where a pill is truly required (single unified pill style).",
+    "Keep gradients limited to ambient lightfield + gradient hairline borders only; ensure gradient area <=20% viewport.",
+    "Preserve all existing data-testids; add missing data-testid to any new interactive element introduced by redesign.",
+    "Charts: apply the restraint spec (stroke widths, gridlines, label sizes) consistently across all custom SVG charts.",
+    "Dock: becomes the only place with pulse wave; on mobile convert to bottom Sheet with compact controls.",
+    "Accessibility: implement dual focus ring; ensure 44px tap targets on mobile; respect reduced motion."
+  ],
+
+  "General UI UX Design Guidelines": "- You must **not** apply universal transition. Eg: `transition: all`. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms\n    - You must **not** center align the app container, ie do not add `.App { text-align: center; }` in the css file. This disrupts the human natural reading flow of text\n   - NEVER: use AI assistant Emoji characters like`🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons. Always use **FontAwesome cdn** or **lucid-react** library already installed in the package.json\n\n **GRADIENT RESTRICTION RULE**\nNEVER use dark/saturated gradient combos (e.g., purple/pink) on any UI element.  Prohibited gradients: blue-500 to purple 600, purple 500 to pink-500, green-500 to blue-500, red to pink etc\nNEVER use dark gradients for logo, testimonial, footer etc\nNEVER let gradients cover more than 20% of the viewport.\nNEVER apply gradients to text-heavy content or reading areas.\nNEVER use gradients on small UI elements (<100px width).\nNEVER stack multiple gradient layers in the same viewport.\n\n**ENFORCEMENT RULE:**\n    • Id gradient area exceeds 20% of viewport OR affects readability, **THEN** use solid colors\n\n**How and where to use:**\n   • Section backgrounds (not content backgrounds)\n   • Hero section header content. Eg: dark to light to dark color\n   • Decorative overlays and accent elements only\n   • Hero section with 2-3 mild color\n   • Gradients creation can be done for any angle say horizontal, vertical or diagonal\n\n- For AI chat, voice application, **do not use purple color. Use color like light green, ocean blue, peach orange etc**\n\n</Font Guidelines>\n\n- Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead. \n   \n- Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.\n\n- Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.\n   \n- Before generating UI, infer the visual style from the problem statement (palette, contrast, mood, motion) and immediately instantiate it by setting global design tokens (primary, secondary/accent, background, foreground, ring, state colors), rather than relying on any library defaults. Don't make the background dark as a default step, always understand problem first and define colors accordingly\n    Eg: - if it implies playful/energetic, choose a colorful scheme\n           - if it implies monochrome/minimal, choose a black–white/neutral scheme\n\n**Component Reuse:**\n\t- Prioritize using pre-existing components from src/components/ui when applicable\n\t- Create new components that match the style and conventions of existing components when needed\n\t- Examine existing components to understand the project's component patterns before creating new ones\n\n**IMPORTANT**: Do not use HTML based component like dropdown, calendar, toast etc. You **MUST** always use `/app/frontend/src/components/ui/ ` only as a primary components as these are modern and stylish component\n\n**Best Practices:**\n\t- Use Shadcn/UI as the primary component library for consistency and accessibility\n\t- Import path: ./components/[component-name]\n\n**Export Conventions:**\n\t- Components MUST use named exports (export const ComponentName = ...)\n\t- Pages MUST use default exports (export default function PageName() {...})\n\n**Toasts:**\n  - Use `sonner` for toasts\"\n  - Sonner component are located in `/app/src/components/ui/sonner.tsx`\n\nUse 2–4 color gradients, subtle textures/noise overlays, or CSS-based noise to avoid flat visuals."
 }

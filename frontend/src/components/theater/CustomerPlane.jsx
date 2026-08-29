@@ -6,23 +6,23 @@ import { useTimeline } from '@/lib/timelineContext';
 import { Panel } from './Panel';
 
 const viewAt = (t) => {
-  if (t < 0.28) return 'failed';
-  if (t < 0.5) return 'nudge';
-  if (t < 0.58) return 'checkout';
-  if (t < 0.66) return 'abandoned';
-  if (t < 0.82) return 'incentive-msg';
-  if (t < 0.94) return 'checkout-offer';
+  if (t < 0.167) return 'failed';
+  if (t < 0.25) return 'nudge';
+  if (t < 0.417) return 'checkout';
+  if (t < 0.583) return 'abandoned';
+  if (t < 0.694) return 'incentive-msg';
+  if (t < 0.833) return 'checkout-offer';
   return 'success';
 };
 
 const VIEW_LABEL = {
-  failed: { text: 'FAILURE SHOWN', tone: 'bg-rose-500/15 text-rose-200 border-rose-400/20' },
-  nudge: { text: 'WHATSAPP SENT', tone: 'bg-cyan-500/15 text-cyan-200 border-cyan-400/20' },
-  checkout: { text: 'CUSTOMER VIEWING', tone: 'bg-emerald-500/15 text-emerald-200 border-emerald-400/20' },
-  abandoned: { text: 'SESSION IDLE', tone: 'bg-amber-500/15 text-amber-200 border-amber-400/20' },
-  'incentive-msg': { text: 'SMS + OFFER SENT', tone: 'bg-cyan-500/15 text-cyan-200 border-cyan-400/20' },
-  'checkout-offer': { text: 'OFFER ACTIVE', tone: 'bg-amber-500/15 text-amber-200 border-amber-400/20' },
-  success: { text: 'CAPTURED', tone: 'bg-emerald-500/15 text-emerald-200 border-emerald-400/20' },
+  failed: { text: 'Payment failed', dot: 'bg-destructive/80' },
+  nudge: { text: 'WhatsApp sent', dot: 'bg-primary/80' },
+  checkout: { text: 'Customer viewing', dot: 'bg-[rgba(45,212,191,0.85)]' },
+  abandoned: { text: 'Customer idle', dot: 'bg-warning/80' },
+  'incentive-msg': { text: 'Offer sent', dot: 'bg-primary/80' },
+  'checkout-offer': { text: 'Offer active', dot: 'bg-warning/80' },
+  success: { text: 'Paid', dot: 'bg-[rgba(45,212,191,0.85)]' },
 };
 
 const fade = {
@@ -32,10 +32,10 @@ const fade = {
 };
 
 const CheckoutShell = ({ children }) => (
-  <div className="rounded-lg bg-[#0d1117] border border-white/10 overflow-hidden">
-    <div className="px-3.5 py-2.5 border-b border-white/10 flex items-center justify-between">
-      <span className="font-mono text-[10px] text-white/60">Aurora Fitness</span>
-      <span className="font-mono text-[11px] text-white/90">₹2,499</span>
+  <div className="rounded-lg bg-background border border-border/80 overflow-hidden">
+    <div className="px-3.5 py-2.5 border-b border-border/70 flex items-center justify-between">
+      <span className="text-[10px] font-medium text-muted-foreground">Aurora Fitness</span>
+      <span className="font-mono text-[11px] text-foreground tabular-nums">₹2,499</span>
     </div>
     <div className="p-3.5">{children}</div>
   </div>
@@ -43,10 +43,10 @@ const CheckoutShell = ({ children }) => (
 
 const MsgBubble = ({ icon: Icon, tone, title, children }) => (
   <div className={`rounded-xl rounded-tl-sm border p-3 ${tone}`}>
-    <div className="flex items-center gap-1.5 font-mono text-[10px] opacity-80 mb-1.5">
+    <div className="flex items-center gap-1.5 text-[10px] font-medium opacity-80 mb-1.5">
       <Icon size={11} aria-hidden="true" /> {title}
     </div>
-    <p className="text-[12px] leading-relaxed text-white/85">{children}</p>
+    <p className="text-[12px] leading-relaxed text-foreground/90">{children}</p>
   </div>
 );
 
@@ -57,35 +57,35 @@ export const CustomerPlane = ({ className }) => {
 
   return (
     <Panel
-      title="Customer Plane"
+      title="Customer checkout preview"
+      subtitle="What Riya sees right now"
       icon={Smartphone}
       testId="customer-plane"
-      index="04"
       className={className}
       right={
-        <Badge data-testid="customer-plane-state" className={`border font-mono text-[10px] ${label.tone}`}>
+        <span data-testid="customer-plane-state" className="inline-flex items-center gap-2 text-[12px] leading-4 text-white/70 shrink-0">
+          <span className={`inline-block h-1.5 w-1.5 rounded-full ${label.dot}`} aria-hidden="true" />
           {label.text}
-        </Badge>
+        </span>
       }
     >
-      <div className="label-caps mb-3">What Riya sees right now</div>
       <div
         data-testid="checkout-preview"
-        className="mx-auto w-full max-w-[250px] rounded-[26px] border border-white/12 bg-black/50 p-2.5 shadow-[0_16px_50px_rgba(0,0,0,0.5)]"
+        className="mx-auto w-full max-w-[250px] rounded-[24px] border border-white/10 bg-white/[0.03] p-2.5"
       >
-        <div className="rounded-[20px] bg-[#090c10] border border-white/[0.06] p-3 min-h-[290px] flex flex-col">
+        <div className="rounded-[16px] bg-[hsl(218_62%_5%)] border border-white/[0.06] p-3 min-h-[290px] flex flex-col">
           <div className="flex justify-center mb-3" aria-hidden="true">
-            <div className="w-14 h-1 rounded-full bg-white/15" />
+            <div className="w-14 h-1 rounded-full bg-muted" />
           </div>
           <AnimatePresence mode="wait">
             <motion.div key={view} {...fade} className="flex-1 flex flex-col gap-3" data-testid="intervention-asset">
               {view === 'failed' && (
                 <CheckoutShell>
                   <div className="flex flex-col items-center text-center py-3">
-                    <XCircle size={30} className="text-rose-400 mb-2" aria-hidden="true" />
-                    <p className="text-[13px] text-white/90">Payment failed</p>
-                    <p className="font-mono text-[10px] text-white/50 mt-1">Your bank declined this card</p>
-                    <div className="mt-3 w-full rounded-md bg-white/[0.06] border border-white/10 py-2 font-mono text-[10px] text-white/40">
+                    <XCircle size={30} className="text-destructive mb-2" aria-hidden="true" />
+                    <p className="text-[13px] text-foreground">Payment failed</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">Your bank declined this card</p>
+                    <div className="mt-3 w-full rounded-md bg-secondary/60 border border-border/70 py-2 font-mono text-[10px] text-muted-foreground/80">
                       HDFC •••• 4417 · declined
                     </div>
                   </div>
@@ -94,29 +94,29 @@ export const CustomerPlane = ({ className }) => {
 
               {view === 'nudge' && (
                 <>
-                  <MsgBubble icon={MessageCircle} tone="bg-emerald-500/[0.08] border-emerald-400/20" title="WhatsApp · Aurora Fitness">
-                    Hi Riya — your order is saved. Finish in one tap with UPI → <span className="text-cyan-300">rzp.io/l/aur7f3a</span>
+                  <MsgBubble icon={MessageCircle} tone="bg-success/[0.08] border-success/25" title="WhatsApp · Aurora Fitness">
+                    Hi Riya — your order is saved. Finish in one tap with UPI → <span className="text-primary">rzp.io/l/aur7f3a</span>
                   </MsgBubble>
-                  <p className="font-mono text-[10px] text-white/40 text-center mt-auto">delivered · 21:28</p>
+                  <p className="text-[10px] text-muted-foreground/70 text-center mt-auto">Delivered · T+12h</p>
                 </>
               )}
 
               {(view === 'checkout' || view === 'abandoned') && (
                 <CheckoutShell>
                   <div className="space-y-2.5">
-                    <div className="rounded-md border border-cyan-400/30 bg-cyan-500/[0.08] px-3 py-2.5 flex items-center justify-between">
-                      <span className="text-[12px] text-white/90">UPI · riya@okhdfc</span>
-                      <span className="font-mono text-[9px] text-cyan-300">RECOMMENDED</span>
+                    <div className="rounded-md border border-primary/35 bg-primary/[0.08] px-3 py-2.5 flex items-center justify-between">
+                      <span className="text-[12px] text-foreground">UPI · riya@okhdfc</span>
+                      <span className="text-[9px] font-semibold text-primary">Recommended</span>
                     </div>
-                    <div className="rounded-md border border-white/10 px-3 py-2.5 text-[12px] text-white/45">
-                      Card •••• 4417 <span className="font-mono text-[9px] text-rose-300/80 ml-1">declined</span>
+                    <div className="rounded-md border border-border/70 px-3 py-2.5 text-[12px] text-muted-foreground/70">
+                      Card •••• 4417 <span className="text-[9px] text-destructive/80 ml-1">declined</span>
                     </div>
-                    <div className="rounded-md bg-cyan-400/90 text-[#06121a] text-center py-2 text-[12px] font-medium">
+                    <div className="rounded-md bg-primary text-primary-foreground text-center py-2 text-[12px] font-semibold">
                       Pay ₹2,499
                     </div>
                     {view === 'abandoned' && (
-                      <div className="flex items-center gap-1.5 justify-center pt-1 text-amber-300/90 font-mono text-[10px]">
-                        <Hourglass size={10} aria-hidden="true" /> session idle 120s
+                      <div className="flex items-center gap-1.5 justify-center pt-1 text-warning text-[10px] font-medium">
+                        <Hourglass size={10} aria-hidden="true" /> Idle for 2 minutes
                       </div>
                     )}
                   </div>
@@ -125,24 +125,24 @@ export const CustomerPlane = ({ className }) => {
 
               {view === 'incentive-msg' && (
                 <>
-                  <MsgBubble icon={MessageSquareText} tone="bg-amber-500/[0.08] border-amber-400/20" title="SMS · AURFIT">
-                    ₹40 cashback if you complete in 30 min → <span className="text-cyan-300">rzp.io/l/aur7f3a-c40</span>
+                  <MsgBubble icon={MessageSquareText} tone="bg-warning/[0.08] border-warning/25" title="SMS · AURFIT">
+                    ₹40 cashback if you complete in 30 min → <span className="text-primary">rzp.io/l/aur7f3a-c40</span>
                   </MsgBubble>
-                  <p className="font-mono text-[10px] text-white/40 text-center mt-auto">delivered · 22:03</p>
+                  <p className="text-[10px] text-muted-foreground/70 text-center mt-auto">Delivered · T+42h</p>
                 </>
               )}
 
               {view === 'checkout-offer' && (
                 <CheckoutShell>
                   <div className="space-y-2.5">
-                    <div className="rounded-md border border-amber-400/30 bg-amber-500/[0.1] px-3 py-2 text-center">
-                      <span className="font-mono text-[10px] text-amber-200">₹40 CASHBACK APPLIED · 22:41 left</span>
+                    <div className="rounded-md border border-warning/35 bg-warning/[0.1] px-3 py-2 text-center">
+                      <span className="text-[10px] font-semibold text-warning">₹40 cashback applied · 22:41 left</span>
                     </div>
-                    <div className="rounded-md border border-cyan-400/30 bg-cyan-500/[0.08] px-3 py-2.5 flex items-center justify-between">
-                      <span className="text-[12px] text-white/90">UPI · riya@okhdfc</span>
-                      <span className="font-mono text-[9px] text-cyan-300">1-TAP</span>
+                    <div className="rounded-md border border-primary/35 bg-primary/[0.08] px-3 py-2.5 flex items-center justify-between">
+                      <span className="text-[12px] text-foreground">UPI · riya@okhdfc</span>
+                      <span className="text-[9px] font-semibold text-primary">1-tap</span>
                     </div>
-                    <div className="rounded-md bg-cyan-400/90 text-[#06121a] text-center py-2 text-[12px] font-medium">
+                    <div className="rounded-md bg-primary text-primary-foreground text-center py-2 text-[12px] font-semibold">
                       Pay ₹2,499 · get ₹40 back
                     </div>
                   </div>
@@ -157,11 +157,11 @@ export const CustomerPlane = ({ className }) => {
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ type: 'spring', stiffness: 260, damping: 16 }}
                     >
-                      <CheckCircle2 size={34} className="text-emerald-400 mb-2" aria-hidden="true" />
+                      <CheckCircle2 size={34} className="text-success mb-2" aria-hidden="true" />
                     </motion.div>
-                    <p className="text-[13px] text-white/95">Payment successful</p>
-                    <p className="font-mono text-[11px] text-emerald-300 mt-1">₹2,499.00 · UPI</p>
-                    <p className="font-mono text-[9px] text-white/40 mt-2">₹40 cashback queued · 24h</p>
+                    <p className="text-[13px] text-foreground">Payment successful</p>
+                    <p className="font-mono text-[11px] text-success mt-1 tabular-nums">₹2,499.00 · UPI</p>
+                    <p className="text-[9px] text-muted-foreground/70 mt-2">₹40 cashback queued · 24h</p>
                   </div>
                 </CheckoutShell>
               )}

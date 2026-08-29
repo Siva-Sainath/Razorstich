@@ -13,7 +13,8 @@ import { FALLBACK_CASE } from './mockCase';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
 
-const PLAY_DURATION_MS = 75000; // full sweep of the 90-min window in demo time
+const PLAY_DURATION_MS = 75000; // one full 72h episode sweep in demo time
+const RECOVERED_AT = 0.833; // T+60h
 
 const TimelineContext = createContext(null);
 
@@ -35,7 +36,7 @@ export const sampleCurve = (points, t) => {
 
 export const TimelineProvider = ({ children }) => {
   const [caseData, setCaseData] = useState(null);
-  const [dataSource, setDataSource] = useState('loading'); // loading | api | fallback
+  const [dataSource, setDataSource] = useState('loading');
   const [t, setTState] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
@@ -51,7 +52,6 @@ export const TimelineProvider = ({ children }) => {
     speedRef.current = speed;
   }, [speed]);
 
-  // Fetch case narrative (with offline fallback)
   useEffect(() => {
     let cancelled = false;
     axios
@@ -73,7 +73,6 @@ export const TimelineProvider = ({ children }) => {
     };
   }, []);
 
-  // Auto-play once the case loads (cinematic opening)
   useEffect(() => {
     if (caseData) {
       const id = setTimeout(() => setPlaying(true), 1400);
@@ -88,7 +87,6 @@ export const TimelineProvider = ({ children }) => {
     setTState(clamped);
   }, []);
 
-  // rAF play loop
   useEffect(() => {
     if (!playing) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -133,6 +131,8 @@ export const TimelineProvider = ({ children }) => {
 
   // ---- Derived state (single source of truth: t) ----
   const events = caseData?.events || [];
+  const windowHours = caseData?.case?.windowHours || 72;
+  const maxContacts = caseData?.case?.maxContacts || 3;
 
   const activeEventIndex = useMemo(() => {
     let idx = -1;
@@ -160,28 +160,23 @@ export const TimelineProvider = ({ children }) => {
     return current;
   }, [caseData, t]);
 
-  const policy = useMemo(() => {
-    const snaps = caseData?.policySnapshots || [];
-    let current = snaps[0] || null;
-    for (const s of snaps) {
-      if (s.t <= t) current = s;
-      else break;
-    }
-    return current;
+  const hoursSince = t * windowHours;
+  const tick = Math.min(11, Math.floor(t * 12));
+
+  const contactsUsed = useMemo(() => {
+    const ledger = caseData?.trustLedger || [];
+    return ledger.reduce((acc, e) => (e.t <= t ? acc + 1 : acc), 0);
   }, [caseData, t]);
 
-  const trustRemaining = useMemo(() => {
-    const ledger = caseData?.trustLedger || [];
-    return ledger.reduce((acc, e) => (e.t <= t ? acc + e.delta : acc), 100);
-  }, [caseData, t]);
+  const trustRemaining = maxContacts - contactsUsed;
 
   const intervention = useMemo(() => {
     if (!caseData || !stage) return null;
     return caseData.interventions?.[stage.key] || null;
   }, [caseData, stage]);
 
-  const recovered = t >= 0.94;
-  const mode = playing ? 'LIVE' : 'REVIEW';
+  const recovered = t >= RECOVERED_AT;
+  const mode = playing ? 'Replaying' : 'Paused';
 
   const jumpToEvent = useCallback(
     (dir) => {
@@ -200,26 +195,21 @@ export const TimelineProvider = ({ children }) => {
 
   const clockAt = useCallback(
     (tt) => {
-      if (!caseData) return '--:--:--';
+      if (!caseData) return '--:--';
       const start = new Date(caseData.case.failedAt).getTime();
-      const ms = start + tt * caseData.case.windowMinutes * 60000;
-      const d = new Date(ms);
-      return d.toLocaleTimeString('en-IN', {
-        hour12: false,
+      const d = new Date(start + tt * windowHours * 3600000);
+      return d.toLocaleString('en-IN', {
+        weekday: 'short',
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit',
+        hour12: false,
         timeZone: 'Asia/Kolkata',
       });
     },
-    [caseData]
+    [caseData, windowHours]
   );
 
-  const elapsedLabel = useMemo(() => {
-    if (!caseData) return 't+0m';
-    const mins = Math.round(t * caseData.case.windowMinutes);
-    return `t+${mins}m`;
-  }, [caseData, t]);
+  const elapsedLabel = useMemo(() => `T+${Math.round(t * windowHours)}h`, [t, windowHours]);
 
   const value = {
     caseData,
@@ -237,7 +227,10 @@ export const TimelineProvider = ({ children }) => {
     activeEvent,
     recoveryProb,
     stage,
-    policy,
+    tick,
+    hoursSince,
+    contactsUsed,
+    maxContacts,
     trustRemaining,
     intervention,
     recovered,

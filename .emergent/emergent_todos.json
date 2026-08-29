@@ -1,22 +1,26 @@
 [
   {
-    "content": "index.css: scanlines, phosphor sweep, panel ruler, watermark, crosshair utilities",
+    "content": "Backend: 72h case narrative + POST /api/policy/recommend (11 actions, Q-table, guardrails)",
     "status": "completed"
   },
   {
-    "content": "Brand components: LogoMark, Wordmark, ECGTrace, VitalTopBar, SterilizeIntro",
+    "content": "Timeline context: 72h window, 6h ticks, contacts 3, Day-clock, recovered @60h",
     "status": "completed"
   },
   {
-    "content": "Panel.jsx: INSTRUMENT indexing + ruler; pass index to all 8 panels",
+    "content": "Policy Brain HERO: Q-value bar chart, selected action, badges, guardrail callouts",
     "status": "completed"
   },
   {
-    "content": "App.js: integrate topbar, intro, watermark, scanlines; CaseHeader restyle",
+    "content": "Failure Anatomy: failure_reason/error_source, hours since, contacts 3, risk sentence",
     "status": "completed"
   },
   {
-    "content": "Compile check + screenshot verify + regression sanity",
+    "content": "Adapt panels: TrustBudget 3 contacts, CustomerPlane thresholds, composer actions, 72h copy, Newsreader",
     "status": "completed"
+  },
+  {
+    "content": "Layout: FailureAnatomy left + PolicyBrain center hero; compile + test",
+    "status": "in_progress"
   }
 ]

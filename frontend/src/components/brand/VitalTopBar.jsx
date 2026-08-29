@@ -5,58 +5,41 @@ import { LogoMark } from './LogoMark';
 import { Wordmark } from './Wordmark';
 import { ECGTrace } from './ECGTrace';
 
-const VitalChip = ({ label, value, tone = 'text-white/85', testId }) => (
-  <div className="flex flex-col items-end leading-none" data-testid={testId}>
-    <span className="font-mono text-[8px] tracking-[0.28em] text-white/40 uppercase mb-[3px]">{label}</span>
-    <span className={`font-mono text-[13px] font-semibold ${tone}`}>{value}</span>
-  </div>
-);
-
-/**
- * Fixed OR-monitor rail: brand lockup left, live ECG center, vitals right.
- */
+/** Minimal product rail — brand, live pulse, one status, one number. */
 export const VitalTopBar = () => {
-  const { recoveryProb, trustRemaining, elapsedLabel, recovered, clockAt, t } = useTimeline();
-  const probTone = recoveryProb >= 0.65 ? 'text-emerald-300' : recoveryProb >= 0.4 ? 'text-amber-300' : 'text-rose-300';
-  const trustTone = trustRemaining >= 70 ? 'text-emerald-300' : trustRemaining >= 40 ? 'text-amber-300' : 'text-rose-300';
+  const { recoveryProb, recovered, playing } = useTimeline();
+  const statusLabel = recovered ? 'Recovered' : recoveryProb >= 0.55 ? 'On track' : 'At risk';
+  const statusTone = recovered ? 'text-[rgba(45,212,191,0.95)]' : recoveryProb >= 0.55 ? 'text-primary' : 'text-warning';
+  const statusDot = recovered ? 'bg-[rgba(45,212,191,0.95)]' : recoveryProb >= 0.55 ? 'bg-primary' : 'bg-warning';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-0 inset-x-0 z-[120] h-[52px] border-b border-white/[0.08] bg-[hsl(210_25%_4%/0.78)] backdrop-blur-xl"
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed top-0 inset-x-0 z-[120] h-[60px] border-b border-white/[0.07] bg-[hsl(218_62%_7%/0.75)] backdrop-blur-2xl"
       data-testid="vital-top-bar"
     >
-      <div className="max-w-[1600px] mx-auto h-full px-4 md:px-6 xl:px-8 flex items-center gap-4 md:gap-6">
+      <div className="max-w-[1320px] mx-auto h-full px-5 sm:px-6 lg:px-8 flex items-center gap-5 md:gap-8">
         <div className="flex items-center gap-3 shrink-0">
-          <LogoMark size={28} />
+          <LogoMark size={30} />
           <Wordmark className="hidden sm:block" />
         </div>
 
-        <div className="h-7 w-px bg-white/10 shrink-0 hidden md:block" aria-hidden="true" />
+        <ECGTrace prob={recoveryProb} playing={playing} height={32} className="flex-1 min-w-0 hidden md:block" />
 
-        {/* live ECG — the heartbeat of the case */}
-        <ECGTrace prob={recoveryProb} height={34} className="flex-1 min-w-0 hidden md:block" />
-
-        <div className="h-7 w-px bg-white/10 shrink-0 hidden md:block" aria-hidden="true" />
-
-        <div className="flex items-center gap-4 md:gap-6 shrink-0 ml-auto md:ml-0">
-          <VitalChip label="P·Recover" value={`${Math.round(recoveryProb * 100)}%`} tone={probTone} testId="vital-prob" />
-          <VitalChip label="Trust" value={trustRemaining} tone={trustTone} testId="vital-trust" />
-          <VitalChip label="Elapsed" value={elapsedLabel} tone="text-cyan-300" testId="vital-elapsed" />
-          <div className="hidden lg:block">
-            <VitalChip label="Clock" value={clockAt(t)} testId="vital-clock" />
+        <div className="flex items-center gap-4 md:gap-5 shrink-0 ml-auto md:ml-0">
+          <div className="text-right leading-none" data-testid="vital-prob">
+            <div className="text-[11px] text-white/45 mb-1">Recovery odds</div>
+            <div className="text-[15px] font-semibold tabular-nums text-white">{Math.round(recoveryProb * 100)}%</div>
           </div>
-          <div className="flex items-center gap-1.5" data-testid="vital-status">
+          <div className="flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] pl-2.5 pr-3 py-1.5" data-testid="vital-status">
             <motion.span
-              className={`w-2 h-2 rounded-full ${recovered ? 'bg-emerald-400' : 'bg-amber-400'}`}
-              animate={{ opacity: [0.35, 1, 0.35] }}
-              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+              className={`w-1.5 h-1.5 rounded-full ${statusDot}`}
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
             />
-            <span className={`font-mono text-[10px] tracking-[0.2em] ${recovered ? 'text-emerald-300' : 'text-amber-300'}`}>
-              {recovered ? 'STABLE' : 'CRITICAL'}
-            </span>
+            <span className={`text-[13px] font-medium ${statusTone}`}>{statusLabel}</span>
           </div>
         </div>
       </div>

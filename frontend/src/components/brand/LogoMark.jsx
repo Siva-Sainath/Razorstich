@@ -2,8 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 /**
- * M.O.T. logo mark — a notched monitor frame containing an ECG spike
- * that doubles as an upward recovery arrow. Stroke-only, instrument-etched.
+ * RazorStitch mark — a continuous stitch line that sutures a broken payment
+ * back together: dashed segments closing into a smooth azure rise, passing
+ * through a Razorpay-style chamfered needle-eye node.
  */
 export const LogoMark = ({ size = 26, className = '', animate = true }) => (
   <svg
@@ -13,27 +14,34 @@ export const LogoMark = ({ size = 26, className = '', animate = true }) => (
     fill="none"
     className={className}
     role="img"
-    aria-label="Midnight Operating Theater logo"
+    aria-label="RazorStitch logo"
     data-testid="brand-logo-mark"
   >
-    {/* monitor frame with 24° notched corner (top-right) */}
+    {/* rounded container tile */}
+    <rect x="4" y="4" width="56" height="56" rx="14" fill="hsl(218 55% 12%)" stroke="hsl(218 28% 22%)" strokeWidth="1.5" />
+    {/* broken stitch (the failure) */}
     <path
-      d="M14 6 H41 L58 20 V50 Q58 58 50 58 H14 Q6 58 6 50 V14 Q6 6 14 6 Z"
-      stroke="rgba(255,255,255,0.28)"
+      d="M12 42 H22"
+      stroke="hsl(215 18% 55%)"
       strokeWidth="3"
-      strokeLinejoin="round"
+      strokeLinecap="round"
+      strokeDasharray="4 5"
     />
-    {/* ECG trace: flatline -> spike (recovery arrow) -> uptick */}
+    {/* needle-eye chamfer node */}
+    <rect x="26.2" y="36.2" width="9.6" height="9.6" rx="2" transform="rotate(45 31 41)" fill="hsl(218 55% 12%)" stroke="hsl(213 89% 62%)" strokeWidth="2" />
+    {/* suture rising into recovery */}
     <motion.path
-      d="M12 38 H24 L29 42 L36 16 L41 46 L46 34 H52"
-      stroke="#22d3ee"
+      d="M36 40 C 42 38, 44 30, 47 24 L 52 15"
+      stroke="hsl(213 89% 60%)"
       strokeWidth="3.2"
       strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ filter: 'drop-shadow(0 0 5px rgba(34,211,238,0.5))' }}
+      style={{ filter: 'drop-shadow(0 0 5px hsl(213 89% 56% / 0.55))' }}
       initial={animate ? { pathLength: 0, opacity: 0 } : false}
       animate={{ pathLength: 1, opacity: 1 }}
-      transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.2 }}
+      transition={{ duration: 0.8, ease: 'easeInOut', delay: 0.15 }}
     />
+    {/* stitch ticks along the rise */}
+    <path d="M40.5 33.5 L 44.5 36" stroke="hsl(199 92% 64%)" strokeWidth="1.8" strokeLinecap="round" opacity="0.75" />
+    <path d="M45.5 25.5 L 49.5 28" stroke="hsl(199 92% 64%)" strokeWidth="1.8" strokeLinecap="round" opacity="0.75" />
   </svg>
 );
