@@ -1,0 +1,22 @@
+[
+  {
+    "content": "index.css: scanlines, phosphor sweep, panel ruler, watermark, crosshair utilities",
+    "status": "completed"
+  },
+  {
+    "content": "Brand components: LogoMark, Wordmark, ECGTrace, VitalTopBar, SterilizeIntro",
+    "status": "completed"
+  },
+  {
+    "content": "Panel.jsx: INSTRUMENT indexing + ruler; pass index to all 8 panels",
+    "status": "completed"
+  },
+  {
+    "content": "App.js: integrate topbar, intro, watermark, scanlines; CaseHeader restyle",
+    "status": "completed"
+  },
+  {
+    "content": "Compile check + screenshot verify + regression sanity",
+    "status": "completed"
+  }
+]

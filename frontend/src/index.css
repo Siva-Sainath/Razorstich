@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'Newsreader', Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: hsl(210 25% 4%);
+    color: hsl(0 0% 96%);
+}
+
+code {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+@layer base {
+    :root {
+        --font-heading: 'Newsreader', Georgia, serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+        --background: 210 25% 4%;
+        --foreground: 0 0% 96%;
+        --card: 210 22% 7%;
+        --card-foreground: 0 0% 96%;
+        --popover: 210 22% 8%;
+        --popover-foreground: 0 0% 96%;
+        --primary: 186 100% 55%;
+        --primary-foreground: 210 25% 6%;
+        --secondary: 210 18% 12%;
+        --secondary-foreground: 0 0% 92%;
+        --muted: 215 16% 14%;
+        --muted-foreground: 0 0% 64%;
+        --accent: 210 18% 14%;
+        --accent-foreground: 0 0% 96%;
+        --destructive: 0 78% 58%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 210 15% 18%;
+        --input: 210 15% 18%;
+        --ring: 186 100% 55%;
+        --radius: 0.9rem;
+
+        --accent-cyan: 186 100% 55%;
+        --accent-green: 152 84% 52%;
+        --accent-amber: 38 92% 56%;
+        --danger: 0 78% 58%;
+
+        --z-dropdown: 100;
+        --z-modal: 200;
+        --z-scrubber: 150;
+        --z-toast: 300;
+    }
+
+    * {
+        @apply border-border;
+    }
+
+    html {
+        color-scheme: dark;
+    }
+
+    ::selection {
+        background: hsl(186 100% 55% / 0.28);
+        color: hsl(0 0% 98%);
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: hsl(210 15% 22%);
+        border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: hsl(210 15% 30%);
+    }
+}
+
+@layer utilities {
+    .font-display {
+        font-family: var(--font-heading);
+    }
+    .font-mono {
+        font-family: var(--font-mono);
+    }
+    .glass-panel {
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow:
+            0 0 0 1px rgba(0, 255, 200, 0.05),
+            0 18px 60px rgba(0, 0, 0, 0.55);
+    }
+    .label-caps {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: rgba(255, 255, 255, 0.55);
+        font-family: var(--font-mono);
+    }
+    .theater-wash {
+        background-image:
+            radial-gradient(900px circle at 18% 8%, rgba(0, 255, 200, 0.07), transparent 55%),
+            radial-gradient(720px circle at 82% 12%, rgba(255, 184, 72, 0.05), transparent 55%),
+            radial-gradient(1000px circle at 50% 110%, rgba(0, 180, 255, 0.05), transparent 60%);
+    }
+    .noise-overlay::after {
+        content: '';
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        opacity: 0.05;
+        z-index: 1;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .corner-notch {
+        position: relative;
+    }
+    .corner-notch::before,
+    .corner-notch::after {
+        content: '';
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        pointer-events: none;
+        opacity: 0.55;
+    }
+    .corner-notch::before {
+        top: 6px;
+        left: 6px;
+        border-top: 1px solid rgba(94, 234, 212, 0.6);
+        border-left: 1px solid rgba(94, 234, 212, 0.6);
+    }
+    .corner-notch::after {
+        bottom: 6px;
+        right: 6px;
+        border-bottom: 1px solid rgba(94, 234, 212, 0.6);
+        border-right: 1px solid rgba(94, 234, 212, 0.6);
+    }
+    .text-glow-cyan {
+        text-shadow: 0 0 18px rgba(34, 211, 238, 0.45);
+    }
+    .text-glow-green {
+        text-shadow: 0 0 18px rgba(52, 211, 153, 0.45);
+    }
+    /* --- Brand elevation layer --- */
+    .scanlines::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.04;
+        background: repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.07) 0,
+            rgba(255, 255, 255, 0.07) 1px,
+            rgba(0, 0, 0, 0) 3px,
+            rgba(0, 0, 0, 0) 6px
+        );
+        mix-blend-mode: overlay;
+    }
+    .phosphor-sweep::after {
+        content: '';
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: -20%;
+        height: 40%;
+        pointer-events: none;
+        z-index: 2;
+        background: linear-gradient(to bottom, transparent, rgba(52, 211, 153, 0.05), transparent);
+        animation: phosphor-sweep 11s linear infinite;
+        opacity: 0.5;
+    }
+    @keyframes phosphor-sweep {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(350%);
+        }
+    }
+    .panel-ruler {
+        position: absolute;
+        left: 9px;
+        top: 48px;
+        bottom: 16px;
+        width: 1px;
+        pointer-events: none;
+        background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.09), transparent);
+    }
+    .panel-ruler::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0,
+            rgba(0, 0, 0, 0) 11px,
+            rgba(94, 234, 212, 0.28) 11px,
+            rgba(94, 234, 212, 0.28) 12px
+        );
+        opacity: 0.6;
+    }
+    .bg-watermark {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: rgba(255, 255, 255, 0.032);
+        text-transform: uppercase;
+        user-select: none;
+        white-space: nowrap;
+    }
+    .instrument-index {
+        font-family: var(--font-mono);
+        font-size: 8.5px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: rgba(94, 234, 212, 0.42);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .phosphor-sweep::after {
+        animation: none;
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
