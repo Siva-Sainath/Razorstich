@@ -15,3 +15,4 @@ apps/web/node_modules/
 eval/checkpoints/*.pt
 eval/results/*.json
 *.ipynb_checkpoints/
+eval/logs/

@@ -12,7 +12,12 @@ class RecoveryEnv:
 
     metadata = {"render_modes": []}
 
-    def __init__(self, env_name: str = "train", seed: int | None = None):
+    def __init__(
+        self,
+        env_name: str = "train",
+        seed: int | None = None,
+        recovery_gamma: float = 0.98,
+    ):
         self.env_name = env_name
         self.rng = np.random.default_rng(seed)
         self.customer = CustomerResponseModel(self.rng, env_name)
@@ -20,6 +25,7 @@ class RecoveryEnv:
         self.step_count = 0
         self.max_steps = 12
         self.hour_per_step = 6.0
+        self.recovery_gamma = recovery_gamma
 
     @property
     def observation_space_shape(self) -> tuple[int, ...]:
@@ -69,7 +75,7 @@ class RecoveryEnv:
             p = self.customer.spontaneous_recovery_prob(s.failure_reason, s.hours_since_failure)
             if self.rng.random() < p:
                 s.recovered = True
-                reward += s.amount_inr
+                reward += s.amount_inr * (self.recovery_gamma ** self.step_count)
                 s.prior_outcome = 1
             else:
                 s.prior_outcome = -1
@@ -91,7 +97,7 @@ class RecoveryEnv:
             )
             if self.rng.random() < p_succ:
                 s.recovered = True
-                reward += s.amount_inr
+                reward += s.amount_inr * (self.recovery_gamma ** self.step_count)
                 s.prior_outcome = 1
             else:
                 s.prior_outcome = -1
@@ -100,15 +106,32 @@ class RecoveryEnv:
         self.step_count += 1
         terminated = s.recovered or s.stopped
         truncated = self.step_count >= self.max_steps
+        if truncated and not s.recovered:
+            reward += self._timeout_penalty()
         return s.to_obs(), reward, terminated, truncated, self._info()
+
+    def _timeout_penalty(self) -> float:
+        from packages.policy.reward import RewardCalculator
+
+        assert self.state is not None
+        calc = RewardCalculator(normalize_for_training=True)
+        return calc.step_reward(
+            action=int(RecoveryAction.WAIT),
+            amount_inr=self.state.amount_inr,
+            contacts_used=self.state.contacts_used,
+            contacts_max=self.state.contacts_max,
+            invalid_action=False,
+            duplicate=False,
+            recovered=False,
+            comm_cost=0.0,
+            episode_timed_out=True,
+        )
 
     def _compute_step_reward(self, action: int, invalid: bool) -> float:
         import os
         from packages.policy.reward import RewardCalculator
 
         assert self.state is not None
-        # Allow non-interactive hyperparameter overrides via environment variables.
-        # Used by docs/experiments/run_sweep.sh; falls back to RewardCalculator defaults.
         kwargs: dict = {}
         if (fw := os.environ.get("RAZORSTITCH_FRICTION_WEIGHT")) is not None:
             kwargs["friction_weight"] = float(fw)
@@ -124,6 +147,7 @@ class RecoveryEnv:
             duplicate=self.state.duplicate_incident,
             recovered=False,
             comm_cost=self.state.total_comm_cost,
+            is_wait=action == int(RecoveryAction.WAIT),
         )
 
     def _reason_to_source(self, reason: str) -> str:

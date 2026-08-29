@@ -28,6 +28,13 @@ class EpisodeState:
     duplicate_incident: bool = False
     total_comm_cost: float = 0.0
     action_history: list[int] = field(default_factory=list)
+    # Extended guardrail state
+    customer_opted_out: bool = False
+    payment_pending: bool = False
+    permanent_failure: bool = False
+    webhook_mismatch: bool = False
+    subscription_halted: bool = False
+    wedge: str = "checkout_failed"
 
     def to_obs(self) -> np.ndarray:
         reason_oh = _one_hot(self.failure_reason, _REASONS, 6)
@@ -79,23 +86,78 @@ def _one_hot(value: str, vocab: list[str], size: int) -> np.ndarray:
     return v
 
 
+def _block(mask: np.ndarray, *actions: RecoveryAction) -> None:
+    for a in actions:
+        mask[int(a)] = False
+
+
 def action_mask(state: EpisodeState) -> np.ndarray:
+    """Deterministic business-logic action mask — never learned by the policy."""
     mask = np.ones(NUM_ACTIONS, dtype=bool)
-    if state.contacts_used >= state.contacts_max:
-        for a in (
+
+    if state.recovered:
+        mask[:] = False
+        mask[int(RecoveryAction.STOP)] = True
+        return mask
+
+    if state.stopped:
+        mask[:] = False
+        mask[int(RecoveryAction.STOP)] = True
+        return mask
+
+    # Payment pending / in-flight — block immediate duplicate retry
+    if state.payment_pending:
+        _block(mask, RecoveryAction.RETRY_CHECKOUT, RecoveryAction.CREATE_PAYMENT_LINK)
+
+    # Customer opted out — block outbound contact
+    if state.customer_opted_out:
+        _block(
+            mask,
             RecoveryAction.NOTIFY_CUSTOMER,
             RecoveryAction.RESEND_LINK,
             RecoveryAction.SUGGEST_ALT_METHOD,
-        ):
-            mask[int(a)] = False
+        )
+
+    # Permanent failure — no ordinary retry
+    if state.permanent_failure:
+        _block(mask, RecoveryAction.RETRY_CHECKOUT, RecoveryAction.CREATE_PAYMENT_LINK)
+
+    # Subscription halted — method update, not checkout retry
+    if state.subscription_halted:
+        _block(mask, RecoveryAction.RETRY_CHECKOUT)
+
+    # Webhook mismatch — reconcile before contacting customer
+    if state.webhook_mismatch:
+        _block(
+            mask,
+            RecoveryAction.NOTIFY_CUSTOMER,
+            RecoveryAction.RESEND_LINK,
+            RecoveryAction.CREATE_PAYMENT_LINK,
+        )
+
+    # Trust budget exhausted
+    if state.contacts_used >= state.contacts_max:
+        _block(
+            mask,
+            RecoveryAction.NOTIFY_CUSTOMER,
+            RecoveryAction.RESEND_LINK,
+            RecoveryAction.SUGGEST_ALT_METHOD,
+        )
+
+    # UPI duplicate-risk window
     if state.hours_since_failure < 1 and state.failure_reason == "upi_timeout":
-        mask[int(RecoveryAction.RETRY_CHECKOUT)] = False
-        mask[int(RecoveryAction.CREATE_PAYMENT_LINK)] = False
-    if state.recovered or state.stopped:
-        mask[:] = False
-        mask[int(RecoveryAction.STOP)] = True
+        _block(mask, RecoveryAction.RETRY_CHECKOUT, RecoveryAction.CREATE_PAYMENT_LINK)
+
+    # Horizon / stop conditions
     if state.hours_since_failure >= 72:
         mask[:] = False
         mask[int(RecoveryAction.STOP)] = True
         mask[int(RecoveryAction.ESCALATE_HUMAN)] = True
+
     return mask
+
+
+def wedge_action_mask(state: Any) -> np.ndarray:
+    from packages.simulator.core.masks import wedge_action_mask as _wedge_mask
+
+    return _wedge_mask(state)

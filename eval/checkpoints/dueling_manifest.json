@@ -1,0 +1,22 @@
+{
+  "policy_version": "dueling_double_dqn-v1-steps5321",
+  "architecture": "dueling",
+  "obs_dim": 31,
+  "actions": [
+    "wait",
+    "retry_checkout",
+    "suggest_alt_method",
+    "create_payment_link",
+    "resend_link",
+    "notify_customer",
+    "request_method_update",
+    "offer_partial",
+    "escalate_human",
+    "reconcile",
+    "stop"
+  ],
+  "device_trained": "mps",
+  "train_steps": 5321,
+  "gamma": 0.98,
+  "use_per": true
+}

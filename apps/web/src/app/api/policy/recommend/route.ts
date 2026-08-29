@@ -5,12 +5,18 @@ import { getSupabase } from "@/lib/supabase";
 
 const BodySchema = z.object({
   case_id: z.string().optional(),
-  failure_reason: z.string(),
+  wedge: z.enum(["checkout_failed", "cart_abandon", "subscription_failed", "invoice_overdue"]).optional(),
+  failure_reason: z.string().default("gateway_error"),
   hours_since_failure: z.number().optional(),
   contacts_used: z.number().optional(),
   contacts_max: z.number().optional(),
   method: z.string().optional(),
   amount_paise: z.number().optional(),
+  amount_inr: z.number().optional(),
+  abandon_stage: z.string().optional(),
+  failed_attempts: z.number().optional(),
+  customer_tier: z.string().optional(),
+  partial_paid_ratio: z.number().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -52,6 +58,9 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     case_id: parsed.data.case_id,
     ...decision,
+    baseline_value: decision.telemetry.baselineValue,
+    advantages: decision.telemetry.advantages,
+    action_mask: decision.telemetry.actionMask,
     expected_value_inr: parsed.data.amount_paise ? parsed.data.amount_paise / 100 : null,
   });
 }

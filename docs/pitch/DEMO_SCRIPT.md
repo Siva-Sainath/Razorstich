@@ -1,33 +1,31 @@
-# RazorStitch: Judge Demo Script (3 Minutes)
+# RazorStitch: 4-Wedge Judge Demo Script (4 Minutes)
 
-## Scene 1: The Incident (0:00 - 0:45)
-**Visual:** Razorpay Test Mode Dashboard & RazorStitch Monitor
-**Action:** 
-- We trigger a simulated payment failure using a Razorpay Test Mode card (e.g., insufficient funds).
-- The webhook instantly fires to the RazorStitch backend.
-**Narration:** "Here’s a live payment failure in Razorpay Test Mode. In a traditional setup, this would either be lost revenue or it would trigger a blind, aggressive retry loop. Watch how RazorStitch intercepts this via webhook."
-
-## Scene 2: The Operating Theater (0:45 - 1:30)
-**Visual:** RazorStitch Dashboard (The "Operating Theater")
+## Scene 1: Four recovery lanes (0:00 - 0:45)
+**Visual:** Operating Theater with wedge tabs
 **Action:**
-- Show the incident payload being parsed.
-- Display the anatomy of the failure (error code, bank, time of day).
-- Highlight the DQN Agent's live Q-value predictions for different actions (`noop`, `wait`, `immediate_retry`, `payment_link`).
-- Show the agent selecting `payment_link` based on the highest Q-value.
-**Narration:** "Instead of static rules, our Deep Q-Network analyzes the anatomy of the failure. You can see the Q-values calculated in real-time. The agent balances the probability of recovery against the cost of customer friction (Trust Budget). Here, it selects sending a targeted payment link."
+- Switch across **Failed checkout**, **Abandoned cart**, **Subscription failed**, **Overdue invoice**
+- Click **Seed demo case** on each lane to create a live/simulated Razorpay entity
+**Narration:** "RazorStitch is not one static retry rule. It is a recovery orchestration platform with separate Dueling Double DQN policies for each revenue-loss pattern."
 
-## Scene 3: The Recovery (1:30 - 2:15)
-**Visual:** Customer Email/SMS & Razorpay Success Dashboard
+## Scene 2: Policy Brain (0:45 - 2:00)
+**Visual:** Center panel — V(s), Q-value bars, blocked actions
 **Action:**
-- Execute the recovery action: the payment link is generated and sent.
-- We simulate the customer clicking and completing the payment using a success test card.
-- The webhook confirms the payment is `captured`, updating the RazorStitch audit trail.
-**Narration:** "The action is executed. The customer receives a seamless payment link and completes the transaction. RazorStitch registers the success, creating a complete audit trail for compliance and updating the agent's reward for future learning."
+- On **Failed checkout / UPI timeout at t=0**, show `wait` or blocked retry/link guardrails
+- Advance episode +6h on insufficient-funds case; show policy shift toward notify/payment link
+- On **Subscription failed**, highlight `request_method_update` advantage for card-expired cases
+- On **Invoice overdue**, show `offer_partial` rising in rank after +24h
+**Narration:** "Each wedge has its own simulator-trained policy. The UI never overrides the math — it explains V(s), A(s,a), and masked Q-values in real time."
 
-## Scene 4: The Benchmark (2:15 - 3:00)
-**Visual:** Benchmark Slide (Simulated Recovery Benchmark - Not Test Mode)
+## Scene 3: Execute recovery (2:00 - 3:00)
+**Visual:** Execute panel + Razorpay Test Mode dashboard
 **Action:**
-- Display a clear chart comparing our DQN policy against baselines (`failure_rules`, `always_payment_link`, `immediate_retry`).
-- Emphasize Net Recovered Value vs `failure_rules`.
-- Show Duplicate incidents (customer friction) compared to aggressive baselines.
-**Narration:** "Let's look at the data from our simulated environment. While a naive 'always send payment link' approach yields high gross recovery, it destroys user trust, causing 129 duplicate incidents in our evaluation. RazorStitch’s DQN generates an incremental net value of 36,187 INR per seed over standard failure rules, while halving duplicate incidents compared to aggressive baselines. It’s a razor-sharp recovery policy that protects your Trust Budget."
+- Execute recommended action on **checkout_failed** (payment link) and **cart_abandon** (payment link)
+- Show webhook audit trail updating case status
+**Narration:** "The RL agent chooses timing and channel. Execution adapters call Razorpay APIs. The LLM copilot only narrates — it never changes the action."
+
+## Scene 4: Benchmark proof (3:00 - 4:00)
+**Visual:** `eval/results/benchmark_<wedge>.json` summary slide
+**Action:**
+- Show net recovered INR per wedge: Dueling vs failure_rules
+- Call out lower duplicate / trust spend on checkout lane vs aggressive baselines
+**Narration:** "We train offline in simulators, prove online in Test Mode, and optimize for net recovered value — not vanity gross recovery."

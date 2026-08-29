@@ -1,0 +1,24 @@
+{
+  "checkout_failed": [
+    {"case_id": "VAL-CHK-001", "amount_inr": 1499, "reason": "upi_timeout", "method": "upi", "hours": 0},
+    {"case_id": "VAL-CHK-002", "amount_inr": 3200, "reason": "insufficient_funds", "method": "card", "hours": 12},
+    {"case_id": "VAL-CHK-003", "amount_inr": 899, "reason": "gateway_error", "method": "card", "hours": 0},
+    {"case_id": "VAL-CHK-004", "amount_inr": 4999, "reason": "authentication_failed", "method": "card", "hours": 6},
+    {"case_id": "VAL-CHK-005", "amount_inr": 750, "reason": "bank_outage", "method": "upi", "hours": 24}
+  ],
+  "cart_abandon": [
+    {"case_id": "VAL-CART-001", "amount_inr": 2499, "reason": "payment_page", "method": "card", "hours": 0.33},
+    {"case_id": "VAL-CART-002", "amount_inr": 1899, "reason": "browsing", "method": "card", "hours": 2},
+    {"case_id": "VAL-CART-003", "amount_inr": 999, "reason": "shipping", "method": "upi", "hours": 4}
+  ],
+  "subscription_failed": [
+    {"case_id": "VAL-SUB-001", "amount_inr": 899, "reason": "card_expired", "method": "card", "hours": 0},
+    {"case_id": "VAL-SUB-002", "amount_inr": 1299, "reason": "insufficient_funds", "method": "card", "hours": 12},
+    {"case_id": "VAL-SUB-003", "amount_inr": 499, "reason": "authentication_failed", "method": "card", "hours": 0}
+  ],
+  "invoice_overdue": [
+    {"case_id": "VAL-INV-001", "amount_inr": 12500, "reason": "smb", "method": "card", "hours": 168},
+    {"case_id": "VAL-INV-002", "amount_inr": 45000, "reason": "enterprise", "method": "card", "hours": 336},
+    {"case_id": "VAL-INV-003", "amount_inr": 8900, "reason": "smb", "method": "card", "hours": 72}
+  ]
+}

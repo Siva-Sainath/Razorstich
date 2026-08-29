@@ -19,6 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.4"]
+tune = ["optuna>=3.6"]
 
 [tool.setuptools.packages.find]
 where = ["."]

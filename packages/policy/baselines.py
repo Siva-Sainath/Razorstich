@@ -95,6 +95,9 @@ def evaluate_policy(policy, env_name: str, episodes: int, seed: int) -> dict:
     recovered_value = 0.0
     recovered_count = 0
     duplicates = 0
+    upi_cases = 0
+    upi_duplicates = 0
+    recovery_hours: list[float] = []
     total_amount_at_risk = 0.0
     communication_cost = 0.0
     duplicate_penalty = 0.0
@@ -106,7 +109,7 @@ def evaluate_policy(policy, env_name: str, episodes: int, seed: int) -> dict:
         obs, info = env.reset()
         while True:
             mask = info["action_mask"]
-            if hasattr(policy, "select_action") and policy.__class__.__name__ == "DQNAgent":
+            if hasattr(policy, "select_action") and not isinstance(policy, BaselinePolicy):
                 action = policy.select_action(obs, mask, explore=False)
             else:
                 action = policy.select_action(obs, mask, info)
@@ -117,9 +120,14 @@ def evaluate_policy(policy, env_name: str, episodes: int, seed: int) -> dict:
         total_amount_at_risk += env.state.amount_inr
         communication_cost += env.state.total_comm_cost
         contacts_used += env.state.contacts_used
+        if env.state.method == "upi":
+            upi_cases += 1
+            if env.state.duplicate_incident:
+                upi_duplicates += 1
         if env.state.recovered:
             recovered_count += 1
             recovered_value += env.state.amount_inr
+            recovery_hours.append(env.state.hours_since_failure)
         if env.state.duplicate_incident:
             duplicates += 1
             duplicate_penalty += env.state.amount_inr * 0.5
@@ -135,6 +143,9 @@ def evaluate_policy(policy, env_name: str, episodes: int, seed: int) -> dict:
         "net_recovered_value_inr": recovered_value - communication_cost - duplicate_penalty,
         "recovered_per_1000": rate * 1000,
         "duplicate_incidents": duplicates,
+        "duplicate_rate": duplicates / max(episodes, 1),
+        "upi_duplicate_collision_rate": upi_duplicates / max(upi_cases, 1),
         "avg_contacts_used": contacts_used / max(episodes, 1),
+        "avg_time_to_recovery_hours": float(np.mean(recovery_hours)) if recovery_hours else 0.0,
         "avg_case_inr": total_amount_at_risk / max(episodes, 1),
     }
