@@ -1,26 +1,22 @@
 [
   {
-    "content": "Backend: 72h case narrative + POST /api/policy/recommend (11 actions, Q-table, guardrails)",
-    "status": "completed"
-  },
-  {
-    "content": "Timeline context: 72h window, 6h ticks, contacts 3, Day-clock, recovered @60h",
-    "status": "completed"
-  },
-  {
-    "content": "Policy Brain HERO: Q-value bar chart, selected action, badges, guardrail callouts",
-    "status": "completed"
-  },
-  {
-    "content": "Failure Anatomy: failure_reason/error_source, hours since, contacts 3, risk sentence",
-    "status": "completed"
-  },
-  {
-    "content": "Adapt panels: TrustBudget 3 contacts, CustomerPlane thresholds, composer actions, 72h copy, Newsreader",
-    "status": "completed"
-  },
-  {
-    "content": "Layout: FailureAnatomy left + PolicyBrain center hero; compile + test",
+    "content": "Backend: GET /api/cases/queue with 5 mock failing payments",
     "status": "in_progress"
+  },
+  {
+    "content": "RecoverySummary recap card (net saved, contacts, time, path vs best alternative)",
+    "status": "pending"
+  },
+  {
+    "content": "Keyboard shortcuts: Space play/pause, arrow keys step 6h ticks + dock hint",
+    "status": "pending"
+  },
+  {
+    "content": "CaseQueue panel wired to backend with fallback",
+    "status": "pending"
+  },
+  {
+    "content": "Compile, screenshot verify, quick regression",
+    "status": "pending"
   }
 ]

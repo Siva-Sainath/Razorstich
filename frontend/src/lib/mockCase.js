@@ -165,3 +165,11 @@ export const FALLBACK_CASE = {
     { node: 'Issuer · HDFC Bank', status: 'fail', meta: '05 DO_NOT_HONOR' },
   ],
 };
+
+export const FALLBACK_QUEUE = [
+  { id: 'CASE-7F3A', customer: 'Riya S.', merchant: 'Aurora Fitness Pvt Ltd', amount: 2499, method: 'card', failureReason: 'issuer_declined_do_not_honor', status: 'recovering', odds: null, tick: null, isCurrent: true },
+  { id: 'CASE-9K2D', customer: 'Aman T.', merchant: 'Nimbus Books', amount: 1249, method: 'upi', failureReason: 'upi_collect_expired', status: 'recovering', odds: 0.41, tick: 3, isCurrent: false },
+  { id: 'CASE-2M6H', customer: 'Priya K.', merchant: 'Peak Nutrition', amount: 899, method: 'upi', failureReason: 'insufficient_funds', status: 'recovering', odds: 0.87, tick: 8, isCurrent: false },
+  { id: 'CASE-4B8Q', customer: 'Dev M.', merchant: 'Statuesque Decor', amount: 7850, method: 'card', failureReason: 'gateway_timeout', status: 'queued', odds: 0.22, tick: 0, isCurrent: false },
+  { id: 'CASE-8V1C', customer: 'Sana R.', merchant: 'Cobalt Audio', amount: 3150, method: 'card', failureReason: 'issuer_declined_do_not_honor', status: 'recovered', odds: 1.0, tick: 3, isCurrent: false },
+];

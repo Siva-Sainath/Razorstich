@@ -258,3 +258,32 @@ AMBIENT_EVENTS = [
     {"type": "route", "severity": "ok", "summary": "AXIS backup rail healthy · timeout cleared"},
     {"type": "agent", "severity": "info", "summary": "Reward logged · counterfactual bank updated"},
 ]
+
+
+QUEUE_CASES = [
+    {
+        "id": "CASE-7F3A", "customer": "Riya S.", "merchant": "Aurora Fitness Pvt Ltd",
+        "amount": 2499.00, "method": "card", "failureReason": "issuer_declined_do_not_honor",
+        "status": "recovering", "odds": None, "tick": None, "isCurrent": True,
+    },
+    {
+        "id": "CASE-9K2D", "customer": "Aman T.", "merchant": "Nimbus Books",
+        "amount": 1249.00, "method": "upi", "failureReason": "upi_collect_expired",
+        "status": "recovering", "odds": 0.41, "tick": 3, "isCurrent": False,
+    },
+    {
+        "id": "CASE-2M6H", "customer": "Priya K.", "merchant": "Peak Nutrition",
+        "amount": 899.00, "method": "upi", "failureReason": "insufficient_funds",
+        "status": "recovering", "odds": 0.87, "tick": 8, "isCurrent": False,
+    },
+    {
+        "id": "CASE-4B8Q", "customer": "Dev M.", "merchant": "Statuesque Decor",
+        "amount": 7850.00, "method": "card", "failureReason": "gateway_timeout",
+        "status": "queued", "odds": 0.22, "tick": 0, "isCurrent": False,
+    },
+    {
+        "id": "CASE-8V1C", "customer": "Sana R.", "merchant": "Cobalt Audio",
+        "amount": 3150.00, "method": "card", "failureReason": "issuer_declined_do_not_honor",
+        "status": "recovered", "odds": 1.0, "tick": 3, "isCurrent": False,
+    },
+]

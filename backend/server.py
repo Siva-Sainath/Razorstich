@@ -13,7 +13,7 @@ from typing import List
 import uuid
 from datetime import datetime, timezone
 
-from case_data import CASE_PAYLOAD, AMBIENT_EVENTS, recommend
+from case_data import CASE_PAYLOAD, AMBIENT_EVENTS, recommend, QUEUE_CASES
 
 
 ROOT_DIR = Path(__file__).parent
@@ -88,6 +88,12 @@ class PolicyRequest(BaseModel):
 async def policy_recommend(req: PolicyRequest):
     """DQN policy recommendation for the current case state (mock export)."""
     return recommend(req.tick, req.contacts_used, req.method, req.hours_since_failure)
+
+
+@api_router.get("/cases/queue")
+async def get_case_queue():
+    """Other failing payments the agent is working (mock queue)."""
+    return {"cases": QUEUE_CASES}
 
 
 @api_router.get("/events/stream")

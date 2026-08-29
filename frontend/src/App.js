@@ -18,6 +18,8 @@ import { TrustBudget } from '@/components/theater/TrustBudget';
 import { InterventionComposer } from '@/components/theater/InterventionComposer';
 import { LiveEventTicker } from '@/components/theater/LiveEventTicker';
 import { AuditTrailScrubber } from '@/components/theater/AuditTrailScrubber';
+import { RecoverySummary } from '@/components/theater/RecoverySummary';
+import { CaseQueue } from '@/components/theater/CaseQueue';
 
 const LoadingTheater = () => (
   <div className="min-h-screen flex flex-col items-center justify-center gap-4" data-testid="theater-loading">
@@ -31,7 +33,35 @@ const LoadingTheater = () => (
 );
 
 const Theater = () => {
-  const { caseData } = useTimeline();
+  const { caseData, togglePlay, setPlaying, setT, t } = useTimeline();
+
+  // Keyboard shortcuts: Space play/pause · arrow keys step 6h ticks
+  React.useEffect(() => {
+    const onKey = (e) => {
+      const target = e.target;
+      if (
+        target.closest?.('input, textarea, select, [contenteditable="true"], [role="slider"]') ||
+        target.tagName === 'BUTTON'
+      ) {
+        return;
+      }
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (!e.repeat) togglePlay();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setPlaying(false);
+        setT(Math.min(1, (Math.floor(t * 12 + 1e-6) + 1) / 12));
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setPlaying(false);
+        setT(Math.max(0, (Math.ceil(t * 12 - 1e-6) - 1) / 12));
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [togglePlay, setPlaying, setT, t]);
+
   if (!caseData) return <LoadingTheater />;
 
   return (
@@ -54,6 +84,9 @@ const Theater = () => {
         {/* Signature stitch line — sutures closed as recovery progresses */}
         <StitchLine />
 
+        {/* Recap — appears when the episode closes recovered */}
+        <RecoverySummary />
+
         {/* HERO ROW: Failure anatomy (left) + Policy Brain (center) */}
         <div className="grid grid-cols-12 gap-6 lg:gap-8">
           <FailureAnatomy className="col-span-12 lg:col-span-4" />
@@ -75,11 +108,14 @@ const Theater = () => {
           <CustomerPlane className="col-span-12 lg:col-span-5" />
         </div>
 
-        <LiveEventTicker />
+        <div className="grid grid-cols-12 gap-6 lg:gap-8">
+          <LiveEventTicker className="col-span-12 lg:col-span-7" />
+          <CaseQueue className="col-span-12 lg:col-span-5" />
+        </div>
 
         <footer className="flex items-center justify-between flex-wrap gap-2 pt-2">
           <p className="text-[13px] text-white/35">RazorStitch · 72h recovery episodes · 6h decision ticks · demo, all data simulated</p>
-          <p className="text-[13px] text-white/35">Move the timeline — every panel follows</p>
+          <p className="text-[13px] text-white/35 font-mono">Space play/pause · ← → step ticks</p>
         </footer>
       </motion.div>
 
