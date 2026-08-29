@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: hsl(218 62% 7%);
+    color: hsl(210 40% 98%);
+}
+
+code {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+@layer base {
+    :root {
+        --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+        --background: 218 62% 7%;
+        --foreground: 210 40% 98%;
+        --card: 218 55% 10%;
+        --card-foreground: 210 40% 98%;
+        --popover: 218 55% 10%;
+        --popover-foreground: 210 40% 98%;
+        --muted: 218 35% 14%;
+        --muted-foreground: 215 18% 72%;
+        --border: 218 28% 18%;
+        --input: 218 28% 18%;
+
+        --primary: 213 89% 56%;
+        --primary-foreground: 218 62% 7%;
+        --secondary: 218 35% 14%;
+        --secondary-foreground: 210 40% 98%;
+        --accent: 199 92% 60%;
+        --accent-foreground: 218 62% 7%;
+        --ring: 213 89% 56%;
+        --radius: 20px;
+
+        --success: 152 62% 45%;
+        --success-foreground: 210 40% 98%;
+        --warning: 38 92% 55%;
+        --warning-foreground: 218 62% 7%;
+        --destructive: 0 78% 58%;
+        --destructive-foreground: 210 40% 98%;
+
+        --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 60px rgba(0, 0, 0, 0.55);
+        --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.06), 0 30px 90px rgba(0, 0, 0, 0.65);
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+        @apply border-border;
+    }
+
+    html {
+        color-scheme: dark;
+    }
+
+    :focus-visible {
+        outline: none;
+        box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.14),
+            0 0 0 3px rgba(43, 138, 247, 0.35);
+    }
+
+    ::selection {
+        background: hsl(213 89% 56% / 0.3);
+        color: hsl(210 40% 98%);
+    }
+
+    ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: hsl(218 28% 20%);
+        border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: hsl(218 28% 28%);
+    }
+}
+
+@layer utilities {
+    .font-display {
+        font-family: 'Newsreader', Georgia, serif;
+        letter-spacing: -0.015em;
+    }
+    .font-mono {
+        font-family: var(--font-mono);
+    }
+    .tabular-nums {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* ---------- Ambient system (code-crafted, no raster) ---------- */
+    .rs-ambient {
+        position: relative;
+        isolation: isolate;
+    }
+    .rs-ambient::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.22;
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: radial-gradient(closest-side at 50% 14%, rgba(0, 0, 0, 0.95), transparent 72%);
+        -webkit-mask-image: radial-gradient(closest-side at 50% 14%, rgba(0, 0, 0, 0.95), transparent 72%);
+    }
+    .rs-ambient::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+            radial-gradient(1200px 520px at 50% 0%, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5) 74%);
+        opacity: 0.85;
+    }
+    .rs-lightfield {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 24vh;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .rs-lightfield__mesh {
+        position: absolute;
+        inset: -18% -12% auto -12%;
+        height: 140%;
+        filter: blur(44px);
+        transform: translate3d(0, 0, 0);
+        opacity: 0.62;
+        mix-blend-mode: screen;
+        background-image:
+            radial-gradient(900px 520px at 14% -10%, hsl(213 89% 56% / 0.22), transparent 58%),
+            radial-gradient(760px 520px at 86% -14%, hsl(199 92% 60% / 0.16), transparent 56%),
+            radial-gradient(680px 520px at 52% 18%, hsl(213 89% 56% / 0.1), transparent 62%),
+            conic-gradient(from 210deg at 52% 12%, transparent 0deg, hsl(199 92% 60% / 0.06) 42deg, transparent 120deg, hsl(213 89% 56% / 0.05) 210deg, transparent 360deg);
+    }
+
+    /* ---------- Glass tiers ---------- */
+    .glass-1 {
+        background: rgba(255, 255, 255, 0.055);
+        backdrop-filter: blur(20px) saturate(140%);
+        -webkit-backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            inset 0 0 0 1px rgba(43, 138, 247, 0.05),
+            0 18px 60px rgba(0, 0, 0, 0.5);
+    }
+    .glass-2 {
+        background: rgba(255, 255, 255, 0.078);
+        backdrop-filter: blur(24px) saturate(160%);
+        -webkit-backdrop-filter: blur(24px) saturate(160%);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.075),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+            0 30px 90px rgba(0, 0, 0, 0.65);
+    }
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.055);
+        backdrop-filter: blur(20px) saturate(140%);
+        -webkit-backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        box-shadow: var(--shadow-1);
+    }
+    .gradient-border {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(hsl(218 50% 12% / 0.88), hsl(218 55% 9% / 0.88)) padding-box,
+            linear-gradient(135deg, rgba(43, 138, 247, 0.5), rgba(45, 212, 191, 0.2), rgba(255, 255, 255, 0.08)) border-box;
+    }
+    .glint-top {
+        position: relative;
+    }
+    .glint-top::before {
+        content: '';
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        top: 0;
+        height: 1px;
+        z-index: 1;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), rgba(43, 138, 247, 0.18), transparent);
+        opacity: 0.75;
+        border-radius: 999px;
+        pointer-events: none;
+    }
+
+    /* Sentence-case meta label (legacy class kept) */
+    .label-caps {
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: none;
+        color: rgba(255, 255, 255, 0.55);
+        font-family: var(--font-sans);
+    }
+
+    .noise-overlay::after {
+        content: '';
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        opacity: 0.03;
+        z-index: 1;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Deprecated utilities kept as no-ops for compatibility */
+    .corner-notch::before,
+    .corner-notch::after,
+    .panel-ruler,
+    .scanlines::before,
+    .phosphor-sweep::after {
+        content: none;
+        display: none;
+    }
+    .instrument-index,
+    .bg-watermark {
+        display: none;
+    }
+    .theater-wash {
+        background-image: none;
+    }
+    .text-glow-cyan {
+        text-shadow: 0 0 16px hsl(213 89% 56% / 0.4);
+    }
+    .text-glow-green {
+        text-shadow: 0 0 16px hsl(152 62% 50% / 0.4);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

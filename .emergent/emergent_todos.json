@@ -1,0 +1,22 @@
+[
+  {
+    "content": "Backend: GET /api/cases/queue with 5 mock failing payments",
+    "status": "in_progress"
+  },
+  {
+    "content": "RecoverySummary recap card (net saved, contacts, time, path vs best alternative)",
+    "status": "pending"
+  },
+  {
+    "content": "Keyboard shortcuts: Space play/pause, arrow keys step 6h ticks + dock hint",
+    "status": "pending"
+  },
+  {
+    "content": "CaseQueue panel wired to backend with fallback",
+    "status": "pending"
+  },
+  {
+    "content": "Compile, screenshot verify, quick regression",
+    "status": "pending"
+  }
+]

@@ -1,0 +1,7 @@
+/* Midnight Operating Theater — app-level styles.
+   Intentionally minimal: tokens + utilities live in index.css.
+   NOTE: no global text-align center (natural reading flow). */
+
+.App {
+    min-height: 100vh;
+}
