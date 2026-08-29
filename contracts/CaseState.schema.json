@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://razorstitch.dev/schemas/CaseState.json",
+  "title": "CaseState",
+  "type": "object",
+  "required": ["caseId", "amountPaise", "currency", "paymentStatus", "errorReason", "errorSource"],
+  "properties": {
+    "caseId": { "type": "string" },
+    "amountPaise": { "type": "integer", "minimum": 0 },
+    "currency": { "type": "string", "enum": ["INR"] },
+    "method": { "type": "string", "enum": ["card", "upi", "wallet", "unknown"] },
+    "errorSource": { "type": "string" },
+    "errorReason": { "type": "string" },
+    "errorStep": { "type": "string" },
+    "paymentStatus": {
+      "type": "string",
+      "enum": ["failed", "pending", "authorized", "captured", "abandoned"]
+    },
+    "hoursSinceFailure": { "type": "number", "minimum": 0 },
+    "attemptCount": { "type": "integer", "minimum": 0 },
+    "contactsUsed": { "type": "integer", "minimum": 0 },
+    "contactsMax": { "type": "integer", "default": 3 },
+    "contactWindowDays": { "type": "integer", "default": 7 },
+    "isReturningCustomer": { "type": "boolean" },
+    "pendingLateAuthRisk": { "type": "boolean" },
+    "priorAction": { "type": "string" },
+    "priorOutcome": { "type": "string", "enum": ["success", "failure", "none"] },
+    "customerCheckoutState": {
+      "type": "string",
+      "enum": ["checkout_open", "payment_failed", "payment_link_sent", "recovered", "stopped"]
+    }
+  }
+}

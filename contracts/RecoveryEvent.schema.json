@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RecoveryEvent",
+  "type": "object",
+  "required": ["eventId", "eventType", "timestamp", "caseId"],
+  "properties": {
+    "eventId": { "type": "string" },
+    "eventType": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "caseId": { "type": "string" },
+    "razorpayEventId": { "type": "string" },
+    "payload": { "type": "object" }
+  }
+}

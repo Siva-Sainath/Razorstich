@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://razorstitch.dev/schemas/PolicyDecision.json",
+  "title": "PolicyDecision",
+  "type": "object",
+  "required": ["policyVersion", "selectedAction", "qValues", "expectedValueInr"],
+  "properties": {
+    "policyVersion": { "type": "string" },
+    "selectedAction": { "type": "string" },
+    "qValues": { "type": "object", "additionalProperties": { "type": "number" } },
+    "expectedValueInr": { "type": "number" },
+    "constraintsPassed": { "type": "integer" },
+    "constraintsTotal": { "type": "integer" },
+    "actionMask": { "type": "array", "items": { "type": "boolean" } }
+  }
+}

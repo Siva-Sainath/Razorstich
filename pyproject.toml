@@ -1,0 +1,29 @@
+[project]
+name = "razorstitch"
+version = "0.1.0"
+description = "RazorStitch — adaptive payment recovery for Razorpay"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "torch>=2.2",
+  "gymnasium>=1.0",
+  "pydantic>=2.0",
+  "pyyaml>=6.0",
+  "tqdm>=4.66",
+  "matplotlib>=3.8",
+  "jupyter>=1.0",
+  "ipykernel>=6.29",
+  "pandas>=2.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["packages", "packages.*"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"

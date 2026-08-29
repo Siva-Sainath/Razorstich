@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AuditEntry",
+  "type": "object",
+  "required": ["hash", "eventType", "policyVersion", "timestamp"],
+  "properties": {
+    "hash": { "type": "string" },
+    "prevHash": { "type": "string" },
+    "eventType": { "type": "string" },
+    "policyVersion": { "type": "string" },
+    "action": { "type": "string" },
+    "reward": { "type": "number" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "caseId": { "type": "string" }
+  }
+}
