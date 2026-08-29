@@ -1,0 +1,68 @@
+[
+  {
+    "id": "fixture_1",
+    "case_id": "case_101",
+    "customer_name": "Aarav Sharma",
+    "amount_inr": 1500.0,
+    "failure_reason": "insufficient_funds",
+    "action": "notify_customer",
+    "tone": "patient",
+    "payment_link": "",
+    "drafted_copy": "Hi Aarav Sharma,\n\nWe noticed that your recent payment of INR 1,500.00 did not go through because of insufficient funds. No worries at all! Sometimes these things happen.\n\nWe'll try to process this transaction again in a little while, or you can complete it at your convenience. Let us know if you need any assistance or if you would like to use a different payment method.\n\nBest regards,\nCustomer Support Team"
+  },
+  {
+    "id": "fixture_2",
+    "case_id": "case_102",
+    "customer_name": "Priya Patel",
+    "amount_inr": 4500.0,
+    "failure_reason": "insufficient_funds",
+    "action": "resend_link",
+    "tone": "patient",
+    "payment_link": "https://rzp.io/i/rec_xyz123",
+    "drafted_copy": "Hi Priya Patel,\n\nWe hope you are having a good day. We noticed that your payment of INR 4,500.00 was not fully completed (insufficient funds). There is absolutely no rush, but if you're ready to try again, you can complete the transaction securely using this direct link:\nhttps://rzp.io/i/rec_xyz123\n\nIf you need to use a different payment method or have questions, please reach out.\n\nWarmly,\nCustomer Support Team"
+  },
+  {
+    "id": "fixture_3",
+    "case_id": "case_103",
+    "customer_name": "Amit Verma",
+    "amount_inr": 2500.0,
+    "failure_reason": "gateway_error",
+    "action": "notify_customer",
+    "tone": "technical",
+    "payment_link": "",
+    "drafted_copy": "Hi Amit Verma,\n\nYour recent payment of INR 2,500.00 could not be processed due to a temporary network or gateway communication issue. This is a technical issue on the processor's end and your funds have not been debited. If they were, they will be automatically refunded.\n\nWe recommend waiting a few minutes and trying again. If you continue to see this error, please let us know.\n\nSincerely,\nTechnical Operations Team"
+  },
+  {
+    "id": "fixture_4",
+    "case_id": "case_104",
+    "customer_name": "Neha Gupta",
+    "amount_inr": 12000.0,
+    "failure_reason": "gateway_error",
+    "action": "resend_link",
+    "tone": "technical",
+    "payment_link": "https://rzp.io/i/rec_abc789",
+    "drafted_copy": "Hi Neha Gupta,\n\nA technical gateway issue interrupted your payment of INR 12,000.00. The connection has now stabilized, and you can securely complete your checkout using the following direct recovery link:\nhttps://rzp.io/i/rec_abc789\n\nWe apologize for the technical inconvenience.\n\nSincerely,\nSupport Team"
+  },
+  {
+    "id": "fixture_5",
+    "case_id": "case_105",
+    "customer_name": "Vikram Singh",
+    "amount_inr": 800.0,
+    "failure_reason": "upi_timeout",
+    "action": "notify_customer",
+    "tone": "reminder",
+    "payment_link": "",
+    "drafted_copy": "Hi Vikram Singh,\n\nWe noticed your payment of INR 800.00 timed out on the UPI application. This usually happens if the notification was missed or if there was a slight delay.\n\nPlease check your UPI app for any pending requests or try the payment again.\n\nBest regards,\nSupport Team"
+  },
+  {
+    "id": "fixture_6",
+    "case_id": "case_106",
+    "customer_name": "Rohan Mehta",
+    "amount_inr": 3000.0,
+    "failure_reason": "bank_outage",
+    "action": "resend_link",
+    "tone": "technical",
+    "payment_link": "https://rzp.io/i/rec_klm456",
+    "drafted_copy": "Hi Rohan Mehta,\n\nYour transaction of INR 3,000.00 could not be processed due to a temporary bank system outage. Since the bank network is back up, you can now complete your checkout using this direct recovery link:\nhttps://rzp.io/i/rec_klm456\n\nThank you for your patience.\n\nSincerely,\nSupport Team"
+  }
+]

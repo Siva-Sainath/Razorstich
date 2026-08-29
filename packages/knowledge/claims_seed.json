@@ -1,0 +1,92 @@
+[
+  {
+    "id": "claim-001",
+    "statement": "Agentic workflows improve code generation reliability by 20% compared to zero-shot prompting.",
+    "source_tier": "primary",
+    "citations": ["Smith et al., 2024, 'Agentic Coding'"],
+    "policy_implication": "Default to multi-step agentic generation for complex tasks.",
+    "last_verified": "2026-08-01T00:00:00Z",
+    "conflict_ids": []
+  },
+  {
+    "id": "claim-002",
+    "statement": "Over-reliance on mock data in tests reduces production confidence.",
+    "source_tier": "secondary",
+    "citations": ["Integration Testing Best Practices, 2025"],
+    "policy_implication": "Simulator priors should weigh end-to-end test results higher.",
+    "last_verified": "2026-08-05T00:00:00Z",
+    "conflict_ids": ["claim-003"]
+  },
+  {
+    "id": "claim-003",
+    "statement": "End-to-end tests are 50% more flaky than unit tests.",
+    "source_tier": "secondary",
+    "citations": ["System Reliability Report, 2023"],
+    "policy_implication": "Implement automatic retries for E2E simulator verification.",
+    "last_verified": "2026-07-20T00:00:00Z",
+    "conflict_ids": ["claim-002"]
+  },
+  {
+    "id": "claim-004",
+    "statement": "LLM context window limits require aggressive token pruning for long-running tasks.",
+    "source_tier": "primary",
+    "citations": ["Context Management Techniques, 2026"],
+    "policy_implication": "Enable context summarization after 100 turns.",
+    "last_verified": "2026-08-10T00:00:00Z",
+    "conflict_ids": []
+  },
+  {
+    "id": "claim-005",
+    "statement": "JSON schema validation prevents 95% of structured output parsing errors.",
+    "source_tier": "primary",
+    "citations": ["Structured Output Analysis, 2025"],
+    "policy_implication": "Mandate schema validation for all tool calls.",
+    "last_verified": "2026-08-15T00:00:00Z",
+    "conflict_ids": []
+  },
+  {
+    "id": "claim-006",
+    "statement": "Human-in-the-loop (HITL) gates increase task completion time but reduce critical failures by 80%.",
+    "source_tier": "primary",
+    "citations": ["HITL Impact Study, 2024"],
+    "policy_implication": "Require HITL for deployment policies.",
+    "last_verified": "2026-06-01T00:00:00Z",
+    "conflict_ids": []
+  },
+  {
+    "id": "claim-007",
+    "statement": "Temperature 0.0 is optimal for code syntax generation.",
+    "source_tier": "secondary",
+    "citations": ["LLM Hyperparameter Tuning Guide, 2025"],
+    "policy_implication": "Set default temperature to 0.0 for syntax-heavy tasks.",
+    "last_verified": "2026-08-20T00:00:00Z",
+    "conflict_ids": []
+  },
+  {
+    "id": "claim-008",
+    "statement": "Providing explicit error traces improves LLM debugging success rate.",
+    "source_tier": "primary",
+    "citations": ["Debugging with LLMs, 2026"],
+    "policy_implication": "Simulator must capture and pass full stack traces.",
+    "last_verified": "2026-08-25T00:00:00Z",
+    "conflict_ids": []
+  },
+  {
+    "id": "claim-009",
+    "statement": "Simulated environments drift from production APIs within 30 days on average.",
+    "source_tier": "tertiary",
+    "citations": ["API Drift Analysis, 2024"],
+    "policy_implication": "Schedule simulator environment refreshes every 14 days.",
+    "last_verified": "2026-05-15T00:00:00Z",
+    "conflict_ids": []
+  },
+  {
+    "id": "claim-010",
+    "statement": "Concurrent subagent execution reduces latency but increases context collision risks.",
+    "source_tier": "secondary",
+    "citations": ["Multi-Agent Orchestration, 2026"],
+    "policy_implication": "Limit concurrent subagents to 5 unless isolated workspaces are used.",
+    "last_verified": "2026-08-28T00:00:00Z",
+    "conflict_ids": []
+  }
+]
