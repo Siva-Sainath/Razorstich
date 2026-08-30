@@ -1,23 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw } from 'lucide-react';
 import { useTimeline } from '@/lib/timelineContext';
 import { inr, STAGE_MODE_LABEL } from './stageUtils';
 import { WEDGE_BY_ID, formatWedgeClock } from '@/config/wedges';
 
-/** Episode context only — logo & pilot CTA live in SiteNav. */
+/** Episode context only — brand, nav, and RL proof live in SiteNav / BenchmarkStrip. */
 export const StageHeader = ({ wedge }) => {
   const {
     caseData,
     displayAmount,
     stageMode,
     elapsedLabel,
-    clockAt,
-    t,
     restart,
     playing,
-    wedgeSummary,
     hoursSince,
   } = useTimeline();
   const c = caseData?.case;
@@ -25,11 +21,10 @@ export const StageHeader = ({ wedge }) => {
 
   const lane = WEDGE_BY_ID[wedge || c.wedge];
   const isRecovered = displayAmount.label === 'recovered';
-  const lift = wedgeSummary?.benchmark?.acceptance?.mean_improvement_pct;
 
   return (
     <header
-      className="shrink-0 flex flex-wrap items-center gap-x-4 gap-y-2 py-1"
+      className="shrink-0 flex flex-wrap items-center gap-x-4 gap-y-2 py-1 border-b border-white/[0.05] pb-2"
       data-testid="stage-header"
     >
       <div className="flex-1 min-w-[200px]">
@@ -47,9 +42,7 @@ export const StageHeader = ({ wedge }) => {
         </AnimatePresence>
         <div className="flex items-baseline gap-3 flex-wrap mt-0.5">
           <span
-            className={`font-display text-2xl sm:text-3xl font-semibold tabular-nums ${
-              isRecovered ? 'text-success' : 'text-white/92'
-            }`}
+            className="font-mono text-2xl sm:text-3xl font-semibold tabular-nums text-white/92"
             data-testid="case-amount"
           >
             {isRecovered ? inr(displayAmount.captured) : inr(displayAmount.atRisk)}
@@ -63,20 +56,9 @@ export const StageHeader = ({ wedge }) => {
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
-        {lift != null && (
-          <Link
-            to="/research"
-            className="rounded-lg border border-success/25 bg-success/10 px-2.5 py-1 type-micro text-success hover:bg-success/15"
-            data-testid="research-chip"
-          >
-            +{lift.toFixed(0)}% vs rules
-          </Link>
-        )}
-        <div className="text-right hidden sm:block px-2">
+        <div className="text-right hidden sm:block px-1">
           <p className="type-micro font-mono text-white/55 tabular-nums">{elapsedLabel}</p>
-          <p className="type-micro font-mono text-white/30">
-            {formatWedgeClock(c.wedge, hoursSince)}
-          </p>
+          <p className="type-micro font-mono text-white/30">{formatWedgeClock(c.wedge, hoursSince)}</p>
         </div>
         <button
           type="button"

@@ -1,10 +1,8 @@
 import { MarketingPageShell } from '@/components/landing/MarketingPageShell';
+import { PageHero, PageSection } from '@/components/landing/MarketingLayout';
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-
-
 import { InstallSnippet } from '@/components/landing/InstallSnippet';
 import { PipelineFlowSvg } from '@/components/landing/PipelineFlowSvg';
 import { VoiceAddonSection } from '@/components/pricing/PricingSections';
@@ -37,21 +35,17 @@ https://api.razorstitch.dev/hooks/razorpay`,
 
 export const IntegrationsPage = () => (
   <MarketingPageShell>
+    <PageHero
+      compact
+      centered={false}
+      eyebrow="Integrations"
+      title="Drop the recovery agent into your payment pipeline"
+      subtitle="Same stack that trains in the simulator serves through Razorpay webhooks. Test Mode first — no live money."
+    />
 
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <header className="mb-12">
-        <p className="font-mono type-micro tracking-[0.12em] text-accent uppercase">Integrations</p>
-        <h1 className="font-display text-[clamp(2rem,5vw,3rem)] font-semibold mt-3 text-white/95 leading-tight">
-          Drop the recovery agent into your payment pipeline
-        </h1>
-        <p className="type-body text-white/50 mt-4 max-w-xl leading-relaxed">
-          Same stack that trains in the simulator serves through Razorpay webhooks. Zero PyTorch at runtime —
-          exported JSON weights, TypeScript inference, Python or Node ingress.
-        </p>
-      </header>
-
-      <div className="rounded-[24px] border border-white/[0.08] bg-black/25 p-6 sm:p-8 mb-12">
-        <p className="font-mono type-micro text-white/40 mb-4">FIG.1 — Request flow</p>
+    <PageSection className="!pt-8">
+      <div className="rounded-[20px] border border-white/[0.08] bg-black/25 p-6 sm:p-8 mb-10">
+        <p className="font-mono type-micro text-white/40 mb-4">Request flow</p>
         <PipelineFlowSvg />
       </div>
 
@@ -108,7 +102,6 @@ export const IntegrationsPage = () => (
           </Link>
         </div>
       </section>
-    </div>
-
-    </MarketingPageShell>
+    </PageSection>
+  </MarketingPageShell>
 );

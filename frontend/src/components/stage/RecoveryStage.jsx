@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { StageHeader } from './StageHeader';
 import { WedgeLeftPanel } from './WedgeLeftPanel';
@@ -17,7 +17,7 @@ export const RecoveryStage = ({ wedge }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.35 }}
-        className="relative flex flex-col flex-1 min-h-0 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 gap-3"
+        className="relative flex flex-col flex-1 min-h-0 max-w-[1200px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 gap-3"
       >
         <StageHeader wedge={wedge} />
         <DemoScenarioBar wedge={wedge} />

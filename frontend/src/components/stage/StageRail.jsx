@@ -4,14 +4,11 @@ import { Play, Pause, SkipBack, SkipForward, Link2, MessageSquare, Headphones, C
 import { Button } from '@/components/ui/button';
 import { useTimeline } from '@/lib/timelineContext';
 import {
-  WEDGE_CASES,
   WEDGE_BY_ID,
-  CASE_CATALOG,
-  CHECKOUT_TAXONOMY,
-  getCaseMeta,
 } from '@/config/wedges';
 import { WEDGE_ACCENT } from '@/config/demoPersonas';
 import { PITCH_SPEED_PRESETS } from '@/config/pitchNarrative';
+import { friendlyUiAction } from '@/config/consumerCopy';
 
 function actionGlyph(uiAction) {
   if (!uiAction) return null;
@@ -90,94 +87,6 @@ const PitchControls = () => {
   );
 };
 
-export const StageCasePicker = ({ wedge }) => {
-  const { caseData, loadCase } = useTimeline();
-  const currentId = caseData?.case?.id;
-  const lane = WEDGE_BY_ID[wedge];
-  const accentKey = lane?.accent || 'checkout';
-  const accent = WEDGE_ACCENT[accentKey];
-  const cases = WEDGE_CASES[wedge] || [];
-
-  if (!cases.length) return null;
-
-  if (wedge === 'checkout_failed') {
-    return (
-      <div className="space-y-2 shrink-0" data-testid="stage-case-picker">
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          {CHECKOUT_TAXONOMY.map((tax) => {
-            const taxCases = cases.filter((id) => CASE_CATALOG[id]?.taxonomy === tax);
-            if (!taxCases.length) return null;
-            return (
-              <div key={tax} className="flex gap-1.5 shrink-0 items-center">
-                <span className="type-micro text-white/30 font-mono uppercase mr-1">{tax}</span>
-                {taxCases.map((caseId) => {
-                  const active = caseId === currentId;
-                  const meta = getCaseMeta(caseId);
-                  return (
-                    <motion.button
-                      key={caseId}
-                      type="button"
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.97 }}
-                      data-testid={active ? 'queue-case-current' : 'queue-case-row'}
-                      onClick={() => !active && loadCase(caseId)}
-                      className={`rounded-full border px-3 py-1.5 type-micro font-mono transition-colors ${
-                        active ? `${accent.text} border-current/40 bg-white/[0.06]` : 'border-white/10 text-white/50 hover:border-white/25'
-                      }`}
-                    >
-                      {caseId.replace('VAL-CHK-', '')}
-                      {meta.hook && <span className="hidden lg:inline text-white/35 ml-1">· {meta.hook.split('·')[0]}</span>}
-                    </motion.button>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin shrink-0 snap-x" data-testid="stage-case-picker">
-      {cases.map((caseId) => {
-        const active = caseId === currentId;
-        const meta = getCaseMeta(caseId);
-        return (
-          <motion.button
-            key={caseId}
-            type="button"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            data-testid={active ? 'queue-case-current' : 'queue-case-row'}
-            onClick={() => !active && loadCase(caseId)}
-            className={`snap-start shrink-0 rounded-[14px] border px-3 py-2 text-left transition-colors ${
-              active ? 'ring-1 ring-white/20' : 'hover:border-white/25'
-            }`}
-            style={{
-              borderColor: active ? accent.border : 'rgba(255,255,255,0.08)',
-              background: active
-                ? `linear-gradient(145deg, ${accent.glow} 0%, rgba(255,255,255,0.05) 50%)`
-                : 'rgba(255,255,255,0.03)',
-            }}
-          >
-            <p className={`type-micro font-mono ${active ? accent.text : 'text-white/70'}`}>{caseId}</p>
-            {meta.hook && (
-              <p className="type-micro mt-0.5 text-white/40 max-w-[160px] truncate">{meta.hook}</p>
-            )}
-            {meta.badge && (
-              <span className="type-micro text-warning/80">{meta.badge}</span>
-            )}
-            {meta.beatsRules && (
-              <span className="type-micro text-success/80">beats rules</span>
-            )}
-          </motion.button>
-        );
-      })}
-    </div>
-  );
-};
-
 export const StageRail = ({ wedge }) => {
   const {
     rolloutSteps,
@@ -199,7 +108,7 @@ export const StageRail = ({ wedge }) => {
   const chapters = lane?.chapterLabels || [];
 
   const actionLabel = currentRolloutStep
-    ? currentRolloutStep.ui_action?.replace(/_/g, ' ')
+    ? friendlyUiAction(currentRolloutStep.ui_action)
     : 'Episode start';
 
   const chapter =

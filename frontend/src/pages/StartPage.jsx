@@ -20,11 +20,12 @@ export const StartPage = () => {
   return (
     <MarketingPageShell>
       <PageHero
+        compact
         eyebrow="Go to market"
         title="Plug recovery into your Razorpay stack"
         subtitle="We're onboarding a small pilot cohort. You get Test Mode setup, a proof pack for your store, and pay 2.5% only on recovered payments when you go live."
         centered={false}
-        className="!pb-8"
+        className="!pb-6"
       />
 
       <PageSection className="!pt-0">

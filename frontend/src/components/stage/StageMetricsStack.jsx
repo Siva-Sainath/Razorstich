@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useTimeline } from '@/lib/timelineContext';
 import { WEDGE_BY_ID } from '@/config/wedges';
 import { getPersona } from '@/config/demoPersonas';
-import { EpisodeStateCard, FailureNetworkCard } from './metrics/EpisodeCards';
+import { FailureNetworkCard } from './metrics/EpisodeCards';
 import { QValuesCard } from './metrics/QValuesCard';
 import { RolloutActionCard } from './metrics/RolloutActionCard';
 import { RecoveryBeliefCard } from './metrics/RecoveryBeliefCard';
@@ -29,16 +29,16 @@ export const StageMetricsStack = ({ wedge }) => {
     const list = [];
 
     if (stageMode === 'outcome') {
-      list.push('outcome', 'belief');
+      list.push('outcome');
     } else if (stageMode === 'policy') {
       if (alwaysGhost || rulesDelta > 0.05) list.push('ghost');
       list.push('qvalues', 'rollout');
     } else if (stageMode === 'intervene') {
       list.push('rollout', 'belief');
     } else if (stageMode === 'failure') {
-      list.push('failure', 'belief');
+      list.push('failure', 'rollout');
     } else {
-      list.push('episode');
+      list.push('failure');
       if (currentStepIndex > 0) list.push('rollout');
     }
 
@@ -52,8 +52,6 @@ export const StageMetricsStack = ({ wedge }) => {
   const renderCard = (key, index) => {
     const delay = index * 0.05;
     switch (key) {
-      case 'episode':
-        return <EpisodeStateCard key="episode" delay={delay} />;
       case 'failure':
         return <FailureNetworkCard key="failure" delay={delay} />;
       case 'qvalues':

@@ -13,17 +13,61 @@ export function recoveryTypeLabel(wedgeId) {
 
 export const ACTION_LABELS = {
   wait: 'Wait and watch',
+  stop: 'Stop outreach',
   send_reminder: 'Send reminder',
   create_payment_link: 'Send payment link',
   offer_partial: 'Offer partial payment',
+  offer_incentive: 'Offer a small incentive',
   switch_method: 'Suggest another payment method',
   notify_customer: 'Notify customer',
+  notify_sms: 'Send SMS reminder',
+  notify_whatsapp: 'Send WhatsApp message',
+  notify_email: 'Send email',
   escalate: 'Follow up personally',
+  escalate_support: 'Escalate to human support',
+  request_new_method: 'Request new payment method',
+  retry_same_method: 'Retry the same card',
+  retry_upi: 'Retry UPI payment',
   resend_invoice: 'Resend invoice',
   update_card: 'Ask to update card',
 };
 
+/** Customer-facing channel outcomes (ui_action from rollout). */
+export const UI_ACTION_LABELS = {
+  wait: 'Waiting for the right moment',
+  stop: 'No further outreach',
+  create_payment_link: 'Payment link delivered',
+  offer_incentive: 'Incentive shown at checkout',
+  notify_sms: 'SMS sent to customer',
+  notify_whatsapp: 'WhatsApp message sent',
+  notify_email: 'Email sent',
+  escalate_support: 'Support team engaged',
+  request_new_method: 'Asked for a new payment method',
+  retry_same_method: 'Card retry screen shown',
+  retry_upi: 'UPI retry screen shown',
+};
+
 export function friendlyAction(action) {
   if (!action) return '—';
-  return ACTION_LABELS[action] || action.replace(/_/g, ' ');
+  const key = String(action).toLowerCase();
+  return ACTION_LABELS[key] || key.replace(/_/g, ' ');
+}
+
+export function friendlyUiAction(uiAction) {
+  if (!uiAction) return '—';
+  const key = String(uiAction).toLowerCase();
+  return UI_ACTION_LABELS[key] || friendlyAction(key);
+}
+
+/** True when RL action and UI action describe the same thing to a merchant. */
+export function actionsAreRedundant(rlAction, uiAction) {
+  if (!rlAction || !uiAction) return true;
+  const a = friendlyAction(rlAction).toLowerCase();
+  const b = friendlyUiAction(uiAction).toLowerCase();
+  if (a === b) return true;
+  if (uiAction.includes('escalate') && rlAction.includes('escalate')) return true;
+  if (uiAction.includes('notify') && rlAction.includes('notify')) return true;
+  if (uiAction.includes('link') && rlAction.includes('link')) return true;
+  if (uiAction.includes('retry') && rlAction.includes('retry')) return true;
+  return false;
 }
