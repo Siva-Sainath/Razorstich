@@ -35,14 +35,13 @@ export const StageBrainPanel = ({ wedge, ghostOverlay = false }) => {
         </div>
       </div>
 
-      <div className="flex-1 min-h-[300px] lg:min-h-[360px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card backdrop-blur-xl">
+      <div className="flex-1 min-h-[220px] lg:min-h-[280px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card backdrop-blur-xl">
         <PolicyBrainScene
           pipelineStep={brainPipelineStep}
           thinking={brainThinking}
           guardrailActive={brainGuardrailActive}
           selectedAction={brainSelectedAction}
-          height={360}
-          className="!rounded-none !border-0 !min-h-[300px]"
+          className="!rounded-none !border-0 !h-full !min-h-[220px]"
         />
       </div>
     </div>

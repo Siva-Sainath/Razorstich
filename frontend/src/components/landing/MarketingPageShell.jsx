@@ -21,7 +21,7 @@ export const AppShell = ({
     <main
       className={
         variant === 'demo'
-          ? 'flex-1 min-h-0 flex flex-col relative z-10 overflow-hidden'
+          ? 'flex-1 min-h-0 flex flex-col relative z-10 overflow-hidden h-[calc(100dvh-3.5rem)] max-h-[calc(100dvh-3.5rem)]'
           : 'flex-1 relative z-10'
       }
     >

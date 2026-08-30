@@ -20,6 +20,7 @@ export const ValidationGateCard = ({ delay = 0 }) => {
   const b = wedgeSummary?.benchmark;
   const acc = b?.acceptance;
   const model = MODEL_STATUS[wedge] || { gen: 'v1', label: 'checkpoint', shipped: true };
+  const trainV2 = wedgeSummary?.train_v2;
 
   if (!b?.policy_mean_net_inr) {
     return (
@@ -72,7 +73,14 @@ export const ValidationGateCard = ({ delay = 0 }) => {
         <p className="type-meta text-white/60">
           {passed && model.shipped ? 'Ready to ship' : model.shipped ? 'Passed · under review' : 'On hold'}
         </p>
-        <span className="type-micro font-mono text-white/40">{model.gen}</span>
+        <div className="text-right">
+          <span className="type-micro font-mono text-white/40">{model.gen}</span>
+          {trainV2?.episodes && (
+            <p className="type-micro text-white/35 mt-0.5">
+              {trainV2.episodes.toLocaleString()} ep · seed {trainV2.seed ?? 42}
+            </p>
+          )}
+        </div>
       </div>
 
       <ul className="space-y-2.5">

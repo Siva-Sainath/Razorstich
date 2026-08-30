@@ -26,7 +26,7 @@ export const RecoveryStage = ({ wedge }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className="relative flex flex-col flex-1 min-h-0 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 gap-2 sm:gap-3"
+        className="relative flex flex-col flex-1 min-h-0 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 gap-3 sm:gap-4"
       >
         <StageHeader wedge={wedge} />
         <WedgeNav />
@@ -36,11 +36,11 @@ export const RecoveryStage = ({ wedge }) => {
         <StageCasePicker wedge={wedge} />
         <PitchNarrator wedge={wedge} />
 
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4">
-          <div className="lg:col-span-7 min-h-0 flex flex-col">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 min-h-[320px]">
+          <div className="lg:col-span-7 min-h-[280px] lg:min-h-0 flex flex-col">
             <WedgeLeftPanel wedge={wedge} ghostOverlay={ghostOverlay} />
           </div>
-          <div className="lg:col-span-5 min-h-0 flex flex-col max-h-[42vh] lg:max-h-none">
+          <div className="lg:col-span-5 min-h-[240px] lg:min-h-0 flex flex-col">
             <StageMetricsStack wedge={wedge} />
           </div>
         </div>

@@ -35,17 +35,20 @@ export const StageMetricsStack = ({ wedge }) => {
     if (lane?.showDunningLadder) list.push('dunning');
     if (lane?.showARTimeline) list.push('ar');
 
+    // Latest RL benchmark — always visible on demo stage
+    list.push('validation');
+
     if (stageMode === 'outcome') {
-      list.push('outcome', 'belief');
+      list.push('outcome', 'belief', 'training');
     } else if (stageMode === 'policy') {
       if (alwaysGhost || rulesDelta > 0.05) list.push('ghost');
-      list.push('qvalues', 'rollout', 'belief');
+      list.push('qvalues', 'rollout', 'belief', 'training');
     } else if (stageMode === 'intervene') {
       list.push('rollout', 'belief', 'qvalues');
     } else if (stageMode === 'failure') {
-      list.push('failure', 'belief', 'episode');
+      list.push('failure', 'belief', 'episode', 'training');
     } else {
-      list.push('episode');
+      list.push('episode', 'training');
       if (currentStepIndex > 0) list.push('rollout');
     }
 
@@ -53,7 +56,7 @@ export const StageMetricsStack = ({ wedge }) => {
       if (!list.includes('hero')) list.unshift('hero');
     }
 
-    return list;
+    return [...new Set(list)];
   }, [stageMode, currentStepIndex, rulesDelta, persona, alwaysGhost, lane]);
 
   const renderCard = (key, index) => {

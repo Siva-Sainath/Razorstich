@@ -333,15 +333,20 @@ export const PolicyBrainScene = ({
   guardrailActive = false,
   selectedAction = '',
   className = '',
-  height = 340,
+  height,
 }) => {
   const activeStep = Math.min(pipelineStep, POLICY_NODES.length - 1);
+  const resolvedHeight = height ?? 340;
+  const sizeStyle =
+    typeof resolvedHeight === 'number'
+      ? { height: resolvedHeight, minHeight: resolvedHeight }
+      : { height: resolvedHeight, minHeight: resolvedHeight };
   const fallback = (
     <PolicyBrainFallback
       pipelineStep={pipelineStep}
       thinking={thinking}
       selectedAction={selectedAction}
-      height={height}
+      height={typeof resolvedHeight === 'number' ? resolvedHeight : 340}
       className={className}
     />
   );
@@ -353,7 +358,7 @@ export const PolicyBrainScene = ({
           'relative w-full rounded-[16px] border border-white/[0.08] bg-black overflow-hidden select-none',
           className
         )}
-        style={{ height, minHeight: height }}
+        style={sizeStyle}
         data-testid="policy-brain-viz"
       >
         <div className="absolute inset-0 z-0">

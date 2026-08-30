@@ -115,6 +115,7 @@ def learning_summary(wedge: str = "checkout_failed") -> dict:
         "baseline_benchmark": load_baseline_benchmark(wedge),
         "manifest": load_learning_manifest(wedge),
         "hpo": load_hpo_results(wedge),
+        "train_v2": load_train_v2_summary(),
     }
 
 
