@@ -12,12 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from packages.policy.export_weights import load_dueling_from_json
+from agents_registry import get_agent
 from packages.policy.verify_inference import ts_forward_from_weights
 from packages.simulator.actions import ACTION_NAMES
 from packages.simulator.state import EpisodeState, action_mask
+from packages.simulator.wedges.registry import make_env
 
-# Emergent UI action vocabulary (must match frontend + case_data.py)
 UI_ACTIONS = [
     "wait",
     "notify_sms",
@@ -35,67 +35,29 @@ UI_ACTIONS = [
 CONTACT_UI = {"notify_sms", "notify_whatsapp", "notify_email", "create_payment_link", "offer_incentive"}
 RETRY_UI = {"retry_same_method", "retry_upi"}
 
-WEIGHTS_PATH = ROOT / "packages/policy/weights/checkout_failed.json"
-_TICK_NOTES = [
-    "Issuer decline velocity is elevated — waiting is the cheapest safe move.",
-    "Issuer health improving; contact still premature.",
-    "WhatsApp has the best open-rate for this customer at this hour.",
-    "Customer just opened the link — observe, don't crowd.",
-    "A UPI-preselected payment link converts best right now.",
-    "Cool-off after abandonment; immediate follow-up feels like spam.",
-    "Odds decaying slowly — holding the last contact for peak leverage.",
-    "Price hesitation detected — a small cashback flips this cohort.",
-    "Contact budget spent — waiting for the customer to move.",
-    "Customer re-engaged — a UPI collect request closes it.",
-    "Payment captured — episode complete, stop cleanly.",
-    "Episode closed as RECOVERED.",
-]
+REASON_TO_SOURCE = {
+    "insufficient_funds": "customer",
+    "payment_cancelled": "customer",
+    "authentication_failed": "customer",
+    "gateway_error": "gateway",
+    "upi_timeout": "gateway",
+    "bank_outage": "razorpay",
+    "card_expired": "customer",
+    "payment_page": "business",
+    "browsing": "business",
+    "shipping": "business",
+    "smb": "business",
+    "enterprise": "business",
+}
 
-_weights_cache: dict | None = None
-_model_cache = None
+_weights_cache: dict[str, dict] = {}
 
 
-def _load_policy():
-    global _weights_cache, _model_cache
-    if _weights_cache is None:
-        _weights_cache = json.loads(WEIGHTS_PATH.read_text())
-        _model_cache = load_dueling_from_json(_weights_cache)
-        _model_cache.eval()
-    return _weights_cache, _model_cache
-
-
-def _build_obs(tick: int, contacts_used: int, method: str, hours_since_failure: float) -> np.ndarray:
-    """Map theater tick → checkout_failed MDP observation (31-dim)."""
-    case = {
-        "amount_inr": 2499.0,
-        "failure_reason": "authentication_failed",  # maps to issuer_declined demo
-        "error_source": "customer",
-        "method": method,
-        "hours_since_failure": hours_since_failure,
-        "attempt_count": 1 + tick // 3,
-        "contacts_used": contacts_used,
-        "contacts_max": 3,
-        "is_returning": True,
-        "late_auth_risk": method == "upi",
-        "prior_action": 0,
-        "prior_outcome": 0,
-    }
-    state = EpisodeState(
-        case_id="CASE-7F3A",
-        amount_inr=case["amount_inr"],
-        method=case["method"],
-        failure_reason=case["failure_reason"],
-        error_source=case["error_source"],
-        is_returning=case["is_returning"],
-        hours_since_failure=case["hours_since_failure"],
-        attempt_count=case["attempt_count"],
-        contacts_used=case["contacts_used"],
-        contacts_max=case["contacts_max"],
-        late_auth_risk=case["late_auth_risk"],
-        prior_action=case["prior_action"],
-        prior_outcome=case["prior_outcome"],
-    )
-    return state.to_obs()
+def _load_policy(wedge: str):
+    if wedge not in _weights_cache:
+        path = get_agent(wedge)["weights_path"]
+        _weights_cache[wedge] = json.loads(path.read_text())
+    return _weights_cache[wedge]
 
 
 def _rl_q_to_ui_q(rl_q: dict[str, float], method: str) -> dict[str, float]:
@@ -120,11 +82,12 @@ def _rl_q_to_ui_q(rl_q: dict[str, float], method: str) -> dict[str, float]:
     }
 
 
-def _ui_legal_from_rl_mask(rl_mask: np.ndarray, method: str, contacts_used: int, hours: float) -> set[str]:
+def _ui_legal_from_rl_mask(rl_mask: np.ndarray, method: str, contacts_used: int, hours: float, wedge: str) -> set[str]:
     legal = set(UI_ACTIONS)
     if contacts_used >= 3:
         legal -= CONTACT_UI
-    if method == "upi" and hours < 6:
+    pending_hours = 6 if wedge == "checkout_failed" else 1
+    if method == "upi" and hours < pending_hours:
         legal -= RETRY_UI
     if not rl_mask[1]:
         legal.discard("retry_same_method")
@@ -142,28 +105,114 @@ def _ui_legal_from_rl_mask(rl_mask: np.ndarray, method: str, contacts_used: int,
     return legal or {"wait", "stop"}
 
 
-def recommend_live(tick: int, contacts_used: int, method: str, hours_since_failure: float) -> dict:
-    tick = max(0, min(11, tick))
-    weights, _model = _load_policy()
-    obs = _build_obs(tick, contacts_used, method, hours_since_failure)
-
+def _build_checkout_obs(
+    *,
+    case_id: str,
+    amount_inr: float,
+    failure_reason: str,
+    method: str,
+    hours_since_failure: float,
+    contacts_used: int,
+    attempt_count: int,
+    is_returning: bool,
+) -> tuple[np.ndarray, np.ndarray]:
     state = EpisodeState(
-        case_id="CASE-7F3A",
-        amount_inr=2499.0,
+        case_id=case_id,
+        amount_inr=amount_inr,
         method=method,
-        failure_reason="authentication_failed",
-        error_source="customer",
-        is_returning=True,
+        failure_reason=failure_reason,
+        error_source=REASON_TO_SOURCE.get(failure_reason, "gateway"),
+        is_returning=is_returning,
         hours_since_failure=hours_since_failure,
+        attempt_count=attempt_count,
         contacts_used=contacts_used,
         contacts_max=3,
+        late_auth_risk=method == "upi",
+        prior_action=0,
+        prior_outcome=0,
+        wedge="checkout_failed",
     )
-    rl_mask = action_mask(state)
+    return state.to_obs(), action_mask(state)
+
+
+def _build_wedge_obs(
+    wedge: str,
+    *,
+    case_id: str,
+    amount_inr: float,
+    failure_reason: str,
+    method: str,
+    hours_since_failure: float,
+    contacts_used: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    env = make_env(wedge, seed=0, env_name="val")
+    scenario = {
+        "case_id": case_id,
+        "amount_inr": amount_inr,
+        "reason": failure_reason,
+        "method": method,
+        "hours": hours_since_failure,
+        "contacts": contacts_used,
+    }
+    env.reset(seed=0, scenario=scenario)
+    obs = env._obs()
+    mask = env._mask()
+    return obs, mask
+
+
+def _action_note(wedge: str, selected: str, tick: int) -> str:
+    agent = get_agent(wedge)
+    return (
+        f"{agent['name']} tick {tick + 1}/{agent['max_steps']} — "
+        f"selected {selected} under {agent['tick_hours']}h decision cadence."
+    )
+
+
+def recommend_live(
+    tick: int,
+    contacts_used: int,
+    method: str,
+    hours_since_failure: float,
+    *,
+    wedge: str = "checkout_failed",
+    case_id: str = "CASE-0000",
+    amount_inr: float = 1500.0,
+    failure_reason: str = "gateway_error",
+    attempt_count: int | None = None,
+    is_returning: bool = True,
+) -> dict:
+    agent = get_agent(wedge)
+    max_tick = agent["max_steps"] - 1
+    tick = max(0, min(max_tick, tick))
+    attempt_count = attempt_count if attempt_count is not None else 1 + tick // 3
+
+    weights = _load_policy(wedge)
+    if wedge == "checkout_failed":
+        obs, rl_mask = _build_checkout_obs(
+            case_id=case_id,
+            amount_inr=amount_inr,
+            failure_reason=failure_reason,
+            method=method,
+            hours_since_failure=hours_since_failure,
+            contacts_used=contacts_used,
+            attempt_count=attempt_count,
+            is_returning=is_returning,
+        )
+    else:
+        obs, rl_mask = _build_wedge_obs(
+            wedge,
+            case_id=case_id,
+            amount_inr=amount_inr,
+            failure_reason=failure_reason,
+            method=method,
+            hours_since_failure=hours_since_failure,
+            contacts_used=contacts_used,
+        )
+
     _, _, rl_q_arr = ts_forward_from_weights(weights, obs)
     rl_q = {ACTION_NAMES[i]: float(rl_q_arr[i]) for i in range(len(ACTION_NAMES))}
-
     q_ui = _rl_q_to_ui_q(rl_q, method)
-    legal = _ui_legal_from_rl_mask(rl_mask, method, contacts_used, hours_since_failure)
+    legal = _ui_legal_from_rl_mask(rl_mask, method, contacts_used, hours_since_failure, wedge)
 
     guardrails = [
         {"rule": "contact_budget", "status": "ok", "note": f"{contacts_used} of 3 customer contacts used."},
@@ -176,7 +225,8 @@ def recommend_live(tick: int, contacts_used: int, method: str, hours_since_failu
             "status": "enforced",
             "note": "Trust budget exhausted (3/3) — outreach actions masked.",
         }
-    if method == "upi" and hours_since_failure < 6:
+    pending_hours = 6 if wedge == "checkout_failed" else 1
+    if method == "upi" and hours_since_failure < pending_hours:
         guardrails[1] = {
             "rule": "upi_pending_window",
             "status": "enforced",
@@ -185,6 +235,7 @@ def recommend_live(tick: int, contacts_used: int, method: str, hours_since_failu
 
     masked_q = {a: (q_ui[a] if a in legal else -1e9) for a in UI_ACTIONS}
     selected = max(legal, key=lambda a: masked_q[a])
+    baseline, _, _ = ts_forward_from_weights(weights, obs)
 
     return {
         "selected_action": selected,
@@ -192,10 +243,13 @@ def recommend_live(tick: int, contacts_used: int, method: str, hours_since_failu
         "legal_actions": sorted(legal),
         "policy_version": weights.get("policy_version", "dueling-ddqn-v2"),
         "source": "dueling_dqn_forward_pass",
+        "wedge": wedge,
+        "agent_id": wedge,
+        "agent_name": agent["name"],
         "constraints_passed": sum(1 for g in guardrails if g["status"] == "ok"),
         "constraints_total": len(guardrails),
         "guardrails": guardrails,
         "tick": tick,
-        "note": _TICK_NOTES[tick],
-        "baseline_value": float(ts_forward_from_weights(weights, obs)[0]),
+        "note": _action_note(wedge, selected, tick),
+        "baseline_value": float(baseline),
     }
