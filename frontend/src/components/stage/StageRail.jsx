@@ -271,31 +271,23 @@ export const StageRail = ({ wedge }) => {
             })}
           </div>
 
-          <div className="flex items-center justify-between gap-3 min-h-[28px]">
-            <span className="type-micro font-mono text-white/40 shrink-0">{elapsedLabel}</span>
+          <div className="flex items-center justify-between gap-2 min-h-[24px]">
             <motion.div
-              key={`${currentRolloutStep?.step}-${actionLabel}-${chapter}`}
-              initial={{ opacity: 0, y: 6 }}
+              key={`${currentRolloutStep?.step}-${actionLabel}`}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex-1 min-w-0 flex justify-center items-center gap-2"
+              className="flex-1 min-w-0 flex items-center gap-2 justify-center"
             >
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 type-micro text-white/45 shrink-0">
+              <span className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 type-micro text-white/50">
                 {chapter}
               </span>
-              <span
-                className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-3 py-1 type-micro font-mono text-white/75"
-              >
-                {currentRolloutStep && (
-                  <span className="text-white/40">step {currentRolloutStep.step + 1}</span>
-                )}
-                <span className="truncate">{actionLabel}</span>
-                {currentRolloutStep?.recovered && (
-                  <span className="text-success shrink-0">captured</span>
-                )}
-              </span>
+              <span className="type-micro font-mono text-white/70 truncate">{actionLabel}</span>
+              {currentRolloutStep?.recovered && (
+                <span className="type-micro text-success shrink-0">captured</span>
+              )}
             </motion.div>
-            <span className="type-micro font-mono text-white/40 shrink-0">
-              {recovered ? 'Recovered' : `${stepIdx + 1}/${rolloutSteps.length}`}
+            <span className="type-micro font-mono text-white/35 shrink-0 tabular-nums">
+              {stepIdx + 1}/{rolloutSteps.length}
             </span>
           </div>
         </div>

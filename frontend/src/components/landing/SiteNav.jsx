@@ -12,6 +12,11 @@ const NAV_LINKS = [
 export const SiteNav = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const onDemo =
+    pathname === '/checkout' ||
+    pathname === '/cart' ||
+    pathname === '/subscription' ||
+    pathname === '/invoice';
 
   return (
     <header
@@ -47,9 +52,11 @@ export const SiteNav = () => {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link to="/checkout" className="hidden sm:inline-flex btn-quiet items-center px-4">
-            Try demo
-          </Link>
+          {!onDemo && (
+            <Link to="/checkout" className="hidden sm:inline-flex btn-quiet items-center px-4">
+              Try demo
+            </Link>
+          )}
           <Link to="/start" className="btn-primary inline-flex items-center px-4">
             Get pilot access
           </Link>
