@@ -107,7 +107,7 @@ Or via [vercel.com](https://vercel.com) → Project → Settings → Environment
 ## CORS
 
 ```
-CORS_ORIGINS=https://frontend-nine-teal-86.vercel.app,https://your-custom-domain.com
+CORS_ORIGINS=https://razorstitch.vercel.app,https://your-custom-domain.com
 ```
 
 ---

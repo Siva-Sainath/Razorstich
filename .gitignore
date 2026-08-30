@@ -1,3 +1,4 @@
+.local-dev/
 .venv/
 __pycache__/
 *.py[cod]

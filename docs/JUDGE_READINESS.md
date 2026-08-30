@@ -1,6 +1,6 @@
 # Judge / Demo Readiness Checklist
 
-**Production frontend:** https://frontend-nine-teal-86.vercel.app
+**Production frontend:** https://razorstitch.vercel.app
 
 ## What is ready now
 
@@ -33,7 +33,7 @@ REACT_APP_BACKEND_URL=https://your-api.up.railway.app
 Backend env:
 
 ```
-CORS_ORIGINS=https://frontend-nine-teal-86.vercel.app
+CORS_ORIGINS=https://razorstitch.vercel.app
 RAZORPAY_KEY_ID=rzp_test_...
 RAZORPAY_KEY_SECRET=...
 ```
