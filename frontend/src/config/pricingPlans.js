@@ -7,7 +7,8 @@ export const PRICING_PLANS = [
     tagline: 'Try the product before you connect Razorpay',
     price: { monthly: '₹0', annual: '₹0' },
     period: 'forever',
-    cta: 'Open demo',
+    cta: 'Try Test checkout',
+    ctaAction: 'razorpay_sandbox',
     ctaHref: '/checkout',
     highlight: false,
     features: [

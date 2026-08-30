@@ -12,7 +12,6 @@ import { LandingPage } from '@/pages/LandingPage';
 import { PricingPage } from '@/pages/PricingPage';
 import { IntegrationsPage } from '@/pages/IntegrationsPage';
 import { StartPage } from '@/pages/StartPage';
-import { SandboxPage } from '@/pages/SandboxPage';
 import { captureAttribution } from '@/lib/gtm';
 import { ErrorBoundary } from '@/components/kit/ErrorBoundary';
 
@@ -107,7 +106,7 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/start" element={<StartPage />} />
           <Route path="/integrations" element={<IntegrationsPage />} />
-          <Route path="/sandbox" element={<SandboxPage />} />
+          <Route path="/sandbox" element={<Navigate to="/pricing?try=sandbox" replace />} />
           <Route path="/checkout" element={<WedgeRoute wedge="checkout_failed" />} />
           <Route path="/cart" element={<WedgeRoute wedge="cart_abandon" />} />
           <Route path="/subscription" element={<WedgeRoute wedge="subscription_failed" />} />

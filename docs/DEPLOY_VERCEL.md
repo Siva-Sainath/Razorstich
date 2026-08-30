@@ -65,7 +65,7 @@ Copy the public URL, e.g. `https://razorstitch-api.up.railway.app`
 ## 3. Smoke test after deploy
 
 - `/` — landing + lead form + SiteNav
-- `/sandbox` — Razorpay test card checkout (no live PG keys)
+- `/pricing?try=sandbox` — Razorpay Standard Checkout modal (Test Mode keys on backend)
 - `/pricing` — same shell as landing; Glide-style tiers on dark theme
 - `/start` — pilot form → check backend `data/leads.json` or `GET /api/leads/stats`
 - `/checkout` — SiteNav + wedge tabs; demo plays without pitch overlay

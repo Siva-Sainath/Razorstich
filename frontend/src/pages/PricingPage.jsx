@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { MarketingPageShell, MarketingFooter } from '@/components/landing/MarketingPageShell';
 import { PageHero, PageSection } from '@/components/landing/MarketingLayout';
 import { LeadCaptureForm } from '@/components/landing/LeadCaptureForm';
+import { RazorpayPricingModal } from '@/components/razorpay/RazorpayPricingModal';
 import {
   PRICING_PLANS,
   FEATURE_MATRIX,
@@ -42,9 +43,18 @@ const FAQ = [
 export const PricingPage = () => {
   const [annual, setAnnual] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
+  const [razorpayOpen, setRazorpayOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('try') === 'sandbox') {
+      setRazorpayOpen(true);
+    }
+  }, [searchParams]);
 
   return (
     <MarketingPageShell>
+      <RazorpayPricingModal open={razorpayOpen} onClose={() => setRazorpayOpen(false)} />
       <PageHero
         eyebrow="Pricing"
         title="Pay only when money comes back"
@@ -78,7 +88,12 @@ export const PricingPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 mb-16 lg:mb-20">
           {PRICING_PLANS.map((plan) => (
-            <PricingTierCard key={plan.id} plan={plan} annual={annual} />
+            <PricingTierCard
+              key={plan.id}
+              plan={plan}
+              annual={annual}
+              onSandboxClick={() => setRazorpayOpen(true)}
+            />
           ))}
         </div>
 

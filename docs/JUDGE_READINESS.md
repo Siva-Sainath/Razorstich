@@ -11,15 +11,15 @@
 | Recovery demo (4 wedges, pitch mode opt-in) | Done |
 | Research / training proof | Done |
 | Pilot lead capture (`/start`) | Done (needs backend) |
-| **Razorpay Test Mode sandbox** (`/sandbox`) | Done — official test cards, no live PG |
+| **Razorpay Test Mode checkout** (pricing modal) | Done — official `checkout.js`, Test Mode keys |
 
-## Razorpay Test Mode (no compliance required)
+## Razorpay Test Mode (no live PG compliance)
 
-- **Route:** `/sandbox`
-- **API:** `POST /api/razorpay/test/pay` with test card numbers
-- **Success card:** `4111 1111 1111 1111`
-- **Failure card:** `4012 0010 3714 1112` → triggers DQN policy recommend
-- No Razorpay API keys required for judges
+- **Entry:** `/pricing` → Sandbox tier **Try Test checkout**, or `/pricing?try=sandbox`
+- **Flow:** Backend `POST /api/razorpay/orders` → Razorpay Standard Checkout modal (`checkout.js`)
+- **Test cards:** [Razorpay test card docs](https://razorpay.com/docs/payments/payments/test-card-details/) — e.g. `4239 5360 0631 5640` (Visa), any CVV, future expiry → mock bank page → Success/Failure
+- **Keys:** `RAZORPAY_KEY_ID` + `RAZORPAY_KEY_SECRET` (Test Mode) in backend `.env`
+- Without keys: modal shows setup instructions + test card reference (no fake card form)
 
 ## One step for full production E2E
 
@@ -33,6 +33,8 @@ Backend env:
 
 ```
 CORS_ORIGINS=https://frontend-nine-teal-86.vercel.app
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
 ```
 
 Start command: `uvicorn server:app --host 0.0.0.0 --port $PORT`
@@ -40,7 +42,7 @@ Start command: `uvicorn server:app --host 0.0.0.0 --port $PORT`
 ## Recommended judge flow (5 min)
 
 1. **Landing** `/` — value prop + pilot CTA
-2. **Sandbox** `/sandbox` — fail a test payment → see agent recommendation
+2. **Pricing** `/pricing?try=sandbox` — Razorpay Test Checkout → fail payment → agent recommendation
 3. **Demo** `/checkout` — full recovery replay theater
 4. **Pricing** `/pricing` — success-fee GTM
 5. **Research** `/research` — training benchmarks

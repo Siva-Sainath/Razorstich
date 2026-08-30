@@ -5,7 +5,6 @@ import { LogoMark } from '@/components/brand/LogoMark';
 const NAV_LINKS = [
   { to: '/research', label: 'How it works' },
   { to: '/integrations', label: 'Integrations' },
-  { to: '/sandbox', label: 'Test checkout' },
   { to: '/checkout', label: 'Demo' },
   { to: '/pricing', label: 'Pricing' },
 ];

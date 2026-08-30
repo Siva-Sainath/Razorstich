@@ -51,7 +51,7 @@ export const MarketingFooter = () => (
         <Link to="/integrations" className="hover:text-white/60">
           Integrations
         </Link>
-        <Link to="/sandbox" className="hover:text-white/60">
+        <Link to="/pricing?try=sandbox" className="hover:text-white/60">
           Test checkout
         </Link>
         <Link to="/checkout" className="hover:text-white/60">

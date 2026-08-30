@@ -323,6 +323,70 @@ class RazorpayTestPayBody(BaseModel):
     method: str = "card"
 
 
+class RazorpayOrderBody(BaseModel):
+    amount_inr: float = 1499.0
+    wedge: str = "checkout_failed"
+
+
+class RazorpayVerifyBody(BaseModel):
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+    amount_inr: float = 1499.0
+    wedge: str = "checkout_failed"
+
+
+class RazorpayFailedBody(BaseModel):
+    order_id: str
+    payment_id: str | None = None
+    error_code: str | None = None
+    error_description: str | None = None
+    amount_inr: float = 1499.0
+    wedge: str = "checkout_failed"
+
+
+@api_router.post("/razorpay/orders")
+async def razorpay_create_order(body: RazorpayOrderBody):
+    """Standard Checkout — create Razorpay order (Test Mode keys)."""
+    from razorpay_checkout import create_checkout_order
+
+    try:
+        return create_checkout_order(amount_inr=body.amount_inr, wedge=body.wedge)
+    except Exception as exc:
+        logger.exception("razorpay order failed")
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@api_router.post("/razorpay/verify")
+async def razorpay_verify_payment(body: RazorpayVerifyBody):
+    from razorpay_checkout import handle_payment_success
+
+    try:
+        return handle_payment_success(
+            order_id=body.razorpay_order_id,
+            payment_id=body.razorpay_payment_id,
+            signature=body.razorpay_signature,
+            amount_inr=body.amount_inr,
+            wedge=body.wedge,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@api_router.post("/razorpay/payment/failed")
+async def razorpay_payment_failed(body: RazorpayFailedBody):
+    from razorpay_checkout import handle_payment_failed
+
+    return handle_payment_failed(
+        order_id=body.order_id,
+        payment_id=body.payment_id,
+        error_code=body.error_code,
+        error_description=body.error_description,
+        amount_inr=body.amount_inr,
+        wedge=body.wedge,
+    )
+
+
 @api_router.get("/razorpay/test/cards")
 async def razorpay_test_cards():
     """Official Razorpay test card catalog for sandbox checkout (no live PG keys)."""
@@ -363,7 +427,7 @@ async def razorpay_webhook_stub():
     return {
         "ok": True,
         "test_mode": True,
-        "message": "Use /sandbox for Razorpay test card checkout, or POST /api/razorpay/test/pay",
+        "message": "Use /pricing?try=sandbox for Razorpay Standard Checkout (Test Mode), or POST /api/razorpay/orders",
     }
 
 

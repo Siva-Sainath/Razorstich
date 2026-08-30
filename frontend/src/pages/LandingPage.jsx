@@ -60,7 +60,7 @@ export const LandingPage = () => {
                 <Link to="/start" className="btn-primary inline-flex items-center px-6">
                   Request pilot access
                 </Link>
-                <Link to="/sandbox" className="btn-quiet inline-flex items-center px-6">
+                <Link to="/pricing?try=sandbox" className="btn-quiet inline-flex items-center px-6">
                   Razorpay test checkout
                 </Link>
                 <Link to="/checkout" className="btn-quiet inline-flex items-center px-6">

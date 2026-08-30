@@ -87,8 +87,15 @@ export const VoiceAddonSection = ({ addon }) => (
   </section>
 );
 
-export const PricingTierCard = ({ plan, annual }) => {
+export const PricingTierCard = ({ plan, annual, onSandboxClick }) => {
   const price = annual ? plan.price.annual : plan.price.monthly;
+  const isSandbox = plan.ctaAction === 'razorpay_sandbox';
+
+  const ctaClass = `inline-flex items-center justify-center h-11 rounded-xl font-semibold text-sm transition-colors w-full ${
+    plan.highlight
+      ? 'bg-primary text-[hsl(218_62%_7%)] hover:bg-primary/90'
+      : 'bg-white/[0.07] border border-white/10 text-white/85 hover:bg-white/[0.1]'
+  }`;
 
   return (
     <article
@@ -125,16 +132,15 @@ export const PricingTierCard = ({ plan, annual }) => {
         ))}
       </ul>
 
-      <Link
-        to={plan.ctaHref}
-        className={`inline-flex items-center justify-center h-11 rounded-xl font-semibold text-sm transition-colors ${
-          plan.highlight
-            ? 'bg-primary text-[hsl(218_62%_7%)] hover:bg-primary/90'
-            : 'bg-white/[0.07] border border-white/10 text-white/85 hover:bg-white/[0.1]'
-        }`}
-      >
-        {plan.cta}
-      </Link>
+      {isSandbox ? (
+        <button type="button" onClick={onSandboxClick} className={ctaClass}>
+          {plan.cta}
+        </button>
+      ) : (
+        <Link to={plan.ctaHref} className={ctaClass}>
+          {plan.cta}
+        </Link>
+      )}
     </article>
   );
 };
