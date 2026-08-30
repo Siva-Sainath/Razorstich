@@ -10,11 +10,8 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/agents
-    # Pilot leads + payment orders persist across deploys (optional on free tier)
-    disk:
-      name: razorstitch-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1
+    # Free tier: no persistent disk — leads/payment_orders JSON in data/ are ephemeral
+    # (lost on redeploy). Upgrade to Starter + add a disk block if you need persistence.
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.0"

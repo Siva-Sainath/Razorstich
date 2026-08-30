@@ -25,6 +25,8 @@ Deploy **backend first**, copy the public URL, then set `REACT_APP_BACKEND_URL` 
 
 Copy the service URL, e.g. `https://razorstitch-api.onrender.com`.
 
+**Free tier note:** Render free web services cannot attach disks. Pilot leads (`data/leads.json`) and Razorpay order records (`data/payment_orders.json`) are **ephemeral** — they reset on redeploy or instance restart. Policy API, demos, and checkout still work; only stored leads/orders are affected. For persistence, upgrade the service to Starter and add a `disk` block in `render.yaml`.
+
 ### Backend smoke test
 
 ```bash
