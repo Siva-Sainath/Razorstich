@@ -18,3 +18,9 @@ eval/checkpoints/*.pt
 eval/results/*.json
 *.ipynb_checkpoints/
 eval/logs/
+data/leads.json
+eval/checkpoints/milestones/
+eval/results/hpo_trials/
+frontend-preview.png
+stage-preview.png
+stage-brain-preview.png
