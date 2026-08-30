@@ -34,6 +34,21 @@ const PitchControls = () => {
   const { pitchMode, setPitchMode, speed, setSpeed, playDurationMs } = useTimeline();
   const approxSec = Math.round(playDurationMs / 1000);
 
+  if (!pitchMode) {
+    return (
+      <div className="flex justify-end pt-2 mt-2 border-t border-white/[0.06]">
+        <button
+          type="button"
+          onClick={() => setPitchMode(true)}
+          className="type-micro text-white/40 hover:text-primary/80 transition-colors"
+          data-testid="pitch-mode-enable"
+        >
+          Recording mode →
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 pt-3 mt-3 border-t border-white/[0.06]">
       <label className="inline-flex items-center gap-2 cursor-pointer select-none">
@@ -196,7 +211,7 @@ export const StageRail = ({ wedge }) => {
 
   return (
     <div
-      className="stage-rail shrink-0 rounded-[20px] border border-white/10 bg-black/50 backdrop-blur-xl px-4 py-3 z-20"
+      className="stage-rail shrink-0 rounded-[20px] border border-white/10 bg-black/40 backdrop-blur-xl px-3 sm:px-4 py-2.5 z-20"
       data-testid="audit-scrubber"
     >
       <div className="flex items-center gap-3 sm:gap-4">

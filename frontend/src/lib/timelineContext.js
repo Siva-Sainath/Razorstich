@@ -117,13 +117,13 @@ export const TimelineProvider = ({ children }) => {
   const [t, setTState] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [pitchMode, setPitchModeState] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return localStorage.getItem(PITCH_MODE_KEY) !== '0';
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(PITCH_MODE_KEY) === '1';
   });
   const [speed, setSpeed] = useState(() => {
-    if (typeof window === 'undefined') return 0.65;
+    if (typeof window === 'undefined') return 1;
     const stored = parseFloat(localStorage.getItem(PITCH_SPEED_KEY) || '');
-    return Number.isFinite(stored) && stored > 0 ? stored : 0.65;
+    return Number.isFinite(stored) && stored > 0 ? stored : 1;
   });
   const [livePolicy, setLivePolicy] = useState(null);
   const [policyError, setPolicyError] = useState(null);

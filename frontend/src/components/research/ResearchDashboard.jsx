@@ -1,4 +1,4 @@
-import { MarketingPageShell } from '@/components/landing/MarketingPageShell';
+import { MarketingPageShell, MarketingFooter } from '@/components/landing/MarketingPageShell';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,6 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { API } from '@/lib/timelineContext';
 import { WEDGE_LANES } from '@/config/wedges';
-import { WedgeNav } from '@/components/stage/WedgeNav';
 import { ResearchFigure } from './ResearchFigure';
 import { MethodPipeline } from './MethodPipeline';
 import { DecisionLedger } from './DecisionLedger';
@@ -47,10 +46,6 @@ export const ResearchDashboard = () => {
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         {/* Cover — AutoGo-style hero */}
         <header className="mb-12 sm:mb-16" data-testid="research-cover">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <WedgeNav />
-          </div>
-
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -231,6 +226,7 @@ EPISODES=20000 python scripts/train_all_wedges.py`}
           </div>
         )}
       </div>
+      <MarketingFooter />
     </MarketingPageShell>
   );
 };

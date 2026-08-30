@@ -1,6 +1,5 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AmbientLightField } from '@/components/brand/AmbientLightField';
 import { StageHeader } from './StageHeader';
 import { WedgeLeftPanel } from './WedgeLeftPanel';
 import { StageMetricsStack } from './StageMetricsStack';
@@ -16,20 +15,18 @@ export const RecoveryStage = ({ wedge }) => {
 
   useEffect(() => {
     setShowIntro(true);
-    const ms = pitchMode ? 6000 : 3200;
+    const ms = pitchMode ? 5000 : 2500;
     const id = setTimeout(() => setShowIntro(false), ms);
     return () => clearTimeout(id);
   }, [caseData?.case?.id, pitchMode]);
 
   return (
-    <div className="recovery-stage h-[100dvh] min-h-[600px] flex flex-col relative overflow-hidden rs-ambient noise-overlay">
-      <AmbientLightField />
-
+    <div className="recovery-stage flex-1 min-h-0 flex flex-col relative overflow-hidden">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="relative z-10 flex flex-col h-full max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 gap-4"
+        transition={{ duration: 0.4 }}
+        className="relative flex flex-col flex-1 min-h-0 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 gap-2 sm:gap-3"
       >
         <StageHeader wedge={wedge} />
         <WedgeNav />
@@ -39,19 +36,25 @@ export const RecoveryStage = ({ wedge }) => {
         <StageCasePicker wedge={wedge} />
         <PitchNarrator wedge={wedge} />
 
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4">
           <div className="lg:col-span-7 min-h-0 flex flex-col">
             <WedgeLeftPanel wedge={wedge} ghostOverlay={ghostOverlay} />
           </div>
-          <div className="lg:col-span-5 min-h-0 flex flex-col max-h-[48vh] lg:max-h-none">
+          <div className="lg:col-span-5 min-h-0 flex flex-col max-h-[42vh] lg:max-h-none">
             <StageMetricsStack wedge={wedge} />
           </div>
         </div>
 
         <StageRail wedge={wedge} />
-        <p className="type-micro text-center text-white/25 shrink-0 hidden sm:block">
-          Space play/pause · ← → steps · Pitch mode auto-pauses · G toggle brain view
-        </p>
+        {pitchMode ? (
+          <p className="type-micro text-center text-white/25 shrink-0 hidden sm:block">
+            Space play/pause · ← → steps · Pitch mode auto-pauses · G toggle brain view
+          </p>
+        ) : (
+          <p className="type-micro text-center text-white/25 shrink-0 hidden sm:block">
+            Space play/pause · ← → steps · G toggle brain view
+          </p>
+        )}
       </motion.div>
     </div>
   );

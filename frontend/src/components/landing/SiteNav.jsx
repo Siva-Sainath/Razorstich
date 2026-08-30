@@ -9,16 +9,13 @@ const NAV_LINKS = [
   { to: '/pricing', label: 'Pricing' },
 ];
 
-export const SiteNav = ({ transparent = false }) => {
+export const SiteNav = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-colors backdrop-blur-xl ${ transparent
-            ? 'border-white/[0.04] bg-[hsl(218_62%_7%)]/80'
-            : 'border-white/[0.06] bg-[hsl(218_62%_7%)]/95'
-      }`}
+      className="sticky top-0 z-50 border-b border-white/[0.06] bg-[hsl(218_62%_7%)]/95 backdrop-blur-xl shrink-0"
       data-testid="site-nav"
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">

@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { TimelineProvider, useTimeline } from '@/lib/timelineContext';
 import { SterilizeIntro } from '@/components/brand/SterilizeIntro';
+import { AppShell } from '@/components/landing/MarketingPageShell';
 import { WedgeStageLoader } from '@/components/stage/WedgeStageLoader';
 import { ResearchDashboard } from '@/components/research/ResearchDashboard';
 import { LandingPage } from '@/pages/LandingPage';
@@ -14,6 +15,12 @@ import { StartPage } from '@/pages/StartPage';
 import { captureAttribution } from '@/lib/gtm';
 import { ErrorBoundary } from '@/components/kit/ErrorBoundary';
 
+const DemoChrome = ({ children }) => (
+  <AppShell variant="demo" showFooter={false}>
+    {children}
+  </AppShell>
+);
+
 const LoadingTheater = ({ label }) => (
   <div className="h-[100dvh] flex flex-col items-center justify-center gap-4 px-6 text-center" data-testid="theater-loading">
     <motion.div className="w-10 h-10 rounded-full border-2 border-primary/25 border-t-primary animate-spin" />
@@ -22,14 +29,16 @@ const LoadingTheater = ({ label }) => (
 );
 
 const ErrorTheater = ({ message, onRetry, apiBase }) => (
-  <div className="h-[100dvh] flex flex-col items-center justify-center gap-4 px-6 text-center" data-testid="theater-error">
-    <p className="type-section text-white/80">Cannot reach backend.</p>
-    <p className="type-body text-warning/90">{message}</p>
-    <button type="button" onClick={onRetry} className="btn-primary px-5">
-      Retry
-    </button>
-    <p className="type-micro font-mono">{apiBase}</p>
-  </div>
+  <DemoChrome>
+    <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center" data-testid="theater-error">
+      <p className="type-section text-white/80">Cannot reach backend.</p>
+      <p className="type-body text-warning/90">{message}</p>
+      <button type="button" onClick={onRetry} className="btn-primary px-5">
+        Retry
+      </button>
+      <p className="type-micro font-mono">{apiBase}</p>
+    </div>
+  </DemoChrome>
 );
 
 const WedgeShell = ({ wedge }) => {
@@ -77,7 +86,9 @@ const WedgeRoute = ({ wedge }) => (
   <TimelineProvider>
     <SterilizeIntro />
     <ErrorBoundary message="Recovery stage crashed. Reload to continue.">
-      <WedgeShell wedge={wedge} />
+      <DemoChrome>
+        <WedgeShell wedge={wedge} />
+      </DemoChrome>
     </ErrorBoundary>
   </TimelineProvider>
 );

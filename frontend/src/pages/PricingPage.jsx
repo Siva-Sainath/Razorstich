@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HeroBeams } from '@/components/brand/HeroBeams';
 import { MarketingPageShell, MarketingFooter } from '@/components/landing/MarketingPageShell';
+import { PageHero, PageSection } from '@/components/landing/MarketingLayout';
 import { LeadCaptureForm } from '@/components/landing/LeadCaptureForm';
 import {
   PRICING_PLANS,
@@ -45,44 +45,35 @@ export const PricingPage = () => {
 
   return (
     <MarketingPageShell>
-      <section className="relative overflow-hidden border-b border-white/[0.05]">
-        <HeroBeams />
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 text-center">
-          <p className="font-mono type-micro tracking-[0.14em] text-accent uppercase mb-4">
-            Pricing
-          </p>
-          <h1 className="font-display text-[clamp(2.25rem,5.5vw,3.5rem)] font-semibold text-white/95 leading-[1.08] tracking-[-0.02em] max-w-2xl mx-auto">
-            Pay only when money comes back
-          </h1>
-          <p className="type-body text-white/55 mt-5 max-w-lg mx-auto leading-relaxed">
-            Start free in Sandbox. Connect Razorpay for live recovery — or commit annually for a lower success fee.
-          </p>
-
-          <div className="inline-flex items-center gap-1 mt-10 p-1 rounded-full bg-white/[0.05] border border-white/[0.08]">
-            <button
-              type="button"
-              onClick={() => setAnnual(false)}
-              className={`rounded-full px-5 py-2 type-meta font-medium transition-all ${
-                !annual ? 'bg-white/10 text-white shadow-sm' : 'text-white/45 hover:text-white/65'
-              }`}
-            >
-              Pay per recovery
-            </button>
-            <button
-              type="button"
-              onClick={() => setAnnual(true)}
-              className={`rounded-full px-5 py-2 type-meta font-medium transition-all flex items-center gap-2 ${
-                annual ? 'bg-white/10 text-white shadow-sm' : 'text-white/45 hover:text-white/65'
-              }`}
-            >
-              Annual commit
-              <span className="type-micro text-primary/90 bg-primary/10 px-2 py-0.5 rounded-full">−20%</span>
-            </button>
-          </div>
+      <PageHero
+        eyebrow="Pricing"
+        title="Pay only when money comes back"
+        subtitle="Start free in Sandbox. Connect Razorpay for live recovery — or commit annually for a lower success fee."
+      >
+        <div className="inline-flex items-center gap-1 mt-10 p-1 rounded-full bg-white/[0.05] border border-white/[0.08]">
+          <button
+            type="button"
+            onClick={() => setAnnual(false)}
+            className={`rounded-full px-5 py-2 type-meta font-medium transition-all ${
+              !annual ? 'bg-white/10 text-white shadow-sm' : 'text-white/45 hover:text-white/65'
+            }`}
+          >
+            Pay per recovery
+          </button>
+          <button
+            type="button"
+            onClick={() => setAnnual(true)}
+            className={`rounded-full px-5 py-2 type-meta font-medium transition-all flex items-center gap-2 ${
+              annual ? 'bg-white/10 text-white shadow-sm' : 'text-white/45 hover:text-white/65'
+            }`}
+          >
+            Annual commit
+            <span className="type-micro text-primary/90 bg-primary/10 px-2 py-0.5 rounded-full">−20%</span>
+          </button>
         </div>
-      </section>
+      </PageHero>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <PageSection className="!pt-10">
         <PricingVoiceGuide />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 mb-16 lg:mb-20">
@@ -153,7 +144,7 @@ export const PricingPage = () => {
             Talk to us
           </Link>
         </section>
-      </div>
+      </PageSection>
 
       <MarketingFooter />
     </MarketingPageShell>

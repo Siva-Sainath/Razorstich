@@ -49,13 +49,27 @@ Copy the public URL, e.g. `https://razorstitch-api.up.railway.app`
 
 ---
 
+## Pre-deploy checklist
+
+1. `cd frontend && npm run build` — catches JSX errors
+2. Click nav loop on localhost: `/` → `/pricing` → `/checkout` → `/research` → `/integrations` → `/start`
+3. **Same SiteNav** visible on marketing pages AND demo routes
+4. **Same dark background** — no white/light theme drift on pricing
+5. Demo defaults: pitch mode **off**, Normal 1× speed
+6. `REACT_APP_BACKEND_URL` on Vercel matches live backend
+7. Backend `CORS_ORIGINS` includes your Vercel URL
+8. Submit test lead on `/start` → `GET /api/leads/stats`
+
+---
+
 ## 3. Smoke test after deploy
 
-- `/` — landing + lead form
-- `/pricing` — voice guide widget loads (needs `REACT_APP_SMALLEST_AI_AGENT_ID` + domain allowlist)
+- `/` — landing + lead form + SiteNav
+- `/pricing` — same shell as landing; Glide-style tiers on dark theme
 - `/start` — pilot form → check backend `data/leads.json` or `GET /api/leads/stats`
-- `/checkout` — demo loads (needs backend)
-- `/research` — catalog loads from `GET /api/wedges/catalog`
+- `/checkout` — SiteNav + wedge tabs; demo plays without pitch overlay
+- `/subscription` — brain panel visible; compact stage rail
+- `/research` — catalog loads from `GET /api/wedges/catalog`; footer present
 
 ---
 

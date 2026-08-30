@@ -34,7 +34,7 @@ export const WedgeStageLoader = ({ wedge }) => {
 
   if (loadError) {
     return (
-      <div className="h-[100dvh] flex flex-col items-center justify-center gap-3 px-6 text-center">
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 px-6 text-center">
         <p className="type-section text-white/80">Cannot load wedge episode.</p>
         <p className="type-body text-warning/90">{loadError}</p>
         <p className="type-micro font-mono">{apiBase}</p>
@@ -44,7 +44,7 @@ export const WedgeStageLoader = ({ wedge }) => {
 
   if (!caseData) {
     return (
-      <div className="h-[100dvh] flex flex-col items-center justify-center gap-3">
+      <div className="flex-1 flex flex-col items-center justify-center gap-3">
         <div className="w-10 h-10 rounded-full border-2 border-primary/25 border-t-primary animate-spin" />
         <p className="type-body text-white/50">
           Building DQN rollout · {lane?.short || wedge.replace(/_/g, ' ')} · {defaultId || 'featured case'}
