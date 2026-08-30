@@ -334,6 +334,7 @@ export const PolicyBrainScene = ({
   selectedAction = '',
   className = '',
   height,
+  showHud = true,
 }) => {
   const activeStep = Math.min(pipelineStep, POLICY_NODES.length - 1);
   const resolvedHeight = height ?? 340;
@@ -378,23 +379,21 @@ export const PolicyBrainScene = ({
           </Suspense>
         </div>
 
-        <div className="absolute top-3 left-4 right-4 flex items-center justify-between type-micro font-mono z-10 pointer-events-none">
-          <div className="flex flex-col gap-0.5 max-w-[55%]">
-            <span className="text-white/45 truncate">Policy cortex</span>
-          </div>
-          <span
-            className={cn(
-              'px-2.5 py-0.5 rounded-md border type-micro shrink-0',
-              thinking
-                ? 'border-primary/45 bg-primary/10 text-primary'
-                : selectedAction
-                  ? 'border-[rgba(45,212,191,0.4)] bg-[rgba(45,212,191,0.08)] text-[rgba(45,212,191,0.9)]'
+        {showHud && (
+          <div className="absolute top-3 left-4 right-4 flex items-center justify-between type-micro font-mono z-10 pointer-events-none">
+            <span className="text-white/45 truncate">Pipeline</span>
+            <span
+              className={cn(
+                'px-2.5 py-0.5 rounded-md border type-micro shrink-0',
+                thinking
+                  ? 'border-primary/45 bg-primary/10 text-primary'
                   : 'border-white/10 text-white/45'
-            )}
-          >
-            {thinking ? 'firing' : selectedAction ? selectedAction.replace(/_/g, ' ') : 'inspect'}
-          </span>
-        </div>
+              )}
+            >
+              {thinking ? 'firing' : 'inspect'}
+            </span>
+          </div>
+        )}
       </div>
     </ErrorBoundary>
   );

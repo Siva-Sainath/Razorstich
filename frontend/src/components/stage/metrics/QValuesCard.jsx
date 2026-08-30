@@ -75,17 +75,6 @@ export const QValuesCard = ({ delay = 0 }) => {
       ) : (
         <p className="type-body text-white/55">Thinking through options…</p>
       )}
-      {rec?.selected_action && (
-        <motion.p
-          key={rec.selected_action}
-          initial={{ scale: 0.96, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          data-testid="chosen-action"
-          className="type-meta mt-3 surface-inset px-3 py-2 rounded-xl border border-primary/20 text-white/70"
-        >
-          Recommended · <span className="text-primary font-medium">{friendlyAction(rec.selected_action)}</span>
-        </motion.p>
-      )}
     </GlassCard>
   );
 };
