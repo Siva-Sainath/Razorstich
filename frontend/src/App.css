@@ -5,3 +5,11 @@
 .App {
     min-height: 100vh;
 }
+
+.recovery-stage {
+    overflow: hidden;
+}
+
+.stage-viewport {
+    box-shadow: var(--shadow-1);
+}

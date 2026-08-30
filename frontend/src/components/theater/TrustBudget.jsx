@@ -19,7 +19,7 @@ export const TrustBudget = ({ className }) => {
           <div data-testid="trust-budget-remaining" className="font-mono text-2xl font-semibold tabular-nums text-white leading-none">
             {trustRemaining}
           </div>
-          <div className="text-[13px] text-white/45 mt-1">of {maxContacts} left</div>
+          <div className="type-meta text-white/45 mt-1">of {maxContacts} left</div>
         </div>
       }
     >
@@ -52,7 +52,7 @@ export const TrustBudget = ({ className }) => {
               data-testid="trust-ledger-row"
             >
               <span className="text-white/60">{e.reason}</span>
-              <span className="font-mono text-[13px] tabular-nums text-white/85">{`contact ${i + 1}/3`}</span>
+              <span className="font-mono type-meta tabular-nums text-white/85">{`contact ${i + 1}/3`}</span>
             </motion.div>
           ))}
         </AnimatePresence>
@@ -60,7 +60,7 @@ export const TrustBudget = ({ className }) => {
           <p className="text-sm text-white/40">No customer contacts yet.</p>
         )}
         {contactsUsed >= maxContacts && (
-          <p className="text-[13px] text-warning">Budget exhausted — outreach actions are masked from the policy.</p>
+          <p className="type-meta text-warning">Budget exhausted — outreach actions are masked from the policy.</p>
         )}
       </div>
     </Panel>

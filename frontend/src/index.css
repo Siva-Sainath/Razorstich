@@ -102,6 +102,115 @@ code {
         font-variant-numeric: tabular-nums;
     }
 
+    /* ---------- Typography scale (strict hierarchy) ---------- */
+    .type-hero {
+        font-family: 'Newsreader', Georgia, serif;
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        line-height: 1.05;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: rgba(255, 255, 255, 0.92);
+    }
+    .type-panel-title {
+        font-family: 'Newsreader', Georgia, serif;
+        font-size: 1.125rem;
+        line-height: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: rgba(255, 255, 255, 0.9);
+    }
+    .type-section {
+        font-size: 1rem;
+        line-height: 1.375rem;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        color: rgba(255, 255, 255, 0.85);
+    }
+    .type-body {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    .type-meta {
+        font-size: 0.75rem;
+        line-height: 1rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .type-micro {
+        font-size: 0.6875rem;
+        line-height: 0.875rem;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        color: rgba(255, 255, 255, 0.4);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(24px);
+    }
+    .type-metric {
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 1rem;
+        line-height: 1.25rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ---------- Standardized button treatments ---------- */
+    .btn-primary {
+        height: 2.5rem;
+        border-radius: 12px;
+        background: hsl(213 89% 56%);
+        color: hsl(218 62% 7%);
+        font-size: 0.75rem;
+        line-height: 1rem;
+        font-weight: 600;
+        transition: background-color 150ms ease, transform 150ms ease;
+    }
+    .btn-primary:hover { background: hsl(213 89% 50%); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-quiet {
+        height: 2.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.75rem;
+        line-height: 1rem;
+        font-weight: 500;
+        transition: background-color 150ms ease, transform 150ms ease;
+    }
+    .btn-quiet:hover { background: rgba(255, 255, 255, 0.1); }
+    .btn-quiet:active { transform: scale(0.98); }
+
+    /* ---------- Surface ladder ---------- */
+    .surface-0 { background: hsl(218 62% 7%); }
+    .surface-1 {
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .surface-2 {
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .surface-inset {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 16px;
+    }
+    .panel-hover-lift {
+        transition: border-color 0.18s ease, transform 0.18s var(--ease-out);
+    }
+    .panel-hover-lift:hover {
+        border-color: rgba(255, 255, 255, 0.14);
+        transform: translateY(-1px);
+    }
+
     /* ---------- Ambient system (code-crafted, no raster) ---------- */
     .rs-ambient {
         position: relative;
@@ -206,6 +315,53 @@ code {
         opacity: 0.75;
         border-radius: 999px;
         pointer-events: none;
+    }
+
+    /* Floating replay dock — idle glass, stronger on hover */
+    .dock-hover-zone {
+        pointer-events: auto;
+    }
+    .dock-hover-zone .dock-shell {
+        opacity: 0.22;
+        transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dock-hover-zone:hover .dock-shell,
+    .dock-hover-zone:focus-within .dock-shell {
+        opacity: 1;
+    }
+    .dock-glass {
+        background: rgba(255, 255, 255, 0.035);
+        backdrop-filter: blur(14px) saturate(150%);
+        -webkit-backdrop-filter: blur(14px) saturate(150%);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.04),
+            0 12px 40px rgba(0, 0, 0, 0.25);
+        transition:
+            background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+            border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+            box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dock-hover-zone:hover .dock-glass,
+    .dock-hover-zone:focus-within .dock-glass {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+            0 24px 70px rgba(0, 0, 0, 0.55);
+    }
+    .dock-hover-zone:hover .dock-glass.glint-top::before,
+    .dock-hover-zone:focus-within .dock-glass.glint-top::before {
+        opacity: 0.9;
+    }
+    .dock-hover-zone .dock-controls {
+        opacity: 0.55;
+        transition: opacity 0.35s ease;
+    }
+    .dock-hover-zone:hover .dock-controls,
+    .dock-hover-zone:focus-within .dock-controls {
+        opacity: 1;
     }
 
     /* Sentence-case meta label (legacy class kept) */

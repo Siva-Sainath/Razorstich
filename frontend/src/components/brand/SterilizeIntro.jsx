@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { LogoMark } from './LogoMark';
 
-/** Fast, quiet boot moment (<=900ms). Skipped under prefers-reduced-motion. */
+const INTRO_MS = 700;
+
+/** Fast boot splash — once per session. */
 export const SterilizeIntro = () => {
-  const [done, setDone] = useState(() =>
-    typeof window !== 'undefined' &&
-    window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
+  const reduce = useReducedMotion();
+  const [done, setDone] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return true;
+    return sessionStorage.getItem('rs-intro-seen') === '1';
+  });
 
   useEffect(() => {
     if (done) return undefined;
-    const id = setTimeout(() => setDone(true), 900);
+    const id = setTimeout(() => {
+      sessionStorage.setItem('rs-intro-seen', '1');
+      setDone(true);
+    }, reduce ? 0 : INTRO_MS);
     return () => clearTimeout(id);
-  }, [done]);
+  }, [done, reduce]);
 
   return (
     <AnimatePresence>
@@ -22,7 +28,7 @@ export const SterilizeIntro = () => {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.32, ease: 'easeInOut' } }}
-          className="fixed inset-0 z-[400] bg-background flex flex-col items-center justify-center gap-4"
+          className="fixed inset-0 z-[400] bg-background flex flex-col items-center justify-center gap-4 px-6"
           data-testid="boot-intro"
           aria-hidden="true"
         >
@@ -40,10 +46,10 @@ export const SterilizeIntro = () => {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.15, duration: 0.3 }}
-            className="font-mono text-[12px] text-white/45"
+            transition={{ delay: 0.12, duration: 0.28 }}
+            className="font-mono type-meta text-white/45"
           >
-            Initializing timeline…
+            Loading recovery theater…
           </motion.p>
         </motion.div>
       )}

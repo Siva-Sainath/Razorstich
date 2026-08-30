@@ -1,145 +1,109 @@
 import React from 'react';
 import '@/App.css';
 import { motion } from 'framer-motion';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { TimelineProvider, useTimeline } from '@/lib/timelineContext';
-import { containerVariants } from '@/components/theater/Panel';
-import { ConsoleHeader } from '@/components/brand/ConsoleHeader';
 import { SterilizeIntro } from '@/components/brand/SterilizeIntro';
-import { AmbientLightField } from '@/components/brand/AmbientLightField';
-import { StitchLine } from '@/components/brand/StitchLine';
-import { CaseHeader } from '@/components/theater/CaseHeader';
-import { FailureAnatomy } from '@/components/theater/FailureAnatomy';
-import { RecoveryWindow } from '@/components/theater/RecoveryWindow';
-import { GhostRuns } from '@/components/theater/GhostRuns';
-import { PolicyBrainStrip } from '@/components/theater/PolicyBrainStrip';
-import { CustomerPlane } from '@/components/theater/CustomerPlane';
-import { TrustBudget } from '@/components/theater/TrustBudget';
-import { InterventionComposer } from '@/components/theater/InterventionComposer';
-import { LiveEventTicker } from '@/components/theater/LiveEventTicker';
-import { AuditTrailScrubber } from '@/components/theater/AuditTrailScrubber';
-import { RecoverySummary } from '@/components/theater/RecoverySummary';
-import { CaseQueue } from '@/components/theater/CaseQueue';
+import { WedgeStageLoader } from '@/components/stage/WedgeStageLoader';
+import { ResearchDashboard } from '@/components/research/ResearchDashboard';
+import { LandingPage } from '@/pages/LandingPage';
+import { PricingPage } from '@/pages/PricingPage';
+import { IntegrationsPage } from '@/pages/IntegrationsPage';
+import { StartPage } from '@/pages/StartPage';
+import { captureAttribution } from '@/lib/gtm';
+import { ErrorBoundary } from '@/components/kit/ErrorBoundary';
 
-const LoadingTheater = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center gap-4" data-testid="theater-loading">
-    <motion.div
-      className="w-10 h-10 rounded-full border-2 border-primary/25 border-t-primary"
-      animate={{ rotate: 360 }}
-      transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-    />
-    <p className="text-sm text-white/50">Preparing your recovery view…</p>
+const LoadingTheater = ({ label }) => (
+  <div className="h-[100dvh] flex flex-col items-center justify-center gap-4 px-6 text-center" data-testid="theater-loading">
+    <motion.div className="w-10 h-10 rounded-full border-2 border-primary/25 border-t-primary animate-spin" />
+    <p className="type-body text-white/55">{label || 'Loading recovery episode…'}</p>
   </div>
 );
 
-const Theater = () => {
-  const { caseData, togglePlay, setPlaying, setT, t } = useTimeline();
+const ErrorTheater = ({ message, onRetry, apiBase }) => (
+  <div className="h-[100dvh] flex flex-col items-center justify-center gap-4 px-6 text-center" data-testid="theater-error">
+    <p className="type-section text-white/80">Cannot reach backend.</p>
+    <p className="type-body text-warning/90">{message}</p>
+    <button type="button" onClick={onRetry} className="btn-primary px-5">
+      Retry
+    </button>
+    <p className="type-micro font-mono">{apiBase}</p>
+  </div>
+);
 
-  // Keyboard shortcuts: Space play/pause · arrow keys step 6h ticks
+const WedgeShell = ({ wedge }) => {
+  const {
+    loadError,
+    loadInitial,
+    apiBase,
+    togglePlay,
+    setPlaying,
+    goToStep,
+    currentStepIndex,
+    toggleGhostOverlay,
+  } = useTimeline();
+
   React.useEffect(() => {
     const onKey = (e) => {
       const target = e.target;
-      if (
-        target.closest?.('input, textarea, select, [contenteditable="true"], [role="slider"]') ||
-        target.tagName === 'BUTTON'
-      ) {
-        return;
-      }
+      if (target.closest?.('input, textarea, select, [contenteditable="true"]') || target.tagName === 'BUTTON') return;
       if (e.code === 'Space') {
         e.preventDefault();
         if (!e.repeat) togglePlay();
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         setPlaying(false);
-        setT(Math.min(1, (Math.floor(t * 12 + 1e-6) + 1) / 12));
+        goToStep(currentStepIndex + 1);
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         setPlaying(false);
-        setT(Math.max(0, (Math.ceil(t * 12 - 1e-6) - 1) / 12));
+        goToStep(currentStepIndex - 1);
+      } else if (e.key === 'g' || e.key === 'G') {
+        e.preventDefault();
+        toggleGhostOverlay();
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [togglePlay, setPlaying, setT, t]);
+  }, [togglePlay, setPlaying, goToStep, currentStepIndex, toggleGhostOverlay]);
 
-  if (!caseData) return <LoadingTheater />;
+  if (loadError) return <ErrorTheater message={loadError} onRetry={loadInitial} apiBase={apiBase} />;
 
-  return (
-    <div className="min-h-screen rs-ambient noise-overlay relative overflow-x-hidden">
-      <AmbientLightField />
-      <SterilizeIntro />
-
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="relative z-10 max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8 pt-7 pb-36 flex flex-col gap-6 lg:gap-8"
-      >
-        {/* Quiet console header — contextual status, no fixed bar */}
-        <ConsoleHeader />
-
-        {/* What's at stake */}
-        <CaseHeader />
-
-        {/* Signature stitch line — sutures closed as recovery progresses */}
-        <StitchLine />
-
-        {/* Recap — appears when the episode closes recovered */}
-        <RecoverySummary />
-
-        {/* HERO ROW: Failure anatomy (left) + Policy Brain (center) */}
-        <div className="grid grid-cols-12 gap-6 lg:gap-8">
-          <FailureAnatomy className="col-span-12 lg:col-span-4" />
-          <PolicyBrainStrip className="col-span-12 lg:col-span-8" />
-        </div>
-
-        {/* Recovery window + next step */}
-        <div className="grid grid-cols-12 gap-6 lg:gap-8">
-          <RecoveryWindow className="col-span-12 lg:col-span-7" />
-          <div className="col-span-12 lg:col-span-5 flex flex-col gap-6 lg:gap-8">
-            <InterventionComposer />
-            <TrustBudget />
-          </div>
-        </div>
-
-        {/* Proof + customer context */}
-        <div className="grid grid-cols-12 gap-6 lg:gap-8">
-          <GhostRuns className="col-span-12 lg:col-span-7" />
-          <CustomerPlane className="col-span-12 lg:col-span-5" />
-        </div>
-
-        <div className="grid grid-cols-12 gap-6 lg:gap-8">
-          <LiveEventTicker className="col-span-12 lg:col-span-7" />
-          <CaseQueue className="col-span-12 lg:col-span-5" />
-        </div>
-
-        <footer className="flex items-center justify-between flex-wrap gap-2 pt-2">
-          <p className="text-[13px] text-white/35">RazorStitch · 72h recovery episodes · 6h decision ticks · demo, all data simulated</p>
-          <p className="text-[13px] text-white/35 font-mono">Space play/pause · ← → step ticks</p>
-        </footer>
-      </motion.div>
-
-      <AuditTrailScrubber />
-    </div>
-  );
+  return <WedgeStageLoader wedge={wedge} />;
 };
 
+const WedgeRoute = ({ wedge }) => (
+  <TimelineProvider>
+    <SterilizeIntro />
+    <ErrorBoundary message="Recovery stage crashed. Reload to continue.">
+      <WedgeShell wedge={wedge} />
+    </ErrorBoundary>
+  </TimelineProvider>
+);
+
 function App() {
+  React.useEffect(() => {
+    captureAttribution();
+  }, []);
+
   return (
     <div className="App">
-      <TimelineProvider>
-        <Theater />
-      </TimelineProvider>
-      <Toaster
-        position="top-right"
-        theme="dark"
-        toastOptions={{
-          classNames: {
-            toast: 'rounded-[16px] border border-white/12 bg-[hsl(218_55%_12%/0.92)] backdrop-blur-xl text-white/90 shadow-[var(--shadow-1)]',
-            description: 'text-white/60',
-          },
-        }}
-      />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/start" element={<StartPage />} />
+          <Route path="/integrations" element={<IntegrationsPage />} />
+          <Route path="/checkout" element={<WedgeRoute wedge="checkout_failed" />} />
+          <Route path="/cart" element={<WedgeRoute wedge="cart_abandon" />} />
+          <Route path="/subscription" element={<WedgeRoute wedge="subscription_failed" />} />
+          <Route path="/invoice" element={<WedgeRoute wedge="invoice_overdue" />} />
+          <Route path="/research" element={<ResearchDashboard />} />
+          <Route path="/learn" element={<Navigate to="/research" replace />} />
+        </Routes>
+      </BrowserRouter>
+      <Toaster position="top-right" theme="dark" />
     </div>
   );
 }

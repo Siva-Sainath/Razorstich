@@ -1,9 +1,15 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTimeline, API } from '@/lib/timelineContext';
-import { localRecommend } from '@/lib/mockCase';
+import { useTimeline } from '@/lib/timelineContext';
 import { Panel } from './Panel';
+import { DecisionBar } from '@/components/kit/DecisionBar';
+import { EvidenceRow } from '@/components/kit/EvidenceRow';
+import {
+  PolicyBrainViz,
+  PolicyStageCard,
+  pipelineStepFromPolicy,
+  stageIdFromStep,
+} from '@/components/svg/PolicyBrainViz';
 
 const ACTION_HINT = {
   wait: 'hold, re-evaluate next tick',
@@ -19,40 +25,33 @@ const ACTION_HINT = {
   stop: 'close the episode',
 };
 
-/** Policy Brain — the hero. Live Q-values from POST /api/policy/recommend. */
 export const PolicyBrainStrip = ({ className }) => {
-  const { tick, contactsUsed, hoursSince, activeEvent } = useTimeline();
-  const [rec, setRec] = useState(null);
-  const thinking = activeEvent?.type === 'policy_eval';
+  const {
+    tick,
+    tickHours,
+    maxSteps,
+    windowHours,
+    contactsUsed,
+    maxContacts,
+    activeEvent,
+    caseData,
+    activeAgent,
+    livePolicy,
+    policyError,
+  } = useTimeline();
 
-  useEffect(() => {
-    let cancelled = false;
-    axios
-      .post(`${API}/policy/recommend`, {
-        tick,
-        contacts_used: contactsUsed,
-        method: 'card',
-        hours_since_failure: Math.round(hoursSince * 10) / 10,
-      }, { timeout: 6000 })
-      .then((r) => {
-        if (!cancelled) setRec(r.data);
-      })
-      .catch(() => {
-        if (!cancelled) setRec(localRecommend(tick, contactsUsed, 'card', hoursSince));
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [tick, contactsUsed]); // eslint-disable-line react-hooks/exhaustive-deps
+  const thinking = activeEvent?.type === 'policy_eval';
+  const c = caseData?.case;
+  const rec = livePolicy;
 
   const rows = useMemo(() => {
-    if (!rec) return [];
+    if (!rec?.q_values) return [];
     const entries = Object.entries(rec.q_values);
     const qs = entries.map(([, q]) => q);
     const minQ = Math.min(...qs);
     const maxQ = Math.max(...qs);
     const span = maxQ - minQ || 1;
-    const legal = new Set(rec.legal_actions);
+    const legal = new Set(rec.legal_actions || []);
     return entries
       .sort((a, b) => b[1] - a[1])
       .map(([action, q]) => ({
@@ -65,122 +64,133 @@ export const PolicyBrainStrip = ({ className }) => {
   }, [rec]);
 
   const enforced = rec?.guardrails?.filter((g) => g.status === 'enforced') || [];
+  const agentLabel = rec?.agent_name || activeAgent?.name || c?.agentName || 'Recovery agent';
+
+  const pipelineStep = pipelineStepFromPolicy({
+    thinking,
+    rec,
+    tick,
+    guardrailEnforced: enforced.length > 0,
+  });
+  const stageId = stageIdFromStep(pipelineStep);
+  const topRows = rows.slice(0, 4);
 
   return (
     <Panel
       title="Policy Brain"
-      subtitle="A 72-hour recovery episode — the DQN picks one of 11 actions every 6 hours, up to 12 steps."
+      subtitle={`Live DQN · ${agentLabel}`}
       testId="policy-brain"
       className={className}
-      variant="focus"
-      bodyClassName="flex flex-col"
+      variant="primary"
+      bodyClassName="flex flex-col gap-4 pt-3"
       right={
         <div className="flex flex-col items-end gap-1 shrink-0 text-right">
-          <span data-testid="policy-version-badge" className="font-mono text-[12px] text-white/70">
-            {rec?.policy_version || 'dqn-export-4748'}
+          <span data-testid="policy-version-badge" className="font-mono type-meta tabular-nums">
+            {rec?.policy_version || c?.policyVersion || '…'}
           </span>
-          <span data-testid="policy-constraints" className="font-mono text-[11px] text-white/45">
-            {`source: ${rec?.source || 'dqn_export'} · guardrails ${rec?.constraints_passed ?? 3}/${rec?.constraints_total ?? 3}`}
+          <span data-testid="policy-constraints" className="type-micro font-mono">
+            {rec
+              ? `guardrails ${rec.constraints_passed}/${rec.constraints_total}`
+              : policyError
+                ? 'policy unavailable'
+                : 'loading…'}
           </span>
         </div>
       }
     >
-      {/* Tick status line */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <p className="font-mono text-[13px] text-white/60 tabular-nums">
-          {`Tick ${tick + 1} of 12 · T+${tick * 6}h · contacts ${contactsUsed}/3`}
+      <div className="flex flex-col gap-4">
+        <PolicyBrainViz
+          pipelineStep={pipelineStep}
+          thinking={thinking}
+          guardrailActive={enforced.length > 0}
+          selectedAction={rec?.selected_action || ''}
+          height={340}
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <PolicyStageCard
+            stage={stageId}
+            action={rec?.selected_action}
+            qValue={rec?.selected_action ? rec.q_values[rec.selected_action]?.toFixed(2) : null}
+            meta={`Tick ${tick + 1}/${maxSteps} · T+${Math.round(tick * tickHours)}h`}
+            guardrailNote={enforced[0] ? `${enforced[0].rule} — ${enforced[0].note}` : undefined}
+          />
+
+          <AnimatePresence mode="wait">
+            {rec?.selected_action ? (
+              <motion.div
+                key={rec.selected_action}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="surface-inset px-4 py-3.5"
+                data-testid="chosen-action"
+              >
+                <p className="type-micro text-white/45">Policy output</p>
+                <p className="type-metric text-primary mt-1">{rec.selected_action}</p>
+                <p className="type-meta mt-1.5 line-clamp-3">{rec.note}</p>
+              </motion.div>
+            ) : (
+              <div className="surface-inset px-4 py-3.5 flex items-center justify-center">
+                <p className="type-meta text-white/40">Awaiting forward pass…</p>
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-3 flex-wrap surface-inset px-4 py-2.5">
+        <p className="type-micro font-mono tabular-nums text-white/50">
+          {`${windowHours}h window · contacts ${contactsUsed}/${maxContacts}`}
         </p>
         {thinking && (
           <motion.span
-            className="font-mono text-[12px] text-primary"
+            className="font-mono type-micro text-primary"
             animate={{ opacity: [0.35, 0.9, 0.35] }}
             transition={{ repeat: Infinity, duration: 1.1 }}
             data-testid="policy-thinking-indicator"
           >
-            evaluating…
+            synapse firing…
           </motion.span>
         )}
       </div>
 
-      {/* Chosen action */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={rec?.selected_action || 'loading'}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } }}
-          exit={{ opacity: 0, y: -4, transition: { duration: 0.12 } }}
-          className="mt-3 rounded-[16px] bg-primary/[0.07] border border-primary/20 px-5 py-4"
-        >
-          <div className="flex items-baseline justify-between gap-3 flex-wrap">
-            <span data-testid="chosen-action" className="font-mono text-[19px] font-semibold text-primary">
-              {rec?.selected_action || '…'}
-            </span>
-            <span className="font-mono text-[13px] text-white/60 tabular-nums">
-              {rec ? `Q ${rec.q_values[rec.selected_action].toFixed(2)}` : ''}
-            </span>
-          </div>
-          <p className="text-sm text-white/60 mt-1.5">{rec?.note}</p>
-        </motion.div>
-      </AnimatePresence>
+      {policyError && !rec && (
+        <p className="type-meta text-warning/90">{policyError}</p>
+      )}
 
-      {/* Q-value bar chart — all 11 actions */}
-      <div className="mt-5 space-y-2.5 flex-1" data-testid="q-value-chart">
-        {rows.map((row) => (
-          <div
-            key={row.action}
-            data-testid={row.selected ? 'chosen-action-row' : 'candidate-action'}
-            className={`flex items-center gap-3 ${row.blocked ? 'opacity-40' : ''}`}
-          >
-            <span className={`font-mono text-[12px] w-[168px] shrink-0 truncate ${row.selected ? 'text-primary font-semibold' : 'text-white/65'}`}>
-              {row.action}
-            </span>
-            <div className="flex-1 h-[6px] rounded-[3px] bg-white/[0.06] overflow-hidden relative">
-              <motion.div
-                data-testid="q-bar"
-                className={`h-full rounded-[3px] ${
-                  row.selected
-                    ? 'bg-primary'
-                    : row.blocked
-                      ? 'bg-white/[0.12]'
-                      : 'bg-white/[0.25]'
-                }`}
-                animate={{ width: `${row.width}%` }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      {topRows.length > 0 && (
+        <div className="space-y-2" data-testid="q-value-chart">
+          <p className="type-micro px-1">Top Q-values</p>
+          {topRows.map((row) => (
+            <DecisionBar
+              key={row.action}
+              label={row.action}
+              width={row.width}
+              value={row.q.toFixed(2)}
+              selected={row.selected}
+              blocked={row.blocked}
+              hint={row.blocked ? 'blocked' : ACTION_HINT[row.action]}
+              testId={row.selected ? 'chosen-action-row' : 'candidate-action'}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <AnimatePresence>
+          {enforced.map((g) => (
+            <motion.div key={g.rule} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <EvidenceRow
+                tone="bg-warning/80"
+                label={`Guardrail · ${g.rule}`}
+                detail={g.note}
+                testId="guardrail-callout"
               />
-            </div>
-            <span className={`font-mono text-[12px] w-[48px] text-right tabular-nums shrink-0 ${row.selected ? 'text-white/90' : 'text-white/45'}`}>
-              {row.q.toFixed(2)}
-            </span>
-            <span className="text-[11px] text-white/35 w-[150px] shrink-0 truncate hidden xl:block">
-              {row.blocked ? 'blocked by guardrail' : ACTION_HINT[row.action]}
-            </span>
-          </div>
-        ))}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
-
-      {/* Guardrail notes — inline, quiet */}
-      <AnimatePresence>
-        {enforced.map((g) => (
-          <motion.p
-            key={g.rule}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            data-testid="guardrail-callout"
-            className="mt-4 flex items-start gap-2 text-[13px] leading-relaxed text-white/65"
-          >
-            <span className="mt-[6px] inline-block h-1.5 w-1.5 rounded-full bg-warning/80 shrink-0" aria-hidden="true" />
-            <span>
-              <span className="font-mono text-[12px] text-warning/90">Guardrail · {g.rule}</span>
-              <span className="ml-2">{g.note}</span>
-            </span>
-          </motion.p>
-        ))}
-      </AnimatePresence>
-
-      <p className="text-[13px] text-white/40 mt-4">
-        Net-value policy — optimizes recovery minus cost and duplicate risk.
-      </p>
     </Panel>
   );
 };

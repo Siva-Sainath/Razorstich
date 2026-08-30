@@ -4,28 +4,42 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { useTimeline } from '@/lib/timelineContext';
 import { Panel } from './Panel';
+import { MetricNumber } from '@/components/kit/MetricNumber';
+import { TrustBudgetGauge } from '@/components/svg/TrustBudgetGauge';
 
 const ACTION_LABEL = {
   wait: 'Hold — strategic wait',
-  notify_whatsapp: 'Send a WhatsApp reminder with a UPI link',
+  notify_sms: 'Send an SMS reminder',
+  notify_whatsapp: 'Send a WhatsApp reminder with a payment link',
+  notify_email: 'Send an email reminder',
   create_payment_link: 'Send a UPI-preselected payment link',
-  offer_incentive: 'Text a ₹40 cashback offer',
+  retry_same_method: 'Retry the card quietly',
   retry_upi: 'Fire a UPI collect request',
-  stop: 'Close the episode — recovered',
+  offer_incentive: 'Offer a targeted cashback',
+  escalate_support: 'Escalate to human support',
+  request_new_method: 'Ask for another payment method',
+  stop: 'Close the episode',
 };
 
 export const InterventionComposer = ({ className }) => {
-  const { intervention } = useTimeline();
+  const { intervention, activeAgent, livePolicy, contactsUsed, maxContacts } = useTimeline();
   if (!intervention) return null;
   const confidence = Math.round((intervention.confidence || 0) * 100);
+  const fromLivePolicy = intervention.source === 'live_policy' || Boolean(livePolicy);
 
   return (
     <Panel
-      title="AI’s next step"
-      subtitle="Approve it in one click — or edit before it goes out."
+      title="Agent recommendation"
+      subtitle={
+        fromLivePolicy
+          ? `${intervention.agentName || activeAgent?.name || 'DQN agent'} · live forward pass`
+          : 'From episode rollout · approve or edit before send'
+      }
       testId="intervention-composer"
       className={className}
-      variant="focus"
+      variant="primary"
+      figure="FIG.3"
+      bodyClassName="pt-3 flex flex-col gap-5"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -33,51 +47,63 @@ export const InterventionComposer = ({ className }) => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0, transition: { duration: 0.28, ease: 'easeOut' } }}
           exit={{ opacity: 0, y: -6, transition: { duration: 0.15 } }}
-          className="flex flex-col h-full"
+          className="flex flex-col gap-5"
         >
-          <p data-testid="agent-chosen-action" className="text-[19px] font-semibold text-white leading-snug">
-            {ACTION_LABEL[intervention.action] || intervention.action}
-          </p>
-          <p className="text-sm text-white/50 mt-1.5">
-            Via {intervention.channel} · scheduled {intervention.timing}
-            {intervention.incentive && (
-              <span data-testid="intervention-incentive" className="text-warning"> · {intervention.incentive}</span>
-            )}
-          </p>
+          <div>
+            <p data-testid="agent-chosen-action" className="type-section text-white leading-snug">
+              {ACTION_LABEL[intervention.action] || intervention.action}
+            </p>
+            <p className="type-meta mt-2">
+              Via {intervention.channel} · {intervention.timing}
+              {intervention.incentive && (
+                <span data-testid="intervention-incentive" className="text-warning"> · {intervention.incentive}</span>
+              )}
+            </p>
+          </div>
 
-          <div className="mt-5 rounded-[16px] bg-white/[0.03] border border-white/[0.08] p-5">
-            <p data-testid="intervention-message" className="text-[15px] leading-relaxed text-white/85">
+          <div className="surface-inset p-4">
+            <p className="type-micro mb-2">Draft message</p>
+            <p data-testid="intervention-message" className="type-body text-white/88 leading-relaxed">
               “{intervention.message}”
             </p>
           </div>
 
-          <div className="mt-5">
+          <div>
+            <p className="type-micro mb-2">Trust budget</p>
+            <TrustBudgetGauge used={contactsUsed} max={maxContacts} />
+          </div>
+
+          <div>
             <div className="flex items-baseline justify-between mb-2">
-              <span className="text-sm text-white/55">AI confidence</span>
-              <span data-testid="agent-confidence" className="text-lg font-semibold tabular-nums text-white">
+              <span className="type-meta">Policy confidence</span>
+              <MetricNumber testId="agent-confidence" size="md">
                 {confidence}%
-              </span>
+              </MetricNumber>
             </div>
             <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
               <motion.div
-                className="h-full rounded-full bg-primary"
+                className="h-full rounded-full bg-gradient-to-r from-primary/80 to-[rgba(45,212,191,0.85)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${confidence}%` }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               />
             </div>
-            <p className="text-[13px] text-white/40 mt-2">Best of 11 actions, re-evaluated every 6 hours</p>
+            <p className="type-micro mt-2">
+              {fromLivePolicy
+                ? 'Masked argmax over Q-values · re-evaluated each tick'
+                : 'Best action from DQN rollout replay'}
+            </p>
           </div>
 
-          <div className="mt-6 flex gap-3">
+          <div className="flex gap-3 pt-1">
             <Button
               data-testid="approve-intervention-btn"
               onClick={() =>
-                toast.success('Next step approved', {
-                  description: `The ${intervention.channel} message will go out as recommended.`,
+                toast.success('Recommendation approved', {
+                  description: `${intervention.agentName || 'Agent'} will execute ${intervention.action} via ${intervention.channel}.`,
                 })
               }
-              className="flex-1 h-9 rounded-[12px] bg-primary text-primary-foreground hover:bg-primary/90 text-[13px] font-semibold transition-colors duration-150 active:scale-[0.98]"
+              className="flex-1 btn-primary"
             >
               Approve next step
             </Button>
@@ -86,10 +112,10 @@ export const InterventionComposer = ({ className }) => {
               variant="ghost"
               onClick={() =>
                 toast('Sent for manual review', {
-                  description: 'You can edit the message before it goes out.',
+                  description: 'Edit the drafted copy before it goes out.',
                 })
               }
-              className="h-9 px-4 rounded-[12px] bg-white/[0.05] border border-white/10 text-white/75 hover:text-white hover:bg-white/[0.09] text-[13px] font-medium transition-colors duration-150 active:scale-[0.98]"
+              className="btn-quiet"
             >
               Edit
             </Button>

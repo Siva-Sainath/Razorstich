@@ -22,8 +22,9 @@ const ACTION_PHRASE = {
  * Brand + case identity on the left; a contextual status sentence on the right.
  */
 export const ConsoleHeader = () => {
-  const { caseData, recoveryProb, recovered, intervention, clockAt, t, elapsedLabel } = useTimeline();
+  const { caseData, recoveryProb, recovered, intervention, clockAt, t, elapsedLabel, activeAgent } = useTimeline();
   const c = caseData.case;
+  const amountLabel = `₹${Number(c.amount).toLocaleString('en-IN')}`;
 
   const trend = recovered
     ? 'complete'
@@ -40,8 +41,8 @@ export const ConsoleHeader = () => {
       : 'bg-warning/80';
 
   const sentence = recovered
-    ? 'Recovered — ₹2,499 captured; episode closed cleanly.'
-    : `Recovery is tracking ${trend}; next best action is ${ACTION_PHRASE[intervention?.action] || 'holding'}.`;
+    ? `Recovered — ${amountLabel} captured · ${c.agentName || activeAgent?.name || 'agent'} closed the episode.`
+    : `${c.agentName || activeAgent?.name || 'Agent'} · recovery ${trend}; next step: ${ACTION_PHRASE[intervention?.action] || 'holding'}.`;
 
   return (
     <motion.header
@@ -54,14 +55,14 @@ export const ConsoleHeader = () => {
       <div className="flex items-center gap-3">
         <LogoMark size={30} />
         <div className="leading-none">
-          <div className="text-[15px] font-semibold tracking-tight text-white/90" data-testid="brand-wordmark">
+          <div className="type-panel-title font-semibold tracking-tight text-white/90" data-testid="brand-wordmark">
             Razor<span className="text-primary">Stitch</span>
           </div>
-          <div className="font-mono text-[11px] text-white/40 mt-1">{c.id} · {c.paymentId}</div>
+          <div className="font-mono type-meta text-white/40 mt-1">{c.id} · {c.paymentId}</div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 text-[12px] leading-4" data-testid="console-status">
+      <div className="flex items-center gap-3 type-body" data-testid="console-status">
         <span className="flex items-center gap-2 text-white/70">
           <motion.span
             className={`inline-block h-1.5 w-1.5 rounded-full ${dotClass}`}

@@ -119,10 +119,10 @@ export const GhostRuns = ({ className }) => {
             info.chosen ? 'bg-primary/[0.06] border-primary/20' : 'bg-white/[0.03] border-white/[0.08]'
           }`}
         >
-          <span className={`text-[13px] font-medium ${info.chosen ? 'text-primary' : 'text-white/85'}`}>
+          <span className={`type-meta font-medium ${info.chosen ? 'text-primary' : 'text-white/85'}`}>
             {info.label}
           </span>
-          <span className="text-[13px] text-white/55 ml-2.5">{info.reason}</span>
+          <span className="type-meta text-white/55 ml-2.5">{info.reason}</span>
         </div>
       )}
     </Panel>

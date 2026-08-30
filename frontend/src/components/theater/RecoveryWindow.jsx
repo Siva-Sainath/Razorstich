@@ -2,17 +2,19 @@ import React, { useMemo, useRef, useCallback, useState } from 'react';
 import { useTimeline, sampleCurve } from '@/lib/timelineContext';
 import { smoothPath, projectPoints } from '@/lib/svg';
 import { Panel } from './Panel';
+import { MetricNumber } from '@/components/kit/MetricNumber';
+import { ActiveWindowBracket } from '@/components/svg/ActiveWindowBracket';
 
 const W = 680;
-const H = 260;
-const PAD = { padL: 20, padR: 20, padT: 26, padB: 24, width: W, height: H };
+const H = 200;
+const PAD = { padL: 16, padR: 16, padT: 24, padB: 22, width: W, height: H };
 const PLOT_W = W - PAD.padL - PAD.padR;
 const PLOT_H = H - PAD.padT - PAD.padB;
 
 const MARKER_TYPES = new Set(['failure', 'retry_failed', 'intervention', 'customer_drop', 'captured']);
 
 export const RecoveryWindow = ({ className }) => {
-  const { caseData, t, setT, setPlaying, recoveryProb, clockAt, events } = useTimeline();
+  const { caseData, t, setT, setPlaying, recoveryProb, clockAt, events, windowHours, activeAgent, replayWindow, replayProgress } = useTimeline();
   const svgRef = useRef(null);
   const draggingRef = useRef(false);
   const [hoverT, setHoverT] = useState(null);
@@ -30,6 +32,8 @@ export const RecoveryWindow = ({ className }) => {
 
   const playheadX = xAt(t);
   const playheadY = yAt(t);
+  const winStartX = xAt(replayWindow?.start ?? 0);
+  const winEndX = xAt(replayWindow?.end ?? 1);
 
   const tFromClientX = useCallback((clientX) => {
     const rect = svgRef.current.getBoundingClientRect();
@@ -54,26 +58,39 @@ export const RecoveryWindow = ({ className }) => {
   };
 
   const markers = useMemo(() => events.filter((ev) => MARKER_TYPES.has(ev.type)), [events]);
+  const showWindowBracket = (replayWindow?.end ?? 1) - (replayWindow?.start ?? 0) < 0.92;
 
   return (
     <Panel
       title="Best time to retry"
-      subtitle="Recovery odds across the 72-hour window — drag the curve to move through time."
+      subtitle={`Simulated recovery odds across the ${windowHours}h episode — scrub to explore timing.`}
       testId="recovery-window"
       className={className}
+      variant="standard"
+      figure="FIG.4"
+      bodyClassName="pt-3"
       right={
         <div data-testid="recovery-probability" className="text-right shrink-0">
-          <div className="text-2xl font-semibold tabular-nums text-white leading-none">{Math.round(recoveryProb * 100)}%</div>
-          <div className="text-[13px] text-white/45 mt-1">odds now</div>
+          <MetricNumber size="lg">{Math.round(recoveryProb * 100)}%</MetricNumber>
+          <p className="type-micro mt-1">at playhead</p>
         </div>
       }
     >
+      {showWindowBracket && (
+        <div className="mb-3 px-1">
+          <ActiveWindowBracket
+            startPct={(replayWindow?.start ?? 0) * 100}
+            endPct={(replayWindow?.end ?? 1) * 100}
+            label={`Active replay · ${Math.round(replayProgress * 100)}%`}
+          />
+        </div>
+      )}
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full h-auto cursor-crosshair select-none touch-none"
+        className="w-full max-h-[200px] cursor-crosshair select-none touch-none block rounded-[16px] surface-inset"
         role="img"
-        aria-label="Recovery probability over the 72-hour window"
+        aria-label={`Recovery probability over the ${windowHours}-hour window`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -84,25 +101,41 @@ export const RecoveryWindow = ({ className }) => {
             <stop offset="0%" stopColor="hsl(213 89% 56%)" stopOpacity="0.10" />
             <stop offset="100%" stopColor="hsl(213 89% 56%)" stopOpacity="0" />
           </linearGradient>
-          <filter id="rwGlow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3.5" result="b" />
-            <feMerge>
-              <feMergeNode in="b" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
           <clipPath id="rwClip">
             <rect x="0" y="0" width={playheadX} height={H} />
           </clipPath>
         </defs>
 
-        {/* minimal gridlines */}
+        {showWindowBracket && (
+          <rect
+            x={winStartX}
+            y={PAD.padT - 6}
+            width={Math.max(0, winEndX - winStartX)}
+            height={PLOT_H + 12}
+            fill="rgba(43,138,247,0.04)"
+            stroke="rgba(43,138,247,0.15)"
+            strokeWidth="1"
+            rx="4"
+          />
+        )}
+
         {[0.5, 1].map((p) => (
-          <line key={p} x1={PAD.padL} y1={PAD.padT + (1 - p) * PLOT_H} x2={W - PAD.padR} y2={PAD.padT + (1 - p) * PLOT_H} stroke="rgba(255,255,255,0.06)" strokeDasharray="2 6" />
+          <line
+            key={p}
+            x1={PAD.padL}
+            y1={PAD.padT + (1 - p) * PLOT_H}
+            x2={W - PAD.padR}
+            y2={PAD.padT + (1 - p) * PLOT_H}
+            stroke="rgba(255,255,255,0.06)"
+            strokeDasharray="2 6"
+          />
         ))}
-        {/* endpoint time labels only */}
-        <text x={PAD.padL} y={H - 6} fontSize="11" fill="rgba(255,255,255,0.35)" fontFamily="IBM Plex Mono, monospace">now</text>
-        <text x={W - PAD.padR} y={H - 6} textAnchor="end" fontSize="11" fill="rgba(255,255,255,0.35)" fontFamily="IBM Plex Mono, monospace">+72h</text>
+        <text x={PAD.padL} y={H - 4} fontSize="11" fill="rgba(255,255,255,0.35)" fontFamily="IBM Plex Mono, monospace">
+          now
+        </text>
+        <text x={W - PAD.padR} y={H - 4} textAnchor="end" fontSize="11" fill="rgba(255,255,255,0.35)" fontFamily="IBM Plex Mono, monospace">
+          {`+${windowHours}h`}
+        </text>
 
         <path d={areaPath} fill="url(#rwFill)" clipPath="url(#rwClip)" />
         <path d={linePath} fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeLinecap="round" />
@@ -121,21 +154,25 @@ export const RecoveryWindow = ({ className }) => {
         {hoverT != null && !draggingRef.current && (
           <g pointerEvents="none" opacity="0.6">
             <line x1={xAt(hoverT)} y1={PAD.padT} x2={xAt(hoverT)} y2={PAD.padT + PLOT_H} stroke="rgba(255,255,255,0.25)" strokeDasharray="2 4" />
-            <text x={xAt(hoverT)} y={PAD.padT - 9} textAnchor="middle" fontSize="11" fill="rgba(255,255,255,0.7)" fontFamily="IBM Plex Mono, monospace">
+            <text x={xAt(hoverT)} y={PAD.padT - 8} textAnchor="middle" fontSize="11" fill="rgba(255,255,255,0.7)" fontFamily="IBM Plex Mono, monospace">
               {`${Math.round(sampleCurve(curve, hoverT) * 100)}% · ${clockAt(hoverT)}`}
             </text>
           </g>
         )}
 
-        {/* playhead: hairline + handle */}
         <g data-testid="recovery-playhead" pointerEvents="none">
-          <line x1={playheadX} y1={PAD.padT - 6} x2={playheadX} y2={PAD.padT + PLOT_H} stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+          <line x1={playheadX} y1={PAD.padT - 4} x2={playheadX} y2={PAD.padT + PLOT_H} stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
           <circle cx={playheadX} cy={playheadY} r="5" fill="rgba(255,255,255,0.9)" stroke="rgba(43,138,247,0.8)" strokeWidth="2" />
-          <text x={playheadX} y={PAD.padT - 9} textAnchor="middle" fontSize="11" fontWeight="600" fill="rgba(255,255,255,0.9)" fontFamily="IBM Plex Mono, monospace">
+          <text x={playheadX} y={PAD.padT - 8} textAnchor="middle" fontSize="11" fontWeight="600" fill="rgba(255,255,255,0.9)" fontFamily="IBM Plex Mono, monospace">
             {`${Math.round(recoveryProb * 100)}%`}
           </text>
         </g>
       </svg>
+
+      <p className="type-micro mt-3 border-t border-white/[0.06] pt-3">
+        Curve from pre-recorded{' '}
+        <span className="text-white/55">{activeAgent?.name || caseData.case.agentName}</span> rollout — live Q-values in Policy Brain.
+      </p>
     </Panel>
   );
 };

@@ -19,8 +19,8 @@ const Row = ({ time, severity, text, active = false, testId, typeId, typeLabel }
     }`}
   >
     <span data-testid={typeId} title={typeLabel} className={`h-1.5 w-1.5 rounded-full shrink-0 ${SEV_STYLES[severity] || SEV_STYLES.info}`} />
-    <span className={`text-[13px] leading-relaxed truncate flex-1 ${active ? 'text-white/90' : 'text-white/70'}`}>{text}</span>
-    <span className="font-mono text-[11px] text-white/40 shrink-0 tabular-nums">{time}</span>
+    <span className={`type-meta leading-relaxed truncate flex-1 ${active ? 'text-white/90' : 'text-white/70'}`}>{text}</span>
+    <span className="font-mono type-micro text-white/40 shrink-0 tabular-nums">{time}</span>
   </motion.div>
 );
 
@@ -73,7 +73,7 @@ export const LiveEventTicker = ({ className }) => {
       right={
         <span
           data-testid="sse-connection-status"
-          className="inline-flex items-center gap-2 text-[12px] leading-4 shrink-0 text-white/70"
+          className="inline-flex items-center gap-2 type-meta shrink-0 text-white/70"
         >
           <motion.span
             className={`inline-block w-1.5 h-1.5 rounded-full ${connState === 'live' ? 'bg-[rgba(45,212,191,0.85)]' : 'bg-warning/85'}`}
@@ -87,7 +87,7 @@ export const LiveEventTicker = ({ className }) => {
     >
       <div className="grid md:grid-cols-2 gap-6 flex-1 min-h-0">
           <div className="min-h-0 flex flex-col">
-          <p className="text-[12px] leading-4 font-medium text-white/55 mb-2">Payment journey</p>
+          <p className="type-meta font-medium text-white/55 mb-2">Payment journey</p>
           <ScrollArea className="h-60 -mx-1 px-1">
             <div>
               <AnimatePresence initial={false}>
@@ -112,7 +112,7 @@ export const LiveEventTicker = ({ className }) => {
         </div>
 
         <div className="min-h-0 flex flex-col md:border-l md:border-white/[0.07] md:pl-6">
-          <p className="text-[12px] leading-4 font-medium text-white/55 mb-2">System activity</p>
+          <p className="type-meta font-medium text-white/55 mb-2">System activity</p>
           <ScrollArea className="h-60 -mx-1 px-1">
             <div>
               <AnimatePresence initial={false}>

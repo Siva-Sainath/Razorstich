@@ -31,39 +31,43 @@ const fade = {
   exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
 };
 
-const CheckoutShell = ({ children }) => (
-  <div className="rounded-lg bg-background border border-border/80 overflow-hidden">
-    <div className="px-3.5 py-2.5 border-b border-border/70 flex items-center justify-between">
-      <span className="text-[10px] font-medium text-muted-foreground">Aurora Fitness</span>
-      <span className="font-mono text-[11px] text-foreground tabular-nums">₹2,499</span>
-    </div>
-    <div className="p-3.5">{children}</div>
-  </div>
-);
-
 const MsgBubble = ({ icon: Icon, tone, title, children }) => (
   <div className={`rounded-xl rounded-tl-sm border p-3 ${tone}`}>
-    <div className="flex items-center gap-1.5 text-[10px] font-medium opacity-80 mb-1.5">
+    <div className="flex items-center gap-1.5 type-micro font-medium opacity-80 mb-1.5">
       <Icon size={11} aria-hidden="true" /> {title}
     </div>
-    <p className="text-[12px] leading-relaxed text-foreground/90">{children}</p>
+    <p className="type-meta leading-relaxed text-foreground/90">{children}</p>
   </div>
 );
 
 export const CustomerPlane = ({ className }) => {
-  const { t } = useTimeline();
-  const view = viewAt(t);
-  const label = VIEW_LABEL[view];
+  const { t, caseData, recoveredAt } = useTimeline();
+  const c = caseData.case;
+  const amountLabel = `₹${Number(c.amount).toLocaleString('en-IN')}`;
+  const firstName = c.customer?.split(' ')[0] || 'Customer';
+  const linkSlug = c.id?.toLowerCase().replace(/-/g, '') || 'demo';
+  const view = t >= (recoveredAt ?? 0.833) ? 'success' : viewAt(t);
+  const label = VIEW_LABEL[view] || VIEW_LABEL.failed;
+
+  const CheckoutShell = ({ children }) => (
+    <div className="rounded-lg bg-background border border-border/80 overflow-hidden">
+      <div className="px-3.5 py-2.5 border-b border-border/70 flex items-center justify-between">
+        <span className="type-micro font-medium text-muted-foreground truncate">{c.merchant}</span>
+        <span className="font-mono type-micro text-foreground tabular-nums">{amountLabel}</span>
+      </div>
+      <div className="p-3.5">{children}</div>
+    </div>
+  );
 
   return (
     <Panel
       title="Customer checkout preview"
-      subtitle="What Riya sees right now"
+      subtitle={`What ${firstName} sees right now`}
       icon={Smartphone}
       testId="customer-plane"
       className={className}
       right={
-        <span data-testid="customer-plane-state" className="inline-flex items-center gap-2 text-[12px] leading-4 text-white/70 shrink-0">
+        <span data-testid="customer-plane-state" className="inline-flex items-center gap-2 type-meta text-white/70 shrink-0">
           <span className={`inline-block h-1.5 w-1.5 rounded-full ${label.dot}`} aria-hidden="true" />
           {label.text}
         </span>
@@ -83,10 +87,10 @@ export const CustomerPlane = ({ className }) => {
                 <CheckoutShell>
                   <div className="flex flex-col items-center text-center py-3">
                     <XCircle size={30} className="text-destructive mb-2" aria-hidden="true" />
-                    <p className="text-[13px] text-foreground">Payment failed</p>
-                    <p className="text-[10px] text-muted-foreground mt-1">Your bank declined this card</p>
-                    <div className="mt-3 w-full rounded-md bg-secondary/60 border border-border/70 py-2 font-mono text-[10px] text-muted-foreground/80">
-                      HDFC •••• 4417 · declined
+                    <p className="type-meta text-foreground">Payment failed</p>
+                    <p className="type-micro text-muted-foreground mt-1">{c.declineReason || c.failureReason}</p>
+                    <div className="mt-3 w-full rounded-md bg-secondary/60 border border-border/70 py-2 font-mono type-micro text-muted-foreground/80">
+                      {c.issuer !== '—' ? `${c.issuer} · declined` : c.method}
                     </div>
                   </div>
                 </CheckoutShell>
@@ -94,10 +98,10 @@ export const CustomerPlane = ({ className }) => {
 
               {view === 'nudge' && (
                 <>
-                  <MsgBubble icon={MessageCircle} tone="bg-success/[0.08] border-success/25" title="WhatsApp · Aurora Fitness">
-                    Hi Riya — your order is saved. Finish in one tap with UPI → <span className="text-primary">rzp.io/l/aur7f3a</span>
+                  <MsgBubble icon={MessageCircle} tone="bg-success/[0.08] border-success/25" title={`WhatsApp · ${c.merchant}`}>
+                    Hi {firstName} — your order is saved. Finish in one tap → <span className="text-primary">rzp.io/l/{linkSlug}</span>
                   </MsgBubble>
-                  <p className="text-[10px] text-muted-foreground/70 text-center mt-auto">Delivered · T+12h</p>
+                  <p className="type-micro text-muted-foreground/70 text-center mt-auto">Delivered · T+12h</p>
                 </>
               )}
 
@@ -105,17 +109,17 @@ export const CustomerPlane = ({ className }) => {
                 <CheckoutShell>
                   <div className="space-y-2.5">
                     <div className="rounded-md border border-primary/35 bg-primary/[0.08] px-3 py-2.5 flex items-center justify-between">
-                      <span className="text-[12px] text-foreground">UPI · riya@okhdfc</span>
-                      <span className="text-[9px] font-semibold text-primary">Recommended</span>
+                      <span className="type-meta text-foreground">UPI · riya@okhdfc</span>
+                      <span className="type-micro font-semibold text-primary">Recommended</span>
                     </div>
-                    <div className="rounded-md border border-border/70 px-3 py-2.5 text-[12px] text-muted-foreground/70">
-                      Card •••• 4417 <span className="text-[9px] text-destructive/80 ml-1">declined</span>
+                    <div className="rounded-md border border-border/70 px-3 py-2.5 type-meta text-muted-foreground/70">
+                      Card •••• 4417 <span className="type-micro text-destructive/80 ml-1">declined</span>
                     </div>
-                    <div className="rounded-md bg-primary text-primary-foreground text-center py-2 text-[12px] font-semibold">
-                      Pay ₹2,499
+                    <div className="rounded-md bg-primary text-primary-foreground text-center py-2 type-meta font-semibold">
+                      Pay {amountLabel}
                     </div>
                     {view === 'abandoned' && (
-                      <div className="flex items-center gap-1.5 justify-center pt-1 text-warning text-[10px] font-medium">
+                      <div className="flex items-center gap-1.5 justify-center pt-1 text-warning type-micro font-medium">
                         <Hourglass size={10} aria-hidden="true" /> Idle for 2 minutes
                       </div>
                     )}
@@ -128,7 +132,7 @@ export const CustomerPlane = ({ className }) => {
                   <MsgBubble icon={MessageSquareText} tone="bg-warning/[0.08] border-warning/25" title="SMS · AURFIT">
                     ₹40 cashback if you complete in 30 min → <span className="text-primary">rzp.io/l/aur7f3a-c40</span>
                   </MsgBubble>
-                  <p className="text-[10px] text-muted-foreground/70 text-center mt-auto">Delivered · T+42h</p>
+                  <p className="type-micro text-muted-foreground/70 text-center mt-auto">Delivered · T+42h</p>
                 </>
               )}
 
@@ -136,14 +140,14 @@ export const CustomerPlane = ({ className }) => {
                 <CheckoutShell>
                   <div className="space-y-2.5">
                     <div className="rounded-md border border-warning/35 bg-warning/[0.1] px-3 py-2 text-center">
-                      <span className="text-[10px] font-semibold text-warning">₹40 cashback applied · 22:41 left</span>
+                      <span className="type-micro font-semibold text-warning">₹40 cashback applied · 22:41 left</span>
                     </div>
                     <div className="rounded-md border border-primary/35 bg-primary/[0.08] px-3 py-2.5 flex items-center justify-between">
-                      <span className="text-[12px] text-foreground">UPI · riya@okhdfc</span>
-                      <span className="text-[9px] font-semibold text-primary">1-tap</span>
+                      <span className="type-meta text-foreground">UPI · riya@okhdfc</span>
+                      <span className="type-micro font-semibold text-primary">1-tap</span>
                     </div>
-                    <div className="rounded-md bg-primary text-primary-foreground text-center py-2 text-[12px] font-semibold">
-                      Pay ₹2,499 · get ₹40 back
+                    <div className="rounded-md bg-primary text-primary-foreground text-center py-2 type-meta font-semibold">
+                      Pay {amountLabel} · offer active
                     </div>
                   </div>
                 </CheckoutShell>
@@ -159,9 +163,9 @@ export const CustomerPlane = ({ className }) => {
                     >
                       <CheckCircle2 size={34} className="text-success mb-2" aria-hidden="true" />
                     </motion.div>
-                    <p className="text-[13px] text-foreground">Payment successful</p>
-                    <p className="font-mono text-[11px] text-success mt-1 tabular-nums">₹2,499.00 · UPI</p>
-                    <p className="text-[9px] text-muted-foreground/70 mt-2">₹40 cashback queued · 24h</p>
+                    <p className="type-meta text-foreground">Payment successful</p>
+                    <p className="font-mono type-micro text-success mt-1 tabular-nums">{amountLabel} · {c.method}</p>
+                    <p className="type-micro text-muted-foreground/70 mt-2">₹40 cashback queued · 24h</p>
                   </div>
                 </CheckoutShell>
               )}

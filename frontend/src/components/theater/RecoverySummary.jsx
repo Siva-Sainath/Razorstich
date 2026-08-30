@@ -2,18 +2,24 @@ import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useTimeline } from '@/lib/timelineContext';
+import { MetricNumber } from '@/components/kit/MetricNumber';
+import { FigureFrame } from '@/components/kit/FigureFrame';
+import { RecoveryFlowMap } from '@/components/svg/RecoveryFlowMap';
 
 const Stat = ({ label, value, sub, testId }) => (
-  <div className="rounded-[16px] bg-white/[0.03] border border-white/[0.07] px-4 py-3.5">
-    <div className="text-[12px] leading-4 text-white/55">{label}</div>
-    <div data-testid={testId} className="font-mono text-[20px] font-semibold text-white/90 tabular-nums mt-1.5 leading-none">{value}</div>
-    {sub && <div className="text-[11px] text-white/40 mt-1.5">{sub}</div>}
+  <div className="surface-inset px-4 py-4">
+    <div className="type-micro">{label}</div>
+    <div data-testid={testId} className="mt-2">
+      <MetricNumber size="md">{value}</MetricNumber>
+    </div>
+    {sub && <div className="type-micro mt-2 text-white/40">{sub}</div>}
   </div>
 );
 
-/** Recap card — appears once the episode closes as recovered. */
 export const RecoverySummary = () => {
-  const { recovered, caseData, contactsUsed, maxContacts, restart } = useTimeline();
+  const { recovered, caseData, contactsUsed, maxContacts, restart, elapsedLabel, maxSteps, tickHours } = useTimeline();
+  const c = caseData?.case;
+  const amountLabel = c ? `₹${Number(c.amount).toLocaleString('en-IN')}` : '—';
 
   const path = useMemo(() => {
     const runs = caseData?.ghostRuns || [];
@@ -34,37 +40,40 @@ export const RecoverySummary = () => {
           exit={{ opacity: 0, y: -8 }}
           transition={{ type: 'spring', stiffness: 170, damping: 22 }}
           data-testid="recovery-summary"
-          className="gradient-border glint-top backdrop-blur-2xl rounded-[24px] p-6 shadow-[var(--shadow-2)]"
+          className="gradient-border glint-top backdrop-blur-2xl rounded-[24px] p-6 lg:p-8 shadow-[var(--shadow-2)]"
         >
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="min-w-0">
-              <h2 className="font-display text-[18px] leading-6 font-semibold text-white/90">
-                Episode recovered
-              </h2>
-              <p className="text-[12px] leading-4 text-white/55 mt-1.5">
+              <p className="type-micro text-accent mb-2">FIG.6 · Episode closure</p>
+              <h2 className="type-panel-title">Episode recovered</h2>
+              <p className="type-meta mt-2 max-w-md">
                 What the agent saved, what it spent, and the path it took.
               </p>
             </div>
             <Button
               data-testid="recap-replay-btn"
               onClick={restart}
-              className="h-9 px-4 rounded-[12px] bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-white/85 text-[13px] font-medium transition-colors duration-150 active:scale-[0.98]"
+              className="btn-quiet"
             >
               Replay episode
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+          <FigureFrame figure="" caption="Stitch path complete — revenue captured." compact className="mt-5 mb-5">
+            <RecoveryFlowMap progress={1} recovered height={64} />
+          </FigureFrame>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Stat
               label="Net revenue saved"
-              value="₹2,459"
-              sub="₹2,499 recovered − ₹40 cashback"
+              value={amountLabel}
+              sub={`Recovered by ${c?.agentName || c?.wedge || 'recovery agent'}`}
               testId="summary-net-amount"
             />
             <Stat
               label="Time to recovery"
-              value="T+60h"
-              sub="10 of 12 decision ticks used"
+              value={elapsedLabel}
+              sub={`${maxSteps} decision ticks · ${tickHours}h cadence`}
               testId="summary-time"
             />
             <Stat

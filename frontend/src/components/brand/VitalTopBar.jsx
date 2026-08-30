@@ -30,8 +30,8 @@ export const VitalTopBar = () => {
 
         <div className="flex items-center gap-4 md:gap-5 shrink-0 ml-auto md:ml-0">
           <div className="text-right leading-none" data-testid="vital-prob">
-            <div className="text-[11px] text-white/45 mb-1">Recovery odds</div>
-            <div className="text-[15px] font-semibold tabular-nums text-white">{Math.round(recoveryProb * 100)}%</div>
+            <div className="type-micro text-white/45 mb-1">Recovery odds</div>
+            <div className="type-body font-semibold tabular-nums text-white">{Math.round(recoveryProb * 100)}%</div>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] pl-2.5 pr-3 py-1.5" data-testid="vital-status">
             <motion.span
@@ -39,7 +39,7 @@ export const VitalTopBar = () => {
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
             />
-            <span className={`text-[13px] font-medium ${statusTone}`}>{statusLabel}</span>
+            <span className={`type-meta font-medium ${statusTone}`}>{statusLabel}</span>
           </div>
         </div>
       </div>
