@@ -98,6 +98,9 @@ export default function Home() {
         <div style={styles.live}>
           <span style={styles.dot} /> LIVE POLICY ENGINE
           <span style={styles.version}>{decision?.policy_version ?? "loading"}</span>
+          {laneId === "checkout_failed" && (
+            <span style={{ marginLeft: 10, color: "#74f2b2", fontSize: 10 }}>v2 · 20k ep tuned</span>
+          )}
         </div>
       </header>
 

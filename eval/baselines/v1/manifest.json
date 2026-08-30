@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "date": "2026-08-30T04:14:58.649268+00:00",
+  "episodes": 10000,
+  "seed": 42,
+  "description": "Baseline run before v2 20k per-wedge HPO retrain",
+  "wedges": [
+    "checkout_failed",
+    "cart_abandon",
+    "subscription_failed",
+    "invoice_overdue"
+  ]
+}
