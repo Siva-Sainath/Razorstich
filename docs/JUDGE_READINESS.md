@@ -8,7 +8,7 @@
 |------|--------|
 | Unified SiteNav + dark shell on all pages | Done |
 | Glide-style pricing (dark theme) | Done |
-| Recovery demo (4 wedges, pitch mode opt-in) | Done |
+| Recovery demo (checkout, cart, subscription, invoice; pitch mode opt-in) | Done |
 | Research / training proof | Done |
 | Pilot lead capture (`/start`) | Done (needs backend) |
 | **Razorpay Test Mode checkout** (pricing modal) | Done — official `checkout.js`, Test Mode keys |

@@ -32,7 +32,7 @@ Deploy with Vercel from this directory. Set `REACT_APP_BACKEND_URL` in the Verce
 | Route | Purpose |
 |-------|---------|
 | `/` | Landing and product overview |
-| `/checkout`, `/cart`, `/subscription`, `/invoice` | Recovery theater per wedge |
+| `/checkout`, `/cart`, `/subscription`, `/invoice` | Interactive demo for each failure type |
 | `/research` | Training narrative and benchmarks |
 | `/pricing` | Plans and Razorpay Test checkout |
 | `/start` | Pilot waitlist |
