@@ -2,16 +2,17 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useTimeline } from '@/lib/timelineContext';
 import { LogoMark } from './LogoMark';
+import { friendlyAction } from '@/config/consumerCopy';
 
 const ACTION_PHRASE = {
   wait: 'hold and re-evaluate at the next tick',
-  notify_sms: 'send an SMS reminder',
-  notify_whatsapp: 'send the WhatsApp reminder',
-  notify_email: 'send an email reminder',
-  create_payment_link: 'send the UPI payment link',
+  notify_sms: 'simulate an SMS reminder',
+  notify_whatsapp: 'simulate a WhatsApp reminder',
+  notify_email: 'simulate an email reminder',
+  create_payment_link: 'simulate a payment-link nudge',
   retry_same_method: 'retry the card quietly',
   retry_upi: 'fire the UPI collect request',
-  offer_incentive: 'offer the ₹40 cashback',
+  offer_incentive: 'offer the sim cashback',
   escalate_support: 'escalate to support',
   request_new_method: 'ask for another method',
   stop: 'close the episode',
@@ -26,14 +27,6 @@ export const ConsoleHeader = () => {
   const c = caseData.case;
   const amountLabel = `₹${Number(c.amount).toLocaleString('en-IN')}`;
 
-  const trend = recovered
-    ? 'complete'
-    : recoveryProb >= 0.65
-      ? 'ahead of baseline'
-      : recoveryProb >= 0.4
-        ? 'within range'
-        : 'behind baseline';
-
   const dotClass = recovered
     ? 'bg-[rgba(45,212,191,0.8)]'
     : recoveryProb >= 0.4
@@ -41,8 +34,8 @@ export const ConsoleHeader = () => {
       : 'bg-warning/80';
 
   const sentence = recovered
-    ? `Recovered — ${amountLabel} captured · ${c.agentName || activeAgent?.name || 'agent'} closed the episode.`
-    : `${c.agentName || activeAgent?.name || 'Agent'} · recovery ${trend}; next step: ${ACTION_PHRASE[intervention?.action] || 'holding'}.`;
+    ? `Recovered — ${amountLabel} in simulator · ${c.agentName || activeAgent?.name || 'agent'} closed the episode.`
+    : `Eval replay · ${ACTION_PHRASE[intervention?.action] || friendlyAction(intervention?.action) || 'holding'}.`;
 
   return (
     <motion.header

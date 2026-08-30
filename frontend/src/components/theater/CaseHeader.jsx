@@ -7,6 +7,7 @@ import { LogoMark } from '@/components/brand/LogoMark';
 import { MetricNumber } from '@/components/kit/MetricNumber';
 import { FigureFrame } from '@/components/kit/FigureFrame';
 import { RecoveryFlowMap } from '@/components/svg/RecoveryFlowMap';
+import { formatEpisodeWindow } from '@/config/recoveryScenarios';
 import { panelVariants } from './Panel';
 
 /** Hero — revenue at stake, recovery story, stitch-path preview. */
@@ -26,10 +27,11 @@ export const CaseHeader = () => {
   } = useTimeline();
   const c = caseData.case;
   const amountLabel = `₹${Number(c.amount).toLocaleString('en-IN')}`;
+  const windowLabel = formatEpisodeWindow(c.wedge, windowHours);
 
   const statusSentence = recovered
-    ? `Recovered — ${amountLabel} captured`
-    : `${c.agentName || activeAgent?.name || 'Recovery agent'} is working a ${windowHours}h episode`;
+    ? `Recovered — ${amountLabel} captured in simulator`
+    : `${c.agentName || activeAgent?.name || 'Recovery agent'} · ${windowLabel} eval episode`;
 
   return (
     <motion.section
@@ -85,7 +87,7 @@ export const CaseHeader = () => {
             {recovered ? 'Recovered' : 'Recovering'}
           </span>
           <p data-testid="case-clock" className="type-meta font-mono tabular-nums text-white/55">
-            {clockAt(t)} · {elapsedLabel} · {tickHours}h ticks
+            {clockAt(t)} · {elapsedLabel} · {tickHours}h ticks · {windowLabel} window
           </p>
         </div>
       </div>

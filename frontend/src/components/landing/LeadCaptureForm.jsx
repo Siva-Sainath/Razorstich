@@ -21,6 +21,7 @@ export const LeadCaptureForm = ({
   subhead = 'We onboard Razorpay merchants in weekly pilot batches. Tell us your failed-payment volume.',
   showShareOnSuccess = true,
   compact = false,
+  submitLabel = 'Join waitlist',
 }) => {
   const [form, setForm] = useState({
     email: '',
@@ -162,7 +163,7 @@ export const LeadCaptureForm = ({
         disabled={status === 'loading'}
         className="btn-primary w-full sm:w-auto mt-5 inline-flex items-center justify-center px-8 disabled:opacity-60"
       >
-        {status === 'loading' ? 'Submitting…' : 'Request pilot access'}
+        {status === 'loading' ? 'Submitting…' : submitLabel}
       </button>
       <p className="type-micro mt-3 text-white/30">
         No spam · 2.5% only on recovered revenue when you go live

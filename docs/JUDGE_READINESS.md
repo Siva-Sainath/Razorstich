@@ -16,7 +16,8 @@
 ## Razorpay Test Mode (no live PG compliance)
 
 - **Entry:** `/pricing` → Sandbox tier **Try Test checkout**, or `/pricing?try=sandbox`
-- **Flow:** Backend `POST /api/razorpay/orders` → Razorpay Standard Checkout modal (`checkout.js`)
+- **Flow:** Backend `POST /api/razorpay/orders` (server-side `plan_id=sandbox` → ₹1,499) → Razorpay Standard Checkout modal → `POST /api/razorpay/verify` (HMAC signature check) or `POST /api/razorpay/payment/failed`
+- **Security:** Amount is never trusted from the client; duplicate verify callbacks are idempotent
 - **Test cards:** [Razorpay test card docs](https://razorpay.com/docs/payments/payments/test-card-details/) — e.g. `4239 5360 0631 5640` (Visa), any CVV, future expiry → mock bank page → Success/Failure
 - **Keys:** `RAZORPAY_KEY_ID` + `RAZORPAY_KEY_SECRET` (Test Mode) in backend `.env`
 - Without keys: modal shows setup instructions + test card reference (no fake card form)

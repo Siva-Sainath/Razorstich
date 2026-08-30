@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { smoothPath } from '@/lib/svg';
-import { WEDGE_CHART_ACCENT } from '@/config/trainingNarrative';
+import { SCENARIO_CHART_ACCENT } from '@/config/trainingNarrative';
 
 const W = 720;
 const H = 220;
@@ -13,7 +13,7 @@ export const TrainingCurveFigure = ({
   pivotEpisodes = [],
   height = 220,
 }) => {
-  const accent = WEDGE_CHART_ACCENT[wedge] || WEDGE_CHART_ACCENT.checkout_failed;
+  const accent = SCENARIO_CHART_ACCENT[wedge] || SCENARIO_CHART_ACCENT.checkout_failed;
 
   const { maxVal, maxEp, pts, linePath, areaPath, milestonePts } = useMemo(() => {
     if (!curve.length) return { maxVal: 1, maxEp: 1, pts: [], linePath: '', areaPath: '', milestonePts: [] };
@@ -43,7 +43,7 @@ export const TrainingCurveFigure = ({
   }, [curve, milestones]);
 
   if (!curve.length) {
-    return <p className="type-body text-white/45">No training_curve artifact for this wedge.</p>;
+    return <p className="type-body text-white/45">No training curve artifact for this scenario yet.</p>;
   }
 
   const first = curve[0];

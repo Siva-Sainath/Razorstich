@@ -2,6 +2,22 @@
 
 Adaptive payment recovery for Razorpay — simulator-trained DQN policy + Test Mode webhooks.
 
+## Deploy in 5 minutes (Vercel + Render)
+
+| Step | Action |
+|------|--------|
+| 1 | Push this repo to GitHub |
+| 2 | [Render Blueprint](https://dashboard.render.com) → **New → Blueprint** → your repo → **Blueprint path:** `render.yaml` (or leave blank) |
+| 3 | Paste env from [`backend/.env.production.example`](backend/.env.production.example) (`CORS_ORIGINS`, `RAZORPAY_*`) |
+| 4 | Copy Render URL → set `REACT_APP_BACKEND_URL` on Vercel ([`frontend/.env.production.example`](frontend/.env.production.example)) |
+| 5 | `cd frontend && vercel deploy --prod` or `./scripts/deploy-vercel.sh` |
+| 6 | `./scripts/deploy-check.sh https://YOUR-API.onrender.com https://YOUR-APP.vercel.app` |
+
+Full guide: [`docs/DEPLOY.md`](docs/DEPLOY.md)
+
+**Production URLs (update CORS if yours differ):**  
+Frontend `https://frontend-nine-teal-86.vercel.app` · Backend `https://razorstitch-api.onrender.com` (after Blueprint)
+
 ## Quick start (RL on MacBook)
 
 ```bash

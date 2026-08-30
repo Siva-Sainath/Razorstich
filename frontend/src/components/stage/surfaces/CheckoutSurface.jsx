@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link2, CreditCard, CheckCircle2, AlertCircle, MessageSquare, Headphones } from 'lucide-react';
 import { useTimeline } from '@/lib/timelineContext';
 import { customerPhaseFromRollout, inr } from '../stageUtils';
-import { WEDGE_BY_ID } from '@/config/wedges';
+import { RECOVERY_BY_ID } from '@/config/recoveryScenarios';
 import { WEDGE_ACCENT } from '@/config/demoPersonas';
 
 function phaseConfigForWedge(wedge) {
-  const accentKey = WEDGE_BY_ID[wedge]?.accent || 'checkout';
+  const accentKey = RECOVERY_BY_ID[wedge]?.accent || 'checkout';
   const accent = WEDGE_ACCENT[accentKey];
   return {
     fail: {

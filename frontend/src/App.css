@@ -4,6 +4,7 @@
 
 .App {
     min-height: 100vh;
+    background-color: hsl(var(--background));
 }
 
 .recovery-stage {

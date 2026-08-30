@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 /** Bottom sticky CTA — appears after scroll on marketing pages. */
 export const StickyLeadBar = () => {
+  const { pathname } = useLocation();
+  const onHome = pathname === '/';
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -23,12 +25,25 @@ export const StickyLeadBar = () => {
           <span className="text-white/85 font-medium">Razorpay merchants</span> — pilot slots open this week
         </p>
         <div className="flex gap-2">
-          <Link to="/checkout" className="btn-quiet h-9 px-4 inline-flex items-center text-xs">
-            Try demo
-          </Link>
-          <Link to="/start" className="btn-primary h-9 px-5 inline-flex items-center text-xs">
-            Get pilot access
-          </Link>
+          {onHome ? (
+            <>
+              <Link to="/checkout" className="btn-primary h-9 px-5 inline-flex items-center text-xs">
+                Try live demo
+              </Link>
+              <a href="#waitlist" className="btn-quiet h-9 px-4 inline-flex items-center text-xs">
+                Waitlist
+              </a>
+            </>
+          ) : (
+            <>
+              <Link to="/checkout" className="btn-quiet h-9 px-4 inline-flex items-center text-xs">
+                Try demo
+              </Link>
+              <Link to="/start" className="btn-primary h-9 px-5 inline-flex items-center text-xs">
+                Join waitlist
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

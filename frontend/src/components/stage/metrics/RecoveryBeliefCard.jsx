@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTimeline, sampleCurve } from '@/lib/timelineContext';
 import { GlassCard } from '../GlassCard';
-import { WEDGE_BY_ID } from '@/config/wedges';
+import { RECOVERY_BY_ID } from '@/config/recoveryScenarios';
 
 const W = 280;
 const H = 72;
@@ -11,7 +11,7 @@ export const RecoveryBeliefCard = ({ delay = 0, wedge }) => {
   const { caseData, t, currentRolloutStep, recovered } = useTimeline();
   const curve = caseData?.recoveryCurve || [];
   const c = caseData?.case;
-  const lane = WEDGE_BY_ID[wedge || c?.wedge];
+  const lane = RECOVERY_BY_ID[wedge || c?.wedge];
   const showSpontaneous =
     lane?.showSpontaneousBand && c?.failureReason === 'insufficient_funds';
 

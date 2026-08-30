@@ -2,17 +2,35 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTimeline } from '@/lib/timelineContext';
-import { WEDGE_LANES, WEDGE_CASES, WEDGE_BY_ID, getCaseMeta } from '@/config/wedges';
+import { RECOVERY_LANES, SCENARIO_CASES, RECOVERY_BY_ID, getCaseMeta } from '@/config/recoveryScenarios';
 import { WEDGE_ACCENT } from '@/config/demoPersonas';
 
-/** Single control strip: wedge tabs + validation case picker (no duplicate labels). */
-export const DemoScenarioBar = ({ wedge }) => {
+/** Single control strip: scenario tabs + validation case picker. */
+export const DemoScenarioBar = ({ scenarioId, compact = false }) => {
   const { pathname } = useLocation();
   const { caseData, loadCase } = useTimeline();
   const currentId = caseData?.case?.id;
-  const lane = WEDGE_BY_ID[wedge];
+  const lane = RECOVERY_BY_ID[scenarioId];
   const accent = WEDGE_ACCENT[lane?.accent || 'checkout'];
-  const cases = WEDGE_CASES[wedge] || [];
+  const cases = SCENARIO_CASES[scenarioId] || [];
+
+  if (compact) {
+    const amount = caseData?.case?.amount;
+    return (
+      <div
+        className="shrink-0 rounded-[12px] border border-white/[0.08] bg-white/[0.02] px-3 py-2 flex items-center justify-between gap-3"
+        data-testid="demo-scenario-bar"
+      >
+        <span className="type-meta text-white/70">
+          {lane?.label} · <span className="font-mono text-white/90">{currentId}</span>
+          {amount != null && (
+            <span className="text-white/45"> · ₹{Number(amount).toLocaleString('en-IN')}</span>
+          )}
+        </span>
+        <span className="type-micro text-white/35">{lane?.windowLabel}</span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -20,11 +38,11 @@ export const DemoScenarioBar = ({ wedge }) => {
       data-testid="demo-scenario-bar"
     >
       <div className="flex items-center gap-1.5 shrink-0">
-        {WEDGE_LANES.map((w) => {
+        {RECOVERY_LANES.map((w) => {
           const active = pathname === w.path;
           return (
             <Link
-              key={w.wedge}
+              key={w.id}
               to={w.path}
               className={`rounded-lg px-3 py-1.5 type-micro font-medium transition-colors ${
                 active

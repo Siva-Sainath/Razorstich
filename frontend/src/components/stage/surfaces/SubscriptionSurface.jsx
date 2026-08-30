@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { RefreshCw, CreditCard, AlertTriangle } from 'lucide-react';
 import { useTimeline, sampleCurve } from '@/lib/timelineContext';
 import { inr } from '../stageUtils';
-import { getCaseMeta } from '@/config/wedges';
+import { getCaseMeta } from '@/config/recoveryScenarios';
 
 export const SubscriptionRenewalRing = ({ t, windowHours }) => {
   const days = (t * windowHours) / 24;
@@ -65,7 +65,7 @@ export const ChurnRiskMeter = ({ prob }) => {
   );
 };
 
-export const SubscriptionSurface = () => {
+export const SubscriptionSurface = ({ embedded = false }) => {
   const { caseData, t, rolloutSteps, recovered, currentRolloutStep, windowHours } = useTimeline();
   const c = caseData?.case;
   const curve = caseData?.recoveryCurve || [];
@@ -75,8 +75,12 @@ export const SubscriptionSurface = () => {
 
   const actions = rolloutSteps.filter((s) => s.t <= t).map((s) => s.ui_action);
 
+  const shell = embedded
+    ? 'flex flex-col rounded-[20px] border border-white/[0.08] bg-black/30 overflow-hidden'
+    : 'flex flex-col h-full min-h-[300px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card';
+
   return (
-    <div className="flex flex-col h-full min-h-[300px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card" data-testid="subscription-surface">
+    <div className={shell} data-testid="subscription-surface">
       <div className="px-4 py-3 border-b border-white/[0.06] flex items-center gap-2">
         <RefreshCw size={14} className="text-violet-300" />
         <p className="type-micro text-white/50">Subscription renewal lane</p>

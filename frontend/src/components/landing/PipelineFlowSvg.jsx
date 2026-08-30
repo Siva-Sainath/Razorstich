@@ -36,7 +36,7 @@ export const PipelineFlowSvg = () => (
 
     {[
       { x: 24, label: 'Razorpay', sub: 'payment.failed', icon: '₹' },
-      { x: 168, label: 'Wedge router', sub: 'encode state', icon: '→' },
+      { x: 168, label: 'Scenario router', sub: 'encode state', icon: '→' },
       { x: 312, label: 'Dueling DDQN', sub: 'masked Q-max', icon: 'Q' },
       { x: 456, label: 'Recovery', sub: 'link · notify', icon: '✓' },
     ].map((node, i) => (

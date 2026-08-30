@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { demoShareUrl, shareTweetUrl, shareLinkedInUrl, getReferralCode } from '@/lib/gtm';
-import { WEDGE_LANES } from '@/config/wedges';
+import { RECOVERY_LANES } from '@/config/recoveryScenarios';
 
 /** Viral loop — copy demo link with ref code, share to social. */
 export const ShareDemoPanel = ({ className = '', defaultPath = '/checkout' }) => {
@@ -26,7 +26,7 @@ export const ShareDemoPanel = ({ className = '', defaultPath = '/checkout' }) =>
         Your link tracks referrals. When someone tries the demo from your link, you get priority onboarding.
       </p>
       <div className="flex flex-wrap gap-2 mb-3">
-        {WEDGE_LANES.map((lane) => (
+        {RECOVERY_LANES.map((lane) => (
           <button
             key={lane.path}
             type="button"

@@ -6,18 +6,19 @@ import { StickyLeadBar } from '@/components/landing/StickyLeadBar';
 
 /**
  * Unified app shell — same nav, ambient background, and tokens on every route.
- * @param {'marketing' | 'demo'} variant — demo uses flex column for full-height stage
+ * @param {'marketing' | 'demo' | 'theater'} variant — demo pins viewport; theater scrolls
  */
 export const AppShell = ({
   children,
   variant = 'marketing',
   showStickyLeadBar = false,
   showFooter = true,
+  hideNav = false,
 }) => (
-  <div className="min-h-screen rs-ambient noise-overlay text-white relative overflow-x-hidden flex flex-col">
+  <div className="min-h-screen bg-background rs-ambient noise-overlay text-foreground relative overflow-x-hidden flex flex-col">
     <AmbientLightField />
-    <SiteNav />
-    {showStickyLeadBar && <StickyLeadBar />}
+    {!hideNav && <SiteNav />}
+    {showStickyLeadBar && !hideNav && <StickyLeadBar />}
     <main
       className={
         variant === 'demo'
@@ -27,7 +28,7 @@ export const AppShell = ({
     >
       {children}
     </main>
-    {showFooter && variant !== 'demo' && <MarketingFooter />}
+    {showFooter && variant !== 'demo' && variant !== 'theater' && <MarketingFooter />}
   </div>
 );
 
@@ -49,9 +50,6 @@ export const MarketingFooter = () => (
       <div className="flex flex-wrap gap-4">
         <Link to="/research" className="hover:text-white/60">
           How it works
-        </Link>
-        <Link to="/integrations" className="hover:text-white/60">
-          Integrations
         </Link>
         <Link to="/pricing?try=sandbox" className="hover:text-white/60">
           Test checkout

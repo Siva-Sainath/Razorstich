@@ -1,7 +1,7 @@
-/** Four RL wedge lanes — demo config + validation case lists. */
-export const WEDGE_LANES = [
+/** Four recovery scenarios — demo config + validation case lists. */
+export const RECOVERY_LANES = [
   {
-    wedge: 'checkout_failed',
+    id: 'checkout_failed',
     path: '/checkout',
     label: 'Checkout failed',
     short: 'Checkout',
@@ -16,7 +16,7 @@ export const WEDGE_LANES = [
     chapterLabels: ['Decline', 'Observe', 'Policy', 'Nudge', 'Captured'],
   },
   {
-    wedge: 'cart_abandon',
+    id: 'cart_abandon',
     path: '/cart',
     label: 'Cart abandon',
     short: 'Cart',
@@ -32,7 +32,7 @@ export const WEDGE_LANES = [
     chapterLabels: ['Idle', 'Intent', 'Link', 'Recover'],
   },
   {
-    wedge: 'subscription_failed',
+    id: 'subscription_failed',
     path: '/subscription',
     label: 'Subscription failed',
     short: 'Subscription',
@@ -48,7 +48,7 @@ export const WEDGE_LANES = [
     chapterLabels: ['Renewal fail', 'Wait', 'Update', 'Retain'],
   },
   {
-    wedge: 'invoice_overdue',
+    id: 'invoice_overdue',
     path: '/invoice',
     label: 'Invoice overdue',
     short: 'Invoice',
@@ -66,10 +66,10 @@ export const WEDGE_LANES = [
   },
 ];
 
-export const WEDGE_BY_PATH = Object.fromEntries(WEDGE_LANES.map((w) => [w.path, w]));
-export const WEDGE_BY_ID = Object.fromEntries(WEDGE_LANES.map((w) => [w.wedge, w]));
+export const RECOVERY_BY_PATH = Object.fromEntries(RECOVERY_LANES.map((lane) => [lane.path, lane]));
+export const RECOVERY_BY_ID = Object.fromEntries(RECOVERY_LANES.map((lane) => [lane.id, lane]));
 
-export const WEDGE_CASES = {
+export const SCENARIO_CASES = {
   checkout_failed: ['VAL-CHK-004', 'VAL-CHK-002', 'VAL-CHK-001', 'VAL-CHK-003', 'VAL-CHK-005'],
   cart_abandon: ['VAL-CART-002', 'VAL-CART-003', 'VAL-CART-001'],
   subscription_failed: ['VAL-SUB-003', 'VAL-SUB-002', 'VAL-SUB-001'],
@@ -90,7 +90,7 @@ export const CASE_CATALOG = {
   'VAL-SUB-002': { taxonomy: 'Funds', hook: 'Renewal insufficient funds', recoverable: true },
   'VAL-SUB-003': { taxonomy: 'Auth', hook: 'Card update loop', recoverable: true },
   'VAL-INV-001': { taxonomy: 'SMB', hook: '₹12.5k SMB', recoverable: true },
-  'VAL-INV-002': { taxonomy: 'Enterprise', hook: '₹45k whale · 1-tick close', recoverable: true, whale: true },
+  'VAL-INV-002': { taxonomy: 'Enterprise', hook: 'Enterprise · ₹45k · 1-tick close', recoverable: true, enterprise: true },
   'VAL-INV-003': { taxonomy: 'SMB', hook: '₹8.9k SMB', recoverable: true },
 };
 
@@ -100,8 +100,8 @@ export function getCaseMeta(caseId) {
   return CASE_CATALOG[caseId] || { recoverable: true };
 }
 
-export function formatWedgeElapsed(wedgeId, t, windowHours) {
-  const lane = WEDGE_BY_ID[wedgeId];
+export function formatScenarioElapsed(scenarioId, t, windowHours) {
+  const lane = RECOVERY_BY_ID[scenarioId];
   const hours = t * windowHours;
   if (lane?.timeUnit === 'days') {
     const days = hours / 24;
@@ -111,8 +111,27 @@ export function formatWedgeElapsed(wedgeId, t, windowHours) {
   return `T+${Math.round(hours)}h`;
 }
 
-export function formatWedgeClock(wedgeId, hoursElapsed) {
-  const lane = WEDGE_BY_ID[wedgeId];
+/** Human window label — e.g. 72h, 14d, 30d (not raw 336h / 720h). */
+export function formatEpisodeWindow(scenarioId, windowHours) {
+  const lane = RECOVERY_BY_ID[scenarioId];
+  if (lane?.windowLabel) return lane.windowLabel;
+  return `${windowHours}h`;
+}
+
+/** Elapsed time within episode window for failure anatomy stats. */
+export function formatHoursSinceFailure(scenarioId, hoursSince, windowHours) {
+  const lane = RECOVERY_BY_ID[scenarioId];
+  const windowLabel = formatEpisodeWindow(scenarioId, windowHours);
+  if (lane?.timeUnit === 'days') {
+    const elapsedDays = Math.floor(hoursSince / 24);
+    const windowDays = Math.round(windowHours / 24);
+    return `${elapsedDays}d of ${windowDays}d`;
+  }
+  return `${Math.floor(hoursSince)}h of ${windowLabel}`;
+}
+
+export function formatScenarioClock(scenarioId, hoursElapsed) {
+  const lane = RECOVERY_BY_ID[scenarioId];
   if (lane?.timeUnit === 'days') {
     const d = hoursElapsed / 24;
     return `${d.toFixed(1)}d elapsed`;

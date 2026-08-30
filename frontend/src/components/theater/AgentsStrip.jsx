@@ -13,7 +13,7 @@ export const AgentsStrip = ({ className }) => {
     <motion.div variants={panelVariants} className={className}>
       <Panel
         title="Recovery agents"
-        subtitle="Four trained Dueling DDQN policies — one per failure wedge."
+        subtitle="Four trained Dueling DDQN policies — one per failure mode."
         testId="agents-strip"
         bodyClassName="pt-1"
       >

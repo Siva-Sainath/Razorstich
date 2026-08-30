@@ -33,7 +33,7 @@ export const PersonaHeroCard = () => {
       metric = `${Math.round((dqn?.prob || 0) * 100)}%`;
       detail = `Same val scenario · rules stuck at ${Math.round((rules?.prob || 0) * 100)}% on ghost replay`;
       break;
-    case 'whale':
+    case 'enterprise':
       title = 'Enterprise capture';
       metric = inr(c.amount);
       detail = `${rolloutSteps.length} simulator tick${rolloutSteps.length === 1 ? '' : 's'} · ${c.agentName}`;

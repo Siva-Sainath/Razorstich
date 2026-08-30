@@ -61,6 +61,8 @@ export async function openRazorpayCheckout({
   order,
   amountInr,
   wedge,
+  prefill,
+  description,
   onSuccess,
   onFailure,
 }) {
@@ -72,11 +74,11 @@ export async function openRazorpayCheckout({
       amount: order.amount,
       currency: order.currency || 'INR',
       name: 'RazorStitch',
-      description: 'Sandbox · Test Mode only',
+      description: description || 'Sandbox · Test Mode only',
       order_id: order.id,
       prefill: {
-        name: 'Test Merchant',
-        email: 'sandbox@razorstitch.dev',
+        name: prefill?.name || 'Test Merchant',
+        email: prefill?.email || 'sandbox@razorstitch.dev',
       },
       theme: { color: '#2B8AF7' },
       handler(response) {

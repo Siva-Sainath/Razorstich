@@ -14,9 +14,9 @@ const KIND_STYLES = {
   planned: 'border-dashed border-white/20 bg-transparent text-white/45',
 };
 
-export const DecisionLedger = ({ activeWedge = null, className = '' }) => {
+export const DecisionLedger = ({ activeScenario = null, className = '' }) => {
   const rows = TRAINING_PIVOTS.filter(
-    (p) => !p.wedges || !activeWedge || p.wedges.includes(activeWedge)
+    (p) => !p.scenarios || !activeScenario || p.scenarios.includes(activeScenario)
   );
 
   return (

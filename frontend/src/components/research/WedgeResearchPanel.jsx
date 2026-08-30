@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { WEDGE_BY_ID } from '@/config/wedges';
+import { recoveryScenarioLabel } from '@/config/consumerCopy';
+import { RECOVERY_BY_ID } from '@/config/recoveryScenarios';
 import { TRAINING_PIVOTS } from '@/config/trainingNarrative';
 import { ResearchFigure } from './ResearchFigure';
 import { TrainingCurveFigure } from './TrainingCurveFigure';
@@ -10,7 +11,7 @@ const fmt = (n) => (n ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—');
 
 export const WedgeResearchPanel = ({ wedgeData }) => {
   const wedge = wedgeData?.wedge;
-  const lane = WEDGE_BY_ID[wedge];
+  const lane = RECOVERY_BY_ID[wedge];
   const curve = wedgeData?.training_curve || [];
   const benchmark = wedgeData?.benchmark_full || wedgeData?.benchmark || {};
   const manifest = wedgeData?.manifest || [];
@@ -19,14 +20,14 @@ export const WedgeResearchPanel = ({ wedgeData }) => {
   const pivotEps = useMemo(
     () =>
       TRAINING_PIVOTS
-        .filter((p) => p.episode && (!p.wedges || p.wedges.includes(wedge)))
+        .filter((p) => p.episode && (!p.scenarios || p.scenarios.includes(wedge)))
         .map((p) => p.episode),
     [wedge]
   );
 
   if (wedgeData?.error) {
     return (
-      <ResearchFigure title={wedge} subtitle="Artifacts missing">
+      <ResearchFigure title={recoveryScenarioLabel(wedge)} subtitle="Artifacts missing">
         <p className="type-body text-warning/90">{wedgeData.error}</p>
       </ResearchFigure>
     );
@@ -69,8 +70,11 @@ export const WedgeResearchPanel = ({ wedgeData }) => {
           <p className="type-micro font-mono text-white/35 mt-4 truncate">checkpoint · {benchmark.checkpoint}</p>
         )}
         {lane && (
-          <Link to={lane.path} className="btn-primary inline-flex mt-5 px-4 py-2 text-xs">
-            Open {lane.short} demo
+          <Link
+            to={`${lane.path}?record=1`}
+            className="btn-primary inline-flex mt-5 px-4 py-2 text-xs"
+          >
+            Open {lane.short} demo (record mode)
           </Link>
         )}
       </ResearchFigure>

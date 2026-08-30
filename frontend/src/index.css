@@ -9,8 +9,14 @@ body {
     font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: hsl(218 62% 7%);
-    color: hsl(210 40% 98%);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+}
+
+#root,
+.App {
+    min-height: 100%;
+    background-color: hsl(var(--background));
 }
 
 code {
@@ -60,6 +66,7 @@ code {
 
     html {
         color-scheme: dark;
+        background-color: hsl(var(--background));
     }
 
     :focus-visible {
@@ -215,6 +222,7 @@ code {
     .rs-ambient {
         position: relative;
         isolation: isolate;
+        background-color: hsl(var(--background));
     }
     .rs-ambient::before {
         content: '';

@@ -76,40 +76,6 @@ class LeadCreate(BaseModel):
     page: str | None = None
 
 
-class VoiceSyncBody(BaseModel):
-    prompt: str
-    first_message: str = Field(default="", alias="firstMessage")
-
-    model_config = ConfigDict(populate_by_name=True)
-
-
-@api_router.post("/voice/pricing/sync")
-async def sync_pricing_voice(body: VoiceSyncBody):
-    """Push pricing voice prompt from frontend config to Smallest AI Atoms."""
-    from smallest_ai import sync_pricing_voice_agent
-
-    try:
-        return sync_pricing_voice_agent(prompt=body.prompt, first_message=body.first_message)
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
-    except RuntimeError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
-    except Exception as e:
-        logger.exception("voice sync failed")
-        raise HTTPException(status_code=502, detail=str(e)) from e
-
-
-@api_router.get("/voice/pricing/config")
-async def pricing_voice_config():
-    """Public widget embed settings (no secrets)."""
-    from smallest_ai import public_widget_config
-
-    try:
-        return public_widget_config()
-    except FileNotFoundError as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
 @api_router.post("/leads")
 async def create_lead(body: LeadCreate):
     from leads_store import append_lead, lead_count
@@ -324,7 +290,7 @@ class RazorpayTestPayBody(BaseModel):
 
 
 class RazorpayOrderBody(BaseModel):
-    amount_inr: float = 1499.0
+    plan_id: str = "sandbox"
     wedge: str = "checkout_failed"
 
 
@@ -332,8 +298,6 @@ class RazorpayVerifyBody(BaseModel):
     razorpay_order_id: str
     razorpay_payment_id: str
     razorpay_signature: str
-    amount_inr: float = 1499.0
-    wedge: str = "checkout_failed"
 
 
 class RazorpayFailedBody(BaseModel):
@@ -341,17 +305,21 @@ class RazorpayFailedBody(BaseModel):
     payment_id: str | None = None
     error_code: str | None = None
     error_description: str | None = None
-    amount_inr: float = 1499.0
-    wedge: str = "checkout_failed"
+
+
+class RazorpayOrderIdBody(BaseModel):
+    order_id: str
 
 
 @api_router.post("/razorpay/orders")
 async def razorpay_create_order(body: RazorpayOrderBody):
-    """Standard Checkout — create Razorpay order (Test Mode keys)."""
+    """Standard Checkout — create Razorpay order (Test Mode keys). Amount is server-side."""
     from razorpay_checkout import create_checkout_order
 
     try:
-        return create_checkout_order(amount_inr=body.amount_inr, wedge=body.wedge)
+        return create_checkout_order(plan_id=body.plan_id, wedge=body.wedge)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
         logger.exception("razorpay order failed")
         raise HTTPException(status_code=502, detail=str(exc)) from exc
@@ -366,8 +334,6 @@ async def razorpay_verify_payment(body: RazorpayVerifyBody):
             order_id=body.razorpay_order_id,
             payment_id=body.razorpay_payment_id,
             signature=body.razorpay_signature,
-            amount_inr=body.amount_inr,
-            wedge=body.wedge,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -377,14 +343,51 @@ async def razorpay_verify_payment(body: RazorpayVerifyBody):
 async def razorpay_payment_failed(body: RazorpayFailedBody):
     from razorpay_checkout import handle_payment_failed
 
-    return handle_payment_failed(
-        order_id=body.order_id,
-        payment_id=body.payment_id,
-        error_code=body.error_code,
-        error_description=body.error_description,
-        amount_inr=body.amount_inr,
-        wedge=body.wedge,
-    )
+    try:
+        return handle_payment_failed(
+            order_id=body.order_id,
+            payment_id=body.payment_id,
+            error_code=body.error_code,
+            error_description=body.error_description,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@api_router.post("/razorpay/checkout/opened")
+async def razorpay_checkout_opened(body: RazorpayOrderIdBody):
+    from razorpay_checkout import handle_checkout_opened
+
+    try:
+        return handle_checkout_opened(body.order_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@api_router.post("/razorpay/checkout/cancelled")
+async def razorpay_checkout_cancelled(body: RazorpayOrderIdBody):
+    from razorpay_checkout import handle_checkout_cancelled
+
+    try:
+        return handle_checkout_cancelled(body.order_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@api_router.get("/razorpay/orders/{order_id}")
+async def razorpay_get_order(order_id: str):
+    from payment_store import get_order
+
+    record = get_order(order_id)
+    if not record:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return {
+        "order_id": record["order_id"],
+        "plan_id": record.get("plan_id"),
+        "amount_inr": record.get("amount_inr"),
+        "status": record.get("status"),
+        "wedge": record.get("wedge"),
+    }
 
 
 @api_router.get("/razorpay/test/cards")

@@ -5,7 +5,6 @@ import { PAGE_CONTAINER } from '@/components/landing/MarketingLayout';
 
 const NAV_LINKS = [
   { to: '/research', label: 'How it works' },
-  { to: '/integrations', label: 'Integrations' },
   { to: '/checkout', label: 'Demo', matchDemo: true },
   { to: '/pricing', label: 'Pricing', matchPricing: true },
 ];
@@ -15,7 +14,6 @@ const DEMO_PATHS = ['/checkout', '/cart', '/subscription', '/invoice'];
 export const SiteNav = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
-  const onDemo = DEMO_PATHS.includes(pathname);
 
   const isActive = (link) => {
     if (link.matchDemo) return DEMO_PATHS.includes(pathname);
@@ -25,7 +23,7 @@ export const SiteNav = () => {
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-white/[0.06] bg-[hsl(218_62%_7%)]/95 backdrop-blur-xl shrink-0"
+      className="sticky top-0 z-50 border-b border-white/[0.06] bg-background/95 backdrop-blur-xl shrink-0"
       data-testid="site-nav"
     >
       <div className={`${PAGE_CONTAINER} h-14 flex items-center justify-between gap-3`}>
@@ -56,13 +54,8 @@ export const SiteNav = () => {
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
-          {!onDemo && (
-            <Link to="/checkout" className="hidden md:inline-flex btn-quiet items-center px-3 text-xs h-9">
-              Try demo
-            </Link>
-          )}
-          <Link to="/start" className="btn-primary inline-flex items-center px-4 h-9 text-sm">
-            Get pilot access
+          <Link to="/checkout" className="btn-primary inline-flex items-center px-4 h-9 text-sm">
+            Try demo
           </Link>
           <button
             type="button"
@@ -79,7 +72,7 @@ export const SiteNav = () => {
       </div>
 
       {open && (
-        <div className="sm:hidden border-t border-white/[0.06] bg-[hsl(218_62%_7%)] px-4 py-3 space-y-1">
+        <div className="sm:hidden border-t border-white/[0.06] bg-background px-4 py-3 space-y-1">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.to}
@@ -92,15 +85,6 @@ export const SiteNav = () => {
               {link.label}
             </Link>
           ))}
-          {!onDemo && (
-            <Link
-              to="/checkout"
-              className="block px-3 py-2.5 rounded-lg type-body text-white/70 hover:bg-white/[0.05]"
-              onClick={() => setOpen(false)}
-            >
-              Try demo
-            </Link>
-          )}
         </div>
       )}
     </header>

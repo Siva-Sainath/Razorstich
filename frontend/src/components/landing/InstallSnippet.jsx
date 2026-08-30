@@ -4,12 +4,12 @@ import { motion } from 'framer-motion';
 const SNIPPETS = {
   install: `curl -fsSL https://api.razorstitch.dev/install.sh | sh`,
   webhook: `POST /api/webhooks/razorpay
-→ wedge router → Dueling DDQN → masked argmax
+→ scenario router → Dueling DDQN → masked argmax
 → recovery action → Razorpay payment link`,
   policy: `curl -X POST https://api.razorstitch.dev/v1/policy/recommend \\
   -H "Authorization: Bearer rs_live_..." \\
   -d '{
-    "wedge": "checkout_failed",
+    "scenario": "checkout_failed",
     "failure_reason": "upi_timeout",
     "hours_since_failure": 6,
     "amount_inr": 1499,

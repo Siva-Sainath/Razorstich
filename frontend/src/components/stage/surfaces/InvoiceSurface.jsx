@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { FileText, ArrowUpRight, Building2 } from 'lucide-react';
 import { useTimeline } from '@/lib/timelineContext';
 import { inr } from '../stageUtils';
-import { getCaseMeta } from '@/config/wedges';
+import { getCaseMeta } from '@/config/recoveryScenarios';
 
 const DUNNING_TIERS = [
   { key: 'notify', label: 'Reminder', actions: ['notify_sms', 'notify_email', 'notify_whatsapp'] },
@@ -72,16 +72,20 @@ export const InvoiceARTimeline = ({ t, windowHours }) => {
   );
 };
 
-export const InvoiceSurface = () => {
+export const InvoiceSurface = ({ embedded = false }) => {
   const { caseData, t, recovered, displayAmount, currentRolloutStep, windowHours } = useTimeline();
   const c = caseData?.case;
   if (!c) return null;
 
   const meta = getCaseMeta(c.id);
-  const isEnterprise = c.failureReason === 'enterprise' || meta.whale;
+  const isEnterprise = c.failureReason === 'enterprise' || meta.taxonomy === 'Enterprise';
+
+  const shell = embedded
+    ? 'flex flex-col rounded-[20px] border border-white/[0.08] bg-black/30 overflow-hidden'
+    : 'flex flex-col h-full min-h-[300px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card';
 
   return (
-    <div className="flex flex-col h-full min-h-[300px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card" data-testid="invoice-surface">
+    <div className={shell} data-testid="invoice-surface">
       <div className="px-4 py-3 border-b border-white/[0.06]">
         <DunningLadder currentAction={currentRolloutStep?.rl_action || currentRolloutStep?.ui_action} />
       </div>
@@ -106,7 +110,7 @@ export const InvoiceSurface = () => {
               </span>
             )}
           </div>
-          {meta.whale && (
+          {meta.enterprise && (
             <p className="type-micro text-teal-300/90 mt-3 flex items-center gap-1">
               <ArrowUpRight size={12} />
               Single-tick escalation close path

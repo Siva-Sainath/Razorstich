@@ -24,6 +24,14 @@ cd backend
 
 Copy the public URL, e.g. `https://razorstitch-api.up.railway.app`
 
+**Razorpay Test checkout** — set on the backend host:
+
+```
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
+CORS_ORIGINS=https://your-app.vercel.app
+```
+
 **Leads:** writes to `data/leads.json` on the server filesystem — fine for pilot; move to Supabase later.
 
 ---
@@ -39,38 +47,48 @@ Copy the public URL, e.g. `https://razorstitch-api.up.railway.app`
    | Name | Value |
    |------|--------|
    | `REACT_APP_BACKEND_URL` | `https://YOUR-BACKEND-URL` (no trailing slash) |
-   | `REACT_APP_SMALLEST_AI_AGENT_ID` | Atoms Widget → `assistant-id` from embed snippet |
+   | `REACT_APP_RAZORPAY_KEY_ID` | Optional — must match backend `RAZORPAY_KEY_ID` if used client-side |
 
 6. Deploy
 
 `vercel.json` in `frontend/` handles SPA routing (`/research`, `/checkout`, etc.).
-
-**Smallest AI widget:** In Atoms → Widget, set domain allowlist to your Vercel URL + custom domain. Paste `PRICING_AGENT_KNOWLEDGE` from `frontend/src/config/voiceAgent.js` into the agent system prompt.
 
 ---
 
 ## Pre-deploy checklist
 
 1. `cd frontend && npm run build` — catches JSX errors
-2. Click nav loop on localhost: `/` → `/pricing` → `/checkout` → `/research` → `/integrations` → `/start`
+2. Click nav loop on localhost: `/` → `/pricing` → `/checkout` → `/research` → `/start`
 3. **Same SiteNav** visible on marketing pages AND demo routes
 4. **Same dark background** — no white/light theme drift on pricing
-5. Demo defaults: pitch mode **off**, Normal 1× speed
-6. `REACT_APP_BACKEND_URL` on Vercel matches live backend
+5. Demo auto-plays on load; use play rail to scrub steps
+6. `REACT_APP_BACKEND_URL` on Vercel matches live backend (rebuild after changing)
 7. Backend `CORS_ORIGINS` includes your Vercel URL
-8. Submit test lead on `/start` → `GET /api/leads/stats`
+8. Backend has Razorpay Test Mode keys for `/pricing?try=sandbox` **and** `/pricing?plan=growth`
+9. Submit test lead on `/start` → `GET /api/leads/stats`
+
+**Growth pre-book smoke (local or prod):**
+
+```bash
+curl -s -X POST "$BACKEND_URL/api/razorpay/orders" \
+  -H 'Content-Type: application/json' \
+  -d '{"plan_id":"growth","wedge":"checkout_failed"}' | jq .plan_id,.amount_inr,.mode
+```
+
+Expected: `plan_id: "growth"`, `amount_inr: 499`, `mode: "razorpay"` (or `unconfigured` if keys absent — not `Unknown plan_id`).
 
 ---
 
 ## 3. Smoke test after deploy
 
 - `/` — landing + lead form + SiteNav
-- `/pricing?try=sandbox` — Razorpay Standard Checkout modal (Test Mode keys on backend)
+- `/pricing?try=sandbox` — click **Open Razorpay Checkout** in modal (Test Mode keys on backend)
+- `/pricing?plan=growth` — pre-book Growth ₹499 test checkout (same Razorpay keys)
 - `/pricing` — same shell as landing; Glide-style tiers on dark theme
 - `/start` — pilot form → check backend `data/leads.json` or `GET /api/leads/stats`
-- `/checkout` — SiteNav + wedge tabs; demo plays without pitch overlay
-- `/subscription` — brain panel visible; compact stage rail
-- `/research` — catalog loads from `GET /api/wedges/catalog`; footer present
+- `/checkout?record=1` — compact chrome; dock scrubber; no SiteNav
+- `/subscription?record=1` — customer screen + RL live metrics; policy brain
+- `/research` — §1–§8 linear essay; catalog loads from `GET /api/wedges/catalog`
 
 ---
 

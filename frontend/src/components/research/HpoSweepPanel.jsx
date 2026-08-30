@@ -1,17 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { WEDGE_CHART_ACCENT } from '@/config/trainingNarrative';
+import { SCENARIO_CHART_ACCENT } from '@/config/trainingNarrative';
 
 const inr = (n) => `₹${Math.round(n || 0).toLocaleString('en-IN')}`;
 
 /**
  * Interactive HPO sweep scatter — lr vs peak val net, sized by batch_size.
  */
-export const HpoSweepPanel = ({ wedgeData, activeWedge }) => {
+export const HpoSweepPanel = ({ wedgeData, activeScenario }) => {
   const [selectedTrial, setSelectedTrial] = useState(null);
   const hpo = wedgeData?.hpo;
   const trials = hpo?.trials || [];
-  const accent = WEDGE_CHART_ACCENT[activeWedge] || WEDGE_CHART_ACCENT.checkout_failed;
+  const accent = SCENARIO_CHART_ACCENT[activeScenario] || SCENARIO_CHART_ACCENT.checkout_failed;
 
   const plot = useMemo(() => {
     if (!trials.length) return null;
@@ -49,7 +49,7 @@ export const HpoSweepPanel = ({ wedgeData, activeWedge }) => {
   if (!trials.length) {
     return (
       <p className="type-micro text-white/40">
-        HPO results pending — run <code className="text-white/55">scripts/tune_wedge.py</code> for this wedge.
+        HPO results pending — run <code className="text-white/55">scripts/tune_wedge.py</code> for this scenario.
       </p>
     );
   }

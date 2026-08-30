@@ -36,7 +36,7 @@ export const DEMO_PERSONAS = [
     story: 'Single-tick B2B escalation close',
     wedge: 'invoice_overdue',
     accent: 'invoice',
-    hero: 'whale',
+    hero: 'enterprise',
   },
   {
     caseId: 'VAL-CART-003',

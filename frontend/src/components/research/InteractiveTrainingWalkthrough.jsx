@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { WEDGE_CHART_ACCENT } from '@/config/trainingNarrative';
+import { SCENARIO_CHART_ACCENT } from '@/config/trainingNarrative';
+import { recoveryScenarioLabel } from '@/config/consumerCopy';
 
 const inr = (n) => `₹${Math.round(n || 0).toLocaleString('en-IN')}`;
 
 /**
- * Eric Jang / AutoGo-style interactive training narrative.
- * Scroll through numbered beats; scrub episode milestones on the active wedge curve.
+ * Interactive training narrative — numbered beats with milestone scrubbing.
  */
 export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
   const [activeBeat, setActiveBeat] = useState(0);
@@ -39,16 +39,16 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
       id: 'gym',
       fig: '§2',
       title: 'Build the gym, not the API loop',
-      body: 'Each wedge — checkout decline, cart idle, subscription renewal, invoice dunning — gets its own WedgeRecoveryEnv with realistic tick sizes and customer response models. 20k episodes × ~5 steps would be 100k+ live API calls with non-reproducible noise. We locked: simulator trains, Razorpay proves, Theater replays checkpoints.',
+      body: 'Each failure mode — checkout decline, cart idle, subscription renewal, invoice dunning — gets its own recovery simulator with realistic time steps and customer response models. 20k episodes × ~5 steps would be 100k+ live API calls with non-reproducible noise. We locked: simulator trains, Razorpay proves, Theater replays checkpoints.',
       aside: '37-dim state · 11 masked actions · net INR reward (not gross %).',
     },
     {
       id: 'hpo',
       fig: '§3',
-      title: 'Six pilots per wedge, then scale',
-      body: 'Before any 20k run, we swept lr, batch_size, γ, warmup_steps, and PER α across six 1,500-episode mini-runs per wedge. Score = peak val_net_inr minus late-drop overfit penalty. Best configs landed in eval/results/hpo_{wedge}_best.json.',
+      title: 'Six pilots per scenario, then scale',
+      body: 'Before any 20k run, we swept lr, batch_size, γ, warmup_steps, and PER α across six 1,500-episode mini-runs per failure mode. Score = peak val_net_inr minus late-drop overfit penalty. Best configs landed in eval/results/hpo_*_best.json.',
       aside: meta?.hpo_summary?.trials_per_wedge
-        ? `${meta.hpo_summary.trials_per_wedge} trials × ${meta.hpo_summary.episodes_per_trial} ep × 4 wedges`
+        ? `${meta.hpo_summary.trials_per_wedge} trials × ${meta.hpo_summary.episodes_per_trial} ep × 4 scenarios`
         : '24 HPO trials total',
     },
     {
@@ -71,17 +71,17 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
       fig: '§6',
       title: 'Same weights in demo and production',
       body: 'Exported JSON → zero-dependency TypeScript matmul in /api/policy/recommend. Operating Theater replays the same checkpoint on ranked validation cases. What you see in the Q-value bars is exactly what the server scored.',
-      aside: 'checkout_failed v2 is live in the demo. Other wedges serve v1 until v2 passes parity.',
+      aside: `${recoveryScenarioLabel('checkout_failed')} v2 is live in the demo. Other scenarios serve v1 until v2 passes parity.`,
     },
   ];
 
   const beat = beats[activeBeat];
-  const accent = WEDGE_CHART_ACCENT.checkout_failed;
+  const accent = SCENARIO_CHART_ACCENT.checkout_failed;
 
   return (
     <section className="rounded-[24px] border border-white/[0.08] bg-black/25 overflow-hidden" data-testid="interactive-training-walkthrough">
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-        {/* Beat navigator — AutoGo numbered sections */}
+        {/* Beat navigator */}
         <div className="border-b lg:border-b-0 lg:border-r border-white/[0.06] p-5 sm:p-6">
           <p className="font-mono type-micro tracking-[0.12em] text-accent uppercase mb-2">
             Interactive training log
@@ -113,7 +113,7 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
             <p className="type-meta text-white/45 mb-2">What we achieved (v2 run)</p>
             <ul className="space-y-2 type-micro text-white/60">
               <li className="flex justify-between gap-2">
-                <span>checkout_failed benchmark</span>
+                <span>{recoveryScenarioLabel('checkout_failed')} benchmark</span>
                 <span className="font-mono text-success tabular-nums">+61% vs rules</span>
               </li>
               <li className="flex justify-between gap-2">
@@ -150,7 +150,7 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
               {beat.interactive && curve.length > 0 && (
                 <div className="rounded-[16px] border border-white/[0.08] bg-black/30 p-4">
                   <div className="flex justify-between items-baseline mb-3">
-                    <span className="type-micro text-white/45">checkout_failed · val_net_inr</span>
+                    <span className="type-micro text-white/45">{recoveryScenarioLabel('checkout_failed')} · val_net_inr</span>
                     <span className="font-mono type-metric text-accent tabular-nums">
                       {scrubPoint ? inr(scrubPoint.val_net_inr) : '—'}
                     </span>

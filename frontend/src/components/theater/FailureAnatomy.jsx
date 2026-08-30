@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { useTimeline } from '@/lib/timelineContext';
+import { formatEpisodeWindow, formatHoursSinceFailure } from '@/config/recoveryScenarios';
 import { Panel } from './Panel';
 
 const NodeDot = ({ status }) => (
@@ -34,10 +35,10 @@ const Stat = ({ label, value, testId, tone = 'text-white/90' }) => (
 );
 
 export const FailureAnatomy = ({ className }) => {
-  const { caseData, hoursSince, contactsUsed, maxContacts, recovered, windowHours, activeAgent } = useTimeline();
+  const { caseData, hoursSince, contactsUsed, maxContacts, trustRemaining, recovered, windowHours, activeAgent } = useTimeline();
   const c = caseData.case;
-  const hrs = Math.floor(hoursSince);
-  const hoursLeft = Math.max(0, windowHours - hrs);
+  const windowLabel = formatEpisodeWindow(c.wedge, windowHours);
+  const elapsedLabel = formatHoursSinceFailure(c.wedge, hoursSince, windowHours);
   const amountLabel = `₹${Number(c.amount).toLocaleString('en-IN')}`;
 
   return (
@@ -46,6 +47,14 @@ export const FailureAnatomy = ({ className }) => {
       subtitle="What broke, and what it puts at risk."
       testId="failure-anatomy-panel"
       className={className}
+      right={
+        <div className="text-right shrink-0" data-testid="trust-budget-remaining">
+          <div className="font-mono text-2xl font-semibold tabular-nums text-white leading-none">
+            {trustRemaining}
+          </div>
+          <div className="type-meta text-white/45 mt-1">trust contacts left</div>
+        </div>
+      }
     >
       {/* Case vitals */}
       <div className="grid grid-cols-2 gap-2.5">
@@ -54,7 +63,7 @@ export const FailureAnatomy = ({ className }) => {
         <Stat label="Agent" value={c.agentName || activeAgent?.name || c.wedge} testId="active-agent" />
         <Stat label="failure_reason" value={c.failureReason} tone="text-destructive" testId="decline-code" />
         <Stat label="error_source" value={c.errorSource} testId="error-source" />
-        <Stat label="Hours since failure" value={`${hrs}h of ${windowHours}h`} testId="hours-since-failure" />
+        <Stat label="Hours since failure" value={elapsedLabel} testId="hours-since-failure" />
         <Stat label="Contacts used" value={`${contactsUsed} of ${maxContacts}`} testId="contacts-used" tone={contactsUsed >= maxContacts ? 'text-warning' : 'text-white/90'} />
       </div>
 
@@ -64,8 +73,8 @@ export const FailureAnatomy = ({ className }) => {
         <p className="type-meta font-medium text-white/55 mb-1.5">Why revenue is at risk</p>
         <p className="type-body leading-relaxed text-white/85">
           {recovered
-            ? `${amountLabel} was recovered before the ${windowHours}h window closed — episode handled by ${c.agentName || 'the recovery agent'}.`
-            : `${c.failureReason?.replace(/_/g, ' ')} on ${c.method}${c.issuer && c.issuer !== '—' ? ` via ${c.issuer}` : ''}. If nothing lands in the next ${hoursLeft}h, ${amountLabel} is at risk.`}
+            ? `${amountLabel} was recovered before the ${windowLabel} window closed — episode handled by ${c.agentName || 'the recovery agent'} in the simulator.`
+            : `${c.failureReason?.replace(/_/g, ' ')} on ${c.method}${c.issuer && c.issuer !== '—' ? ` via ${c.issuer}` : ''}. ${amountLabel} remains at risk until the agent recovers it within ${windowLabel}.`}
         </p>
       </div>
 
@@ -122,12 +131,12 @@ export const FailureAnatomy = ({ className }) => {
           <AccordionContent>
             <pre className="font-mono type-micro leading-relaxed text-white/50 bg-black/25 rounded-xl p-4 overflow-x-auto">
 {`event     payment.failed
-wedge     ${c.wedge}
+scenario  ${c.wedge}
 agent     ${c.agentName || c.agentId}
 policy    ${c.policyVersion || 'dueling-ddqn-v2'}
 reason    ${c.failureReason}
 source    ${c.errorSource}
-episode   ${windowHours}h · ${c.tickHours}h ticks · ≤${c.maxSteps} steps`}
+episode   ${windowLabel} · ${c.tickHours}h ticks · ≤${c.maxSteps} steps`}
             </pre>
           </AccordionContent>
         </AccordionItem>

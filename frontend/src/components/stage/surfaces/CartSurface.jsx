@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Link2, CheckCircle2 } from 'lucide-react';
 import { useTimeline } from '@/lib/timelineContext';
 import { customerPhaseFromRollout, inr } from '../stageUtils';
-import { getCaseMeta } from '@/config/wedges';
+import { getCaseMeta } from '@/config/recoveryScenarios';
 import { WEDGE_ACCENT } from '@/config/demoPersonas';
 
 const FUNNEL_STEPS = [
@@ -63,7 +63,7 @@ export const IntentHalfLife = ({ t, windowHours }) => {
   );
 };
 
-export const CartSurface = () => {
+export const CartSurface = ({ embedded = false }) => {
   const { caseData, t, rolloutSteps, recovered, windowHours } = useTimeline();
   const c = caseData?.case;
   if (!c) return null;
@@ -71,8 +71,12 @@ export const CartSurface = () => {
   const phase = customerPhaseFromRollout(rolloutSteps, t, recovered);
   const meta = getCaseMeta(c.id);
 
+  const shell = embedded
+    ? 'flex flex-col rounded-[20px] border border-white/[0.08] bg-black/30 overflow-hidden'
+    : 'flex flex-col h-full min-h-[300px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card';
+
   return (
-    <div className="flex flex-col h-full min-h-[300px] rounded-[24px] border border-white/[0.08] overflow-hidden glass-card" data-testid="cart-surface">
+    <div className={shell} data-testid="cart-surface">
       <div className="px-4 py-3 border-b border-white/[0.06]">
         <CartFunnelStrip wedgeReason={c.failureReason} />
       </div>

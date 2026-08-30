@@ -8,14 +8,13 @@ import React, {
   useMemo,
 } from 'react';
 import axios from 'axios';
-import { formatWedgeElapsed } from '@/config/wedges';
+import { formatScenarioElapsed, formatEpisodeWindow } from '@/config/recoveryScenarios';
+import { friendlyAction } from '@/config/consumerCopy';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
 export const API = `${BACKEND_URL}/api`;
 
 const PLAY_DURATION_MS = 52000;
-const PITCH_MODE_KEY = 'rs_pitch_mode';
-const PITCH_SPEED_KEY = 'rs_pitch_speed';
 
 export function getPlayDurationMs(speed = 1) {
   return PLAY_DURATION_MS / Math.max(0.25, speed);
@@ -110,21 +109,13 @@ const CHANNEL_FOR_ACTION = {
   stop: 'Internal',
 };
 
-export const TimelineProvider = ({ children }) => {
+export const TimelineProvider = ({ children, initialSpeed = 1 }) => {
   const [caseData, setCaseData] = useState(null);
   const [agents, setAgents] = useState([]);
   const [loadError, setLoadError] = useState(null);
   const [t, setTState] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [pitchMode, setPitchModeState] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem(PITCH_MODE_KEY) === '1';
-  });
-  const [speed, setSpeed] = useState(() => {
-    if (typeof window === 'undefined') return 1;
-    const stored = parseFloat(localStorage.getItem(PITCH_SPEED_KEY) || '');
-    return Number.isFinite(stored) && stored > 0 ? stored : 1;
-  });
+  const [speed, setSpeed] = useState(initialSpeed);
   const [livePolicy, setLivePolicy] = useState(null);
   const [policyError, setPolicyError] = useState(null);
   const [wedgeSummary, setWedgeSummary] = useState(null);
@@ -137,20 +128,6 @@ export const TimelineProvider = ({ children }) => {
   const replayWindowRef = useRef({ start: 0, end: 1 });
   const replayScheduleRef = useRef([0, 1]);
   const prevStepIndexRef = useRef(null);
-
-  const setPitchMode = useCallback((on) => {
-    setPitchModeState(on);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(PITCH_MODE_KEY, on ? '1' : '0');
-    }
-    if (on) setPlaying(false);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(PITCH_SPEED_KEY, String(speed));
-    }
-  }, [speed]);
 
   useEffect(() => {
     tRef.current = t;
@@ -258,13 +235,9 @@ export const TimelineProvider = ({ children }) => {
     tRef.current = start;
     playElapsedRef.current = 0;
     prevStepIndexRef.current = null;
-    if (pitchMode) {
-      setPlaying(false);
-      return undefined;
-    }
     const id = setTimeout(() => setPlaying(true), 1400);
     return () => clearTimeout(id);
-  }, [caseData, pitchMode]);
+  }, [caseData]);
 
   const setT = useCallback((next) => {
     const clamped = Math.max(0, Math.min(1, next));
@@ -439,30 +412,6 @@ export const TimelineProvider = ({ children }) => {
     };
   }, [caseMeta, tick, contactsUsed, hoursSince]);
 
-  const intervention = useMemo(() => {
-    if (livePolicy?.selected_action) {
-      const action = livePolicy.selected_action;
-      const q = livePolicy.q_values?.[action] ?? 0;
-      const maxQ = Math.max(...Object.values(livePolicy.q_values || { wait: 0 }));
-      const confidence = maxQ > 0 ? Math.min(0.95, 0.5 + (q / maxQ) * 0.45) : 0.6;
-      return {
-        action,
-        channel: CHANNEL_FOR_ACTION[action] || 'Internal',
-        timing: `Tick ${tick + 1} · T+${Math.round(tick * tickHours)}h`,
-        message:
-          livePolicy.note ||
-          scriptedIntervention?.message ||
-          `${caseMeta?.agentName || 'Recovery agent'} recommends ${action.replace(/_/g, ' ')}.`,
-        incentive: scriptedIntervention?.incentive || null,
-        confidence,
-        source: 'live_policy',
-        agentName: livePolicy.agent_name || caseMeta?.agentName,
-        wedge: livePolicy.wedge || caseMeta?.wedge,
-      };
-    }
-    return scriptedIntervention;
-  }, [livePolicy, scriptedIntervention, tick, tickHours, caseMeta]);
-
   const rolloutSteps = useMemo(() => caseData?.rollout || [], [caseData]);
 
   const currentRolloutStep = useMemo(() => {
@@ -475,25 +424,58 @@ export const TimelineProvider = ({ children }) => {
     return step;
   }, [rolloutSteps, t]);
 
+  const intervention = useMemo(() => {
+    const rolloutAction = currentRolloutStep?.ui_action;
+    const action = rolloutAction || livePolicy?.selected_action || scriptedIntervention?.action;
+    if (!action) return scriptedIntervention;
+
+    const qKey = currentRolloutStep?.rl_action || action;
+    const q = livePolicy?.q_values?.[qKey] ?? livePolicy?.q_values?.[action] ?? 0;
+    const maxQ = Math.max(...Object.values(livePolicy?.q_values || { wait: 0 }));
+    const rolloutConfidence = currentRolloutStep?.belief_p;
+    const confidence =
+      rolloutConfidence != null
+        ? Math.min(0.98, rolloutConfidence)
+        : maxQ > 0
+          ? Math.min(0.95, 0.5 + (q / maxQ) * 0.45)
+          : scriptedIntervention?.confidence ?? 0.6;
+
+    const stepHours = currentRolloutStep?.hours ?? tick * tickHours;
+    const wedge = caseMeta?.wedge;
+    const timing =
+      currentRolloutStep != null
+        ? `Tick ${currentRolloutStep.step} · ${formatScenarioElapsed(wedge, stepHours / windowHours, windowHours)}`
+        : scriptedIntervention?.timing || `Tick ${tick + 1}`;
+
+    return {
+      action,
+      channel: CHANNEL_FOR_ACTION[action] || scriptedIntervention?.channel || 'Simulator',
+      timing,
+      message:
+        scriptedIntervention?.message ||
+        `${caseMeta?.agentName || 'Recovery agent'} · eval replay · ${friendlyAction(action)} on ${formatEpisodeWindow(wedge, windowHours)} window.`,
+      incentive: scriptedIntervention?.incentive || null,
+      confidence,
+      source: rolloutAction ? 'rollout_eval' : livePolicy ? 'live_policy' : 'scripted',
+      agentName: livePolicy?.agent_name || caseMeta?.agentName,
+      wedge,
+      rlAction: currentRolloutStep?.rl_action,
+    };
+  }, [
+    currentRolloutStep,
+    livePolicy,
+    scriptedIntervention,
+    tick,
+    tickHours,
+    windowHours,
+    caseMeta,
+  ]);
+
   const currentStepIndex = useMemo(() => {
     if (!currentRolloutStep) return 0;
     const idx = rolloutSteps.findIndex((s) => s.step === currentRolloutStep.step);
     return idx >= 0 ? idx : 0;
   }, [rolloutSteps, currentRolloutStep]);
-
-  useEffect(() => {
-    if (!pitchMode || !playing) {
-      prevStepIndexRef.current = currentStepIndex;
-      return;
-    }
-    if (
-      prevStepIndexRef.current !== null &&
-      currentStepIndex !== prevStepIndexRef.current
-    ) {
-      setPlaying(false);
-    }
-    prevStepIndexRef.current = currentStepIndex;
-  }, [currentStepIndex, pitchMode, playing]);
 
   const stageMode = useMemo(() => {
     if (t >= recoveredAt - 0.001) return 'outcome';
@@ -581,7 +563,7 @@ export const TimelineProvider = ({ children }) => {
 
   const elapsedLabel = useMemo(() => {
     const wedge = caseMeta?.wedge;
-    if (wedge) return formatWedgeElapsed(wedge, t, windowHours);
+    if (wedge) return formatScenarioElapsed(wedge, t, windowHours);
     return `T+${Math.round(t * windowHours)}h`;
   }, [caseMeta, t, windowHours]);
 
@@ -630,8 +612,6 @@ export const TimelineProvider = ({ children }) => {
     restart,
     speed,
     setSpeed,
-    pitchMode,
-    setPitchMode,
     playDurationMs: getPlayDurationMs(speed),
     events,
     activeEventIndex,

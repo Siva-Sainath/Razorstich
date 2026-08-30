@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTimeline } from '@/lib/timelineContext';
+import { recoveryScenarioLabel } from '@/config/consumerCopy';
 import { GlassCard } from '../GlassCard';
 import { MetricNumber } from '@/components/kit/MetricNumber';
 import { PolicyCompareBars } from '@/components/research/PolicyCompareBars';
@@ -24,8 +25,8 @@ export const TrainingBenchmarkCard = ({ delay = 0 }) => {
   return (
     <GlassCard
       testId="metric-training"
-      title="Wedge benchmark"
-      subtitle={wedge?.replace(/_/g, ' ')}
+      title="Training benchmark"
+      subtitle={recoveryScenarioLabel(wedge)}
       delay={delay}
     >
       {b?.policy_mean_net_inr && (

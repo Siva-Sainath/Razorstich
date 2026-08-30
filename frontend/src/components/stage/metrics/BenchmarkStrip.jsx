@@ -57,7 +57,7 @@ export const BenchmarkStrip = () => {
             ? ' · checkout v2 shipped'
             : ''}
           {trainV2.regressions_restored_to_v1?.length > 0
-            ? ` · ${trainV2.regressions_restored_to_v1.length} wedges on v1`
+            ? ` · ${trainV2.regressions_restored_to_v1.length} scenarios on v1`
             : ''}
         </p>
       )}

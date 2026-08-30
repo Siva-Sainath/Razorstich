@@ -5,7 +5,6 @@ import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { useTimeline } from '@/lib/timelineContext';
 import { ECGTrace } from '@/components/brand/ECGTrace';
-import { ActiveWindowBracket } from '@/components/svg/ActiveWindowBracket';
 
 const DOCK_MARKERS = new Set(['failure', 'retry_failed', 'intervention', 'customer_drop', 'captured', 'policy_eval']);
 
@@ -27,10 +26,10 @@ export const AuditTrailScrubber = () => {
     events,
     clockAt,
     elapsedLabel,
-    mode,
     jumpToEvent,
     recoveryProb,
     t,
+    activeEvent,
   } = useTimeline();
   const { start: replayStart, end: replayEnd } = replayWindow;
   const replaySpan = replayEnd - replayStart || 1;
@@ -38,7 +37,7 @@ export const AuditTrailScrubber = () => {
   const markers = events.filter(
     (ev) => DOCK_MARKERS.has(ev.type) && ev.t >= replayStart - 0.001 && ev.t <= replayEnd + 0.001
   );
-  const compressedWindow = replaySpan < 0.92;
+  const eventLabel = activeEvent?.label || 'Episode start';
 
   return (
     <div
@@ -52,15 +51,6 @@ export const AuditTrailScrubber = () => {
         className="dock-shell w-full max-w-[1120px]"
       >
         <div className="dock-glass gradient-border glint-top rounded-[24px] px-4 sm:px-5 py-3.5 flex flex-col gap-2 shadow-[var(--shadow-2)]">
-          {compressedWindow && (
-            <ActiveWindowBracket
-              startPct={0}
-              endPct={100}
-              label={`Active recovery window · ${Math.round(replaySpan * 100)}% of episode`}
-              height={18}
-              className="opacity-80 px-1"
-            />
-          )}
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="dock-controls flex items-center gap-1.5 shrink-0">
               <Button
@@ -121,13 +111,15 @@ export const AuditTrailScrubber = () => {
               />
             </div>
 
-            <div className="dock-controls hidden sm:flex items-center gap-4 shrink-0">
-              <div data-testid="audit-current-timestamp" className="font-mono type-meta text-white/90 tabular-nums leading-none">
+            <div className="dock-controls hidden sm:flex flex-col items-end gap-1 shrink-0 min-w-[140px] max-w-[220px]">
+              <div data-testid="audit-current-timestamp" className="font-mono type-body text-white/90 tabular-nums leading-none">
                 {clockAt(t)}
-                <span className="text-primary type-micro ml-2">{elapsedLabel}</span>
+                <span className="text-primary type-meta ml-2">{elapsedLabel}</span>
               </div>
-              <ECGTrace prob={recoveryProb} playing={playing} height={12} cells={3} stroke="rgba(255,255,255,0.4)" glow={false} className="w-[80px] hidden lg:block" />
-              <span data-testid="scrubber-mode" className="type-micro hidden lg:block">{mode}</span>
+              <p data-testid="scrubber-event-label" className="type-meta text-white/65 truncate w-full text-right" title={eventLabel}>
+                {eventLabel}
+              </p>
+              <ECGTrace prob={recoveryProb} playing={playing} height={12} cells={3} stroke="rgba(255,255,255,0.4)" glow={false} className="w-[80px] hidden lg:block mt-1" />
             </div>
           </div>
         </div>

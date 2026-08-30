@@ -87,9 +87,14 @@ export const VoiceAddonSection = ({ addon }) => (
   </section>
 );
 
-export const PricingTierCard = ({ plan, annual, onSandboxClick }) => {
+export const PricingTierCard = ({ plan, annual, onCheckoutClick }) => {
   const price = annual ? plan.price.annual : plan.price.monthly;
-  const isSandbox = plan.ctaAction === 'razorpay_sandbox';
+  const usesCheckout = plan.ctaAction === 'razorpay_checkout';
+
+  const scrollToCheckout = () => {
+    onCheckoutClick?.(plan.checkoutPlan || plan.id);
+    document.getElementById('pricing-checkout')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const ctaClass = `inline-flex items-center justify-center h-11 rounded-xl font-semibold text-sm transition-colors w-full ${
     plan.highlight
@@ -121,6 +126,11 @@ export const PricingTierCard = ({ plan, annual, onSandboxClick }) => {
           </span>
           {plan.period && <span className="type-meta text-white/40">{plan.period}</span>}
         </div>
+        {plan.checkoutInr && (
+          <p className="type-micro text-white/35 mt-2 font-mono">
+            Test checkout ₹{plan.checkoutInr.toLocaleString('en-IN')} (Razorpay Test Mode)
+          </p>
+        )}
       </div>
 
       <ul className="space-y-3 flex-1 mb-8">
@@ -132,10 +142,14 @@ export const PricingTierCard = ({ plan, annual, onSandboxClick }) => {
         ))}
       </ul>
 
-      {isSandbox ? (
-        <button type="button" onClick={onSandboxClick} className={ctaClass}>
+      {usesCheckout ? (
+        <button type="button" onClick={scrollToCheckout} className={ctaClass}>
           {plan.cta}
         </button>
+      ) : plan.ctaHref?.startsWith('mailto:') ? (
+        <a href={plan.ctaHref} className={ctaClass}>
+          {plan.cta}
+        </a>
       ) : (
         <Link to={plan.ctaHref} className={ctaClass}>
           {plan.cta}

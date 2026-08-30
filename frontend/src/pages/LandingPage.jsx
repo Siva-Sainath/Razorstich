@@ -6,17 +6,22 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 
 import { HeroBeams } from '@/components/brand/HeroBeams';
-
-
-import { InstallSnippet } from '@/components/landing/InstallSnippet';
-import { PipelineFlowSvg } from '@/components/landing/PipelineFlowSvg';
+import { RecoveryStackSvg } from '@/components/landing/RecoveryStackSvg';
+import { ProductPillarsSection } from '@/components/landing/ProductPillarsSection';
 import { LeadCaptureForm } from '@/components/landing/LeadCaptureForm';
 import { ShareDemoPanel } from '@/components/landing/ShareDemoPanel';
 
 import { InteractiveTrainingWalkthrough } from '@/components/research/InteractiveTrainingWalkthrough';
-import { STACK_LAYERS, PROOF_METRICS, CONVERSION_STEPS } from '@/config/pricingPlans';
-import { WEDGE_LANES } from '@/config/wedges';
+import { PROOF_METRICS, CONVERSION_STEPS } from '@/config/pricingPlans';
+import { RECOVERY_LANES } from '@/config/recoveryScenarios';
 import { API } from '@/lib/timelineContext';
+
+const LANE_LIFT = {
+  checkout_failed: '+61%',
+  cart_abandon: '+48%',
+  subscription_failed: '+35%',
+  invoice_overdue: '+52%',
+};
 
 export const LandingPage = () => {
   const [catalog, setCatalog] = useState(null);
@@ -35,11 +40,10 @@ export const LandingPage = () => {
   return (
     <MarketingPageShell showStickyLeadBar={true}>
 
-      {/* Hero — conversion-first */}
-      <section className="relative overflow-hidden pt-10 sm:pt-16 pb-16 sm:pb-24 lg:pb-32">
+      <section className="relative overflow-hidden pt-10 sm:pt-16 pb-16 sm:pb-24 lg:pb-28">
         <HeroBeams />
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,400px)] gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -56,18 +60,15 @@ export const LandingPage = () => {
                 AI agents that learn when to nudge — not blast. Plug into your Razorpay webhooks.
                 Pay 2.5% only on payments you actually recover.
               </p>
-        <div className="flex flex-wrap gap-3 mt-8">
-                <Link to="/start" className="btn-primary inline-flex items-center px-6">
-                  Request pilot access
-                </Link>
-                <Link to="/pricing?try=sandbox" className="btn-quiet inline-flex items-center px-6">
-                  Razorpay test checkout
-                </Link>
-                <Link to="/checkout" className="btn-quiet inline-flex items-center px-6">
+              <div className="flex flex-wrap items-center gap-3 mt-8">
+                <Link to="/checkout" className="btn-primary inline-flex items-center px-7 h-11">
                   Try live demo
                 </Link>
+                <Link to="/pricing?try=sandbox" className="btn-quiet inline-flex items-center px-6 h-11">
+                  Pre-book with test card
+                </Link>
               </div>
-              <p className="type-micro text-white/30 mt-4 font-mono">
+              <p className="type-micro text-white/30 mt-6 font-mono">
                 Checkout recovery ~61% better than basic retry rules in our tests
               </p>
             </motion.div>
@@ -76,8 +77,9 @@ export const LandingPage = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
+              className="rounded-[24px] border border-white/[0.08] bg-black/25 p-4 sm:p-6"
             >
-              <LeadCaptureForm compact plan="pilot" showShareOnSuccess={false} />
+              <RecoveryStackSvg />
             </motion.div>
           </div>
 
@@ -100,37 +102,14 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      {/* Viral loop */}
+      <ProductPillarsSection />
+
       <section className="py-12 border-t border-white/[0.05] bg-black/20">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <ShareDemoPanel />
         </div>
       </section>
 
-      {/* Stack — shortened for GTM */}
-      <section className="py-16 sm:py-20 border-t border-white/[0.05]">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 max-w-2xl">
-            <h2 className="font-display text-3xl font-semibold text-white/92">
-              What you get in the pilot
-            </h2>
-            <p className="type-body text-white/50 mt-3">
-              Not a slide deck — a working agent on your Razorpay Test Mode webhooks.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {STACK_LAYERS.map((layer, i) => (
-              <article key={layer.num} className="rounded-[20px] surface-1 p-6">
-                <span className="font-mono type-micro text-primary/70">{layer.fig}</span>
-                <h3 className="font-display text-lg font-semibold text-white/90 mt-2">{layer.title}</h3>
-                <p className="type-meta text-white/45 mt-1">{layer.subtitle}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Training proof — credibility for technical buyers */}
       <section className="py-16 sm:py-20 border-t border-white/[0.05] bg-black/20">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           {catalog ? (
@@ -143,22 +122,55 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      {/* Wedges */}
       <section className="py-16 border-t border-white/[0.05]">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-2xl font-semibold text-white/92 mb-6">Four failure modes, four agents</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {WEDGE_LANES.map((lane) => (
-              <Link key={lane.wedge} to={lane.path} className="rounded-[16px] surface-1 p-4 panel-hover-lift block">
-                <h3 className="type-section text-white/85">{lane.short}</h3>
-                <p className="type-micro text-white/40 mt-1">{lane.description}</p>
+          <h2 className="font-display text-2xl font-semibold text-white/92 mb-2">Four failure modes, four agents</h2>
+          <p className="type-body text-white/45 mb-6 max-w-xl">
+            Each scenario has its own trained policy — open a demo and scrub through a real validation case.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {RECOVERY_LANES.map((lane) => (
+              <Link
+                key={lane.id}
+                to={lane.path}
+                className="group rounded-[18px] surface-1 p-5 panel-hover-lift block border border-transparent hover:border-primary/30 transition-colors"
+              >
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h3 className="type-section text-white/88 group-hover:text-white">{lane.short}</h3>
+                  <span className="font-mono type-micro text-primary bg-primary/10 border border-primary/25 rounded-full px-2 py-0.5">
+                    {LANE_LIFT[lane.id] || 'RL'}
+                  </span>
+                </div>
+                <p className="type-micro text-white/40">{lane.description}</p>
+                <p className="type-meta text-primary/80 mt-4 group-hover:text-primary">Open demo →</p>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* GTM funnel */}
+      <section id="waitlist" className="py-16 border-t border-white/[0.05] scroll-mt-20">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            <div>
+              <p className="font-mono type-micro tracking-[0.12em] text-accent uppercase mb-3">Early access</p>
+              <h2 className="font-display text-2xl font-semibold text-white/92">Join the waitlist</h2>
+              <p className="type-body text-white/50 mt-3 max-w-md">
+                We onboard Razorpay merchants in weekly batches. Try the demo first — then leave your email if you want Test Mode wired up.
+              </p>
+            </div>
+            <LeadCaptureForm
+              compact
+              plan="pilot"
+              headline="Join the waitlist"
+              subhead="Tell us your failed-payment volume. We reply within 48h with setup steps."
+              showShareOnSuccess={false}
+              submitLabel="Join waitlist"
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 border-t border-white/[0.05]">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
@@ -171,13 +183,18 @@ export const LandingPage = () => {
             ))}
           </div>
           <div className="rounded-[24px] border border-primary/25 bg-primary/[0.06] p-8 text-center">
-            <h2 className="font-display text-2xl font-semibold text-white/92">Ready to recover revenue?</h2>
+            <h2 className="font-display text-2xl font-semibold text-white/92">See the agent decide — then go live</h2>
             <p className="type-body text-white/50 mt-2 max-w-md mx-auto">
-              Join the pilot. Share the demo. Pay 2.5% only when we recover.
+              Walk the demo, read the training log, pre-book Growth when you are ready.
             </p>
-            <Link to="/start" className="btn-primary inline-flex items-center px-8 mt-6">
-              Request pilot access
-            </Link>
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
+              <Link to="/research" className="btn-quiet inline-flex items-center px-6">
+                See how it trains
+              </Link>
+              <Link to="/pricing" className="btn-primary inline-flex items-center px-7">
+                Pre-book Growth
+              </Link>
+            </div>
           </div>
         </div>
       </section>

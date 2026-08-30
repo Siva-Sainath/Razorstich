@@ -7,6 +7,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+!.env.production.example
 node_modules/
 frontend/node_modules/
 frontend/build/
@@ -19,6 +20,7 @@ eval/results/*.json
 *.ipynb_checkpoints/
 eval/logs/
 data/leads.json
+data/payment_orders.json
 eval/checkpoints/milestones/
 eval/results/hpo_trials/
 frontend-preview.png

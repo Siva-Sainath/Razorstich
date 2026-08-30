@@ -1,22 +1,22 @@
 import React from 'react';
 import '@/App.css';
 import { motion } from 'framer-motion';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useSearchParams, BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { TimelineProvider, useTimeline } from '@/lib/timelineContext';
+import { RECORD_PLAYBACK_SPEED } from '@/lib/recordMode';
 import { SterilizeIntro } from '@/components/brand/SterilizeIntro';
 import { AppShell } from '@/components/landing/MarketingPageShell';
 import { WedgeStageLoader } from '@/components/stage/WedgeStageLoader';
 import { ResearchDashboard } from '@/components/research/ResearchDashboard';
 import { LandingPage } from '@/pages/LandingPage';
 import { PricingPage } from '@/pages/PricingPage';
-import { IntegrationsPage } from '@/pages/IntegrationsPage';
 import { StartPage } from '@/pages/StartPage';
 import { captureAttribution } from '@/lib/gtm';
 import { ErrorBoundary } from '@/components/kit/ErrorBoundary';
 
-const DemoChrome = ({ children }) => (
-  <AppShell variant="demo" showFooter={false}>
+const TheaterChrome = ({ children, recordMode = false }) => (
+  <AppShell variant="theater" showFooter={false} hideNav={recordMode}>
     {children}
   </AppShell>
 );
@@ -29,7 +29,7 @@ const LoadingTheater = ({ label }) => (
 );
 
 const ErrorTheater = ({ message, onRetry, apiBase }) => (
-  <DemoChrome>
+  <TheaterChrome>
     <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center" data-testid="theater-error">
       <p className="type-section text-white/80">Cannot reach backend.</p>
       <p className="type-body text-warning/90">{message}</p>
@@ -38,60 +38,32 @@ const ErrorTheater = ({ message, onRetry, apiBase }) => (
       </button>
       <p className="type-micro font-mono">{apiBase}</p>
     </div>
-  </DemoChrome>
+  </TheaterChrome>
 );
 
 const WedgeShell = ({ wedge }) => {
-  const {
-    loadError,
-    loadInitial,
-    apiBase,
-    togglePlay,
-    setPlaying,
-    goToStep,
-    currentStepIndex,
-    toggleGhostOverlay,
-  } = useTimeline();
-
-  React.useEffect(() => {
-    const onKey = (e) => {
-      const target = e.target;
-      if (target.closest?.('input, textarea, select, [contenteditable="true"]') || target.tagName === 'BUTTON') return;
-      if (e.code === 'Space') {
-        e.preventDefault();
-        if (!e.repeat) togglePlay();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        setPlaying(false);
-        goToStep(currentStepIndex + 1);
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        setPlaying(false);
-        goToStep(currentStepIndex - 1);
-      } else if (e.key === 'g' || e.key === 'G') {
-        e.preventDefault();
-        toggleGhostOverlay();
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [togglePlay, setPlaying, goToStep, currentStepIndex, toggleGhostOverlay]);
+  const { loadError, loadInitial, apiBase } = useTimeline();
 
   if (loadError) return <ErrorTheater message={loadError} onRetry={loadInitial} apiBase={apiBase} />;
 
   return <WedgeStageLoader wedge={wedge} />;
 };
 
-const WedgeRoute = ({ wedge }) => (
-  <TimelineProvider>
-    <SterilizeIntro />
-    <ErrorBoundary message="Recovery stage crashed. Reload to continue.">
-      <DemoChrome>
-        <WedgeShell wedge={wedge} />
-      </DemoChrome>
-    </ErrorBoundary>
-  </TimelineProvider>
-);
+const WedgeRoute = ({ wedge }) => {
+  const [searchParams] = useSearchParams();
+  const recordMode = searchParams.get('record') === '1';
+
+  return (
+    <TimelineProvider initialSpeed={recordMode ? RECORD_PLAYBACK_SPEED : 1}>
+      <SterilizeIntro />
+      <ErrorBoundary message="Recovery stage crashed. Reload to continue.">
+        <TheaterChrome recordMode={recordMode}>
+          <WedgeShell wedge={wedge} />
+        </TheaterChrome>
+      </ErrorBoundary>
+    </TimelineProvider>
+  );
+};
 
 function App() {
   React.useEffect(() => {
@@ -105,7 +77,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/start" element={<StartPage />} />
-          <Route path="/integrations" element={<IntegrationsPage />} />
+          <Route path="/integrations" element={<Navigate to="/pricing" replace />} />
           <Route path="/sandbox" element={<Navigate to="/pricing?try=sandbox" replace />} />
           <Route path="/checkout" element={<WedgeRoute wedge="checkout_failed" />} />
           <Route path="/cart" element={<WedgeRoute wedge="cart_abandon" />} />

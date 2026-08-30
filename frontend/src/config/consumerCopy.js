@@ -7,8 +7,22 @@ export const RECOVERY_TYPE_LABELS = {
   invoice_overdue: 'Overdue invoice',
 };
 
+export const RECOVERY_SCENARIO_SHORT = {
+  checkout_failed: 'Checkout',
+  cart_abandon: 'Cart',
+  subscription_failed: 'Subscription',
+  invoice_overdue: 'Invoice',
+};
+
 export function recoveryTypeLabel(wedgeId) {
   return RECOVERY_TYPE_LABELS[wedgeId] || 'Payment recovery';
+}
+
+/** Plain label for research/demo UI. */
+export function recoveryScenarioLabel(id, { short = false } = {}) {
+  if (!id) return short ? 'Scenario' : 'Recovery scenario';
+  if (short) return RECOVERY_SCENARIO_SHORT[id] || id.replace(/_/g, ' ');
+  return RECOVERY_TYPE_LABELS[id] || id.replace(/_/g, ' ');
 }
 
 export const ACTION_LABELS = {
