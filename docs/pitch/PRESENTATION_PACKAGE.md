@@ -1,4 +1,4 @@
-# RazorStitch — Demo Script & Talk Track
+# RazorStitch: Demo Script and Talk Track
 
 **Positioning:** RazorStitch helps Razorpay merchants recover failed payments. Four trained agents cover checkout, cart, subscription, and invoice failures. Each one decides when to wait, nudge, or stop without spamming the customer. Merchants pay 2.5% only on money actually recovered.
 
@@ -45,7 +45,7 @@ Keys: **Space** play · **G** ghost paths · **← →** pause
 
 ---
 
-## After the demo — how I built it (60s)
+## After the demo: how I built it (60s)
 
 1. **Input:** what failed, how much money, decline reason, payment method, time elapsed (from test scenarios in the demo; Razorpay webhooks in production).
 2. **State:** about 31 numbers the model reads: amount, time, contacts used, decline type, last action, and so on.
