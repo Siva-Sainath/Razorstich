@@ -56,9 +56,12 @@ export const LandingPage = () => {
                 AI agents that learn when to nudge — not blast. Plug into your Razorpay webhooks.
                 Pay 2.5% only on payments you actually recover.
               </p>
-              <div className="flex flex-wrap gap-3 mt-8">
+        <div className="flex flex-wrap gap-3 mt-8">
                 <Link to="/start" className="btn-primary inline-flex items-center px-6">
                   Request pilot access
+                </Link>
+                <Link to="/sandbox" className="btn-quiet inline-flex items-center px-6">
+                  Razorpay test checkout
                 </Link>
                 <Link to="/checkout" className="btn-quiet inline-flex items-center px-6">
                   Try live demo

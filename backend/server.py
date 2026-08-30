@@ -316,6 +316,57 @@ async def compare_learning(wedge: str = "checkout_failed"):
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
+class RazorpayTestPayBody(BaseModel):
+    card_number: str
+    amount_inr: float = 1499.0
+    wedge: str = "checkout_failed"
+    method: str = "card"
+
+
+@api_router.get("/razorpay/test/cards")
+async def razorpay_test_cards():
+    """Official Razorpay test card catalog for sandbox checkout (no live PG keys)."""
+    from razorpay_test import list_test_cards
+
+    return {"test_mode": True, "cards": list_test_cards()}
+
+
+@api_router.post("/razorpay/test/pay")
+async def razorpay_test_pay(body: RazorpayTestPayBody):
+    """Simulate Razorpay Test Mode payment with test cards → policy recommend on failure."""
+    from razorpay_test import simulate_test_payment
+
+    try:
+        return simulate_test_payment(
+            card_number=body.card_number,
+            amount_inr=body.amount_inr,
+            wedge=body.wedge,
+            method=body.method,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@api_router.get("/razorpay/test/audit")
+async def razorpay_test_audit(limit: int = Query(20, ge=1, le=100)):
+    from razorpay_test import get_audit_log
+
+    return {"test_mode": True, "entries": get_audit_log(limit)}
+
+
+@api_router.post("/webhooks/razorpay")
+async def razorpay_webhook_stub():
+    """
+    Webhook placeholder for Razorpay Test Mode dashboard.
+    Use POST /api/razorpay/test/pay for interactive sandbox without keys.
+    """
+    return {
+        "ok": True,
+        "test_mode": True,
+        "message": "Use /sandbox for Razorpay test card checkout, or POST /api/razorpay/test/pay",
+    }
+
+
 @api_router.get("/events/stream")
 async def stream_events():
     """Mock SSE stream of ambient ops events for the live ticker."""

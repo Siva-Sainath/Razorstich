@@ -97,14 +97,14 @@ export const IntegrationsPage = () => (
           <li>→ Regression auto-restore to eval/baselines/v1/</li>
         </ul>
         <div className="flex flex-wrap gap-3 mt-6">
-          <Link to="/checkout" className="btn-primary inline-flex items-center px-6">
-            Try live demo
+          <Link to="/sandbox" className="btn-primary inline-flex items-center px-6">
+            Razorpay test checkout
+          </Link>
+          <Link to="/checkout" className="btn-quiet inline-flex items-center px-6">
+            Recovery demo
           </Link>
           <Link to="/research" className="btn-quiet inline-flex items-center px-6">
             Training proof
-          </Link>
-          <Link to="/pricing" className="btn-quiet inline-flex items-center px-6">
-            Pricing
           </Link>
         </div>
       </section>
