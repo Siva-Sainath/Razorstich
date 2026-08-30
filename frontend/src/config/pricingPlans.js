@@ -12,9 +12,9 @@ export const PRICING_PLANS = [
     ctaHref: '/checkout',
     highlight: false,
     features: [
+      'Razorpay Test checkout — real checkout.js modal',
       'Live demo — failed checkouts, carts, subscriptions, invoices',
       'See how the agent decides in real time',
-      'Razorpay Test Mode webhooks',
       'Training details on /research',
     ],
     limits: ['No live recovery', 'No phone calls'],
@@ -108,10 +108,11 @@ export const CONVERSION_STEPS = [
   },
   {
     step: '02',
-    title: 'Connect Razorpay',
-    detail: 'Start in Test Mode. Webhooks flow into the agent with no live money at risk.',
-    cta: 'Integrations',
-    href: '/integrations',
+    title: 'Try Test checkout',
+    detail: 'Sandbox opens Razorpay Test Mode in-place. Fail a payment — see what the agent recommends next.',
+    cta: 'Open test checkout',
+    action: 'sandbox',
+    href: '/pricing?try=sandbox',
   },
   {
     step: '03',

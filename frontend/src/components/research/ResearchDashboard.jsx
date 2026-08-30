@@ -1,4 +1,4 @@
-import { MarketingPageShell, MarketingFooter } from '@/components/landing/MarketingPageShell';
+import { MarketingPageShell } from '@/components/landing/MarketingPageShell';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -226,7 +226,6 @@ EPISODES=20000 python scripts/train_all_wedges.py`}
           </div>
         )}
       </div>
-      <MarketingFooter />
     </MarketingPageShell>
   );
 };

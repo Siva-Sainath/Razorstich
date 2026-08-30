@@ -1,4 +1,4 @@
-import { MarketingPageShell, MarketingFooter } from '@/components/landing/MarketingPageShell';
+import { MarketingPageShell } from '@/components/landing/MarketingPageShell';
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -182,7 +182,6 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      <MarketingFooter />
     </MarketingPageShell>
   );
 };

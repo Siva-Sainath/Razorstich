@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { MarketingPageShell, MarketingFooter } from '@/components/landing/MarketingPageShell';
+import { CreditCard } from 'lucide-react';
+import { MarketingPageShell } from '@/components/landing/MarketingPageShell';
 import { PageHero, PageSection } from '@/components/landing/MarketingLayout';
 import { LeadCaptureForm } from '@/components/landing/LeadCaptureForm';
 import { RazorpayPricingModal } from '@/components/razorpay/RazorpayPricingModal';
@@ -36,29 +37,39 @@ const FAQ = [
   },
   {
     q: 'Can I try before going live?',
-    a: 'Yes — try the live demo and connect Razorpay Test Mode first. No card required for Sandbox.',
+    a: 'Yes — click Try Test checkout on Sandbox. Razorpay Test Mode opens in-place; no live money moves.',
   },
 ];
+
+const SANDBOX_AMOUNT_INR = 1499;
 
 export const PricingPage = () => {
   const [annual, setAnnual] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
   const [razorpayOpen, setRazorpayOpen] = useState(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (searchParams.get('try') === 'sandbox') {
       setRazorpayOpen(true);
+      setSearchParams({}, { replace: true });
     }
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
+
+  const openSandbox = () => setRazorpayOpen(true);
 
   return (
     <MarketingPageShell>
-      <RazorpayPricingModal open={razorpayOpen} onClose={() => setRazorpayOpen(false)} />
+      <RazorpayPricingModal
+        open={razorpayOpen}
+        onClose={() => setRazorpayOpen(false)}
+        amountInr={SANDBOX_AMOUNT_INR}
+      />
+
       <PageHero
         eyebrow="Pricing"
         title="Pay only when money comes back"
-        subtitle="Start free in Sandbox. Connect Razorpay for live recovery — or commit annually for a lower success fee."
+        subtitle="Start free in Sandbox with real Razorpay Test checkout. Connect live keys when you're ready — or commit annually for a lower success fee."
       >
         <div className="inline-flex items-center gap-1 mt-10 p-1 rounded-full bg-white/[0.05] border border-white/[0.08]">
           <button
@@ -84,7 +95,20 @@ export const PricingPage = () => {
       </PageHero>
 
       <PageSection className="!pt-10">
-        <PricingVoiceGuide />
+        <div className="mb-10 rounded-[20px] border border-warning/25 bg-warning/[0.06] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between">
+          <div className="flex items-start gap-3">
+            <CreditCard className="w-5 h-5 text-warning/90 shrink-0 mt-0.5" />
+            <div>
+              <p className="type-section text-white/90">Try Razorpay Test checkout</p>
+              <p className="type-meta text-white/50 mt-1 max-w-lg">
+                Official Razorpay modal · ₹{SANDBOX_AMOUNT_INR.toLocaleString('en-IN')} sandbox order · fail a payment to see what the recovery agent recommends.
+              </p>
+            </div>
+          </div>
+          <button type="button" onClick={openSandbox} className="btn-primary shrink-0 h-11 px-6 font-semibold">
+            Open test checkout
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 mb-16 lg:mb-20">
           {PRICING_PLANS.map((plan) => (
@@ -92,9 +116,13 @@ export const PricingPage = () => {
               key={plan.id}
               plan={plan}
               annual={annual}
-              onSandboxClick={() => setRazorpayOpen(true)}
+              onSandboxClick={openSandbox}
             />
           ))}
+        </div>
+
+        <div className="mb-16 lg:mb-20">
+          <PricingVoiceGuide />
         </div>
 
         <div className="mb-16 lg:mb-20">
@@ -115,9 +143,19 @@ export const PricingPage = () => {
                 <p className="font-mono type-micro text-white/35 mb-2">{step.step}</p>
                 <h3 className="type-section text-white/85">{step.title}</h3>
                 <p className="type-meta text-white/50 mt-2 leading-relaxed">{step.detail}</p>
-                <Link to={step.href} className="type-micro text-primary/75 hover:text-primary mt-3 inline-block">
-                  {step.cta} →
-                </Link>
+                {step.action === 'sandbox' ? (
+                  <button
+                    type="button"
+                    onClick={openSandbox}
+                    className="type-micro text-primary/75 hover:text-primary mt-3 inline-block"
+                  >
+                    {step.cta} →
+                  </button>
+                ) : (
+                  <Link to={step.href} className="type-micro text-primary/75 hover:text-primary mt-3 inline-block">
+                    {step.cta} →
+                  </Link>
+                )}
               </div>
             ))}
           </div>
@@ -160,8 +198,6 @@ export const PricingPage = () => {
           </Link>
         </section>
       </PageSection>
-
-      <MarketingFooter />
     </MarketingPageShell>
   );
 };

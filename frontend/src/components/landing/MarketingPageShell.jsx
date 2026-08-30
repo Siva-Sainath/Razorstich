@@ -37,7 +37,9 @@ export const MarketingPageShell = ({
   showStickyLeadBar = false,
   navTransparent: _ignored,
 }) => (
-  <AppShell showStickyLeadBar={showStickyLeadBar}>{children}</AppShell>
+  <AppShell showStickyLeadBar={showStickyLeadBar} showFooter>
+    {children}
+  </AppShell>
 );
 
 export const MarketingFooter = () => (
