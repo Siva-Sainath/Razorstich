@@ -12,16 +12,10 @@ import { LeadCaptureForm } from '@/components/landing/LeadCaptureForm';
 import { ShareDemoPanel } from '@/components/landing/ShareDemoPanel';
 
 import { InteractiveTrainingWalkthrough } from '@/components/research/InteractiveTrainingWalkthrough';
-import { PROOF_METRICS, CONVERSION_STEPS } from '@/config/pricingPlans';
+import { CONVERSION_STEPS } from '@/config/pricingPlans';
 import { RECOVERY_LANES } from '@/config/recoveryScenarios';
 import { API } from '@/lib/timelineContext';
-
-const LANE_LIFT = {
-  checkout_failed: '+61%',
-  cart_abandon: '+48%',
-  subscription_failed: '+35%',
-  invoice_overdue: '+52%',
-};
+import { formatLiftPct, proofMetricsFromCatalog, resolveBenchmark, RL_RUN_PROTOCOL, statsForWedge } from '@/config/rlRunStats';
 
 export const LandingPage = () => {
   const [catalog, setCatalog] = useState(null);
@@ -69,7 +63,11 @@ export const LandingPage = () => {
                 </Link>
               </div>
               <p className="type-micro text-white/30 mt-6 font-mono">
-                Checkout recovery ~61% better than basic retry rules in our tests
+                {(() => {
+                  const checkout = catalog?.find((w) => w.wedge === 'checkout_failed');
+                  const resolved = resolveBenchmark(checkout, 'checkout_failed');
+                  return `Checkout ${resolved.liftLabel} mean net INR vs failure-rules · ${resolved.seedsBeaten} seeds · simulator`;
+                })()}
               </p>
             </motion.div>
 
@@ -89,7 +87,7 @@ export const LandingPage = () => {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-14"
           >
-            {PROOF_METRICS.map((m) => (
+            {proofMetricsFromCatalog(catalog).map((m) => (
               <div key={m.label} className="rounded-[16px] surface-1 panel-hover-lift p-4">
                 <p className="type-micro text-white/40 mb-1">{m.label}</p>
                 <p className={`${m.mono ? 'font-mono type-metric' : 'font-display text-2xl font-semibold'} text-white/90`}>
@@ -126,10 +124,14 @@ export const LandingPage = () => {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-2xl font-semibold text-white/92 mb-2">Four failure modes, four agents</h2>
           <p className="type-body text-white/45 mb-6 max-w-xl">
-            Each scenario has its own trained policy — open a demo and scrub through a real validation case.
+            Each scenario has its own trained policy. Numbers are the shipped 10-seed
+            simulator benchmark ({RL_RUN_PROTOCOL.disclaimer.toLowerCase()}).
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {RECOVERY_LANES.map((lane) => (
+            {RECOVERY_LANES.map((lane) => {
+              const row = catalog?.find((w) => w.wedge === lane.id);
+              const resolved = resolveBenchmark(row, lane.id);
+              return (
               <Link
                 key={lane.id}
                 to={lane.path}
@@ -138,13 +140,18 @@ export const LandingPage = () => {
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <h3 className="type-section text-white/88 group-hover:text-white">{lane.short}</h3>
                   <span className="font-mono type-micro text-primary bg-primary/10 border border-primary/25 rounded-full px-2 py-0.5">
-                    {LANE_LIFT[lane.id] || 'RL'}
+                    {resolved.liftLabel || formatLiftPct(statsForWedge(lane.id).liftPct)}
                   </span>
                 </div>
                 <p className="type-micro text-white/40">{lane.description}</p>
+                <p className="type-micro text-white/30 mt-2 font-mono">
+                  {resolved.gen}
+                  {!resolved.shipped ? ' · review' : ''} · {resolved.seedsBeaten} seeds
+                </p>
                 <p className="type-meta text-primary/80 mt-4 group-hover:text-primary">Open demo →</p>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

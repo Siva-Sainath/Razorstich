@@ -1,0 +1,264 @@
+{
+  "meta": {
+    "seeds": [
+      42,
+      1337,
+      2025
+    ],
+    "episodes_per_seed": 200
+  },
+  "policies": {
+    "HeuristicFailureRules": [
+      {
+        "policy": "failure_rules",
+        "episodes": 200,
+        "recovery_rate": 0.585,
+        "gross_recovered_value_inr": 336138.5268377912,
+        "communication_cost_inr": 92.79999999999991,
+        "duplicate_penalty_inr": 14966.947179715175,
+        "net_recovered_value_inr": 321078.77965807606,
+        "recovered_per_1000": 585.0,
+        "duplicate_incidents": 10,
+        "duplicate_rate": 0.05,
+        "upi_duplicate_collision_rate": 0.021052631578947368,
+        "avg_contacts_used": 1.47,
+        "avg_time_to_recovery_hours": 28.256410256410255,
+        "avg_case_inr": 2858.270828778381,
+        "seed": 42
+      },
+      {
+        "policy": "failure_rules",
+        "episodes": 200,
+        "recovery_rate": 0.615,
+        "gross_recovered_value_inr": 286088.98681567283,
+        "communication_cost_inr": 95.24999999999993,
+        "duplicate_penalty_inr": 6197.592341809999,
+        "net_recovered_value_inr": 279796.14447386283,
+        "recovered_per_1000": 615.0,
+        "duplicate_incidents": 6,
+        "duplicate_rate": 0.03,
+        "upi_duplicate_collision_rate": 0.010869565217391304,
+        "avg_contacts_used": 1.485,
+        "avg_time_to_recovery_hours": 28.829268292682926,
+        "avg_case_inr": 2340.593713950056,
+        "seed": 1337
+      },
+      {
+        "policy": "failure_rules",
+        "episodes": 200,
+        "recovery_rate": 0.635,
+        "gross_recovered_value_inr": 336520.2578906655,
+        "communication_cost_inr": 92.84999999999994,
+        "duplicate_penalty_inr": 2909.1437937106857,
+        "net_recovered_value_inr": 333518.26409695484,
+        "recovered_per_1000": 635.0,
+        "duplicate_incidents": 3,
+        "duplicate_rate": 0.015,
+        "upi_duplicate_collision_rate": 0.0,
+        "avg_contacts_used": 1.3,
+        "avg_time_to_recovery_hours": 27.77952755905512,
+        "avg_case_inr": 2638.013540908096,
+        "seed": 2025
+      }
+    ],
+    "AlwaysPaymentLink": [
+      {
+        "policy": "always_payment_link",
+        "episodes": 200,
+        "recovery_rate": 0.885,
+        "gross_recovered_value_inr": 496519.0136067536,
+        "communication_cost_inr": 162.7500000000002,
+        "duplicate_penalty_inr": 32094.988019201024,
+        "net_recovered_value_inr": 464261.2755875526,
+        "recovered_per_1000": 885.0,
+        "duplicate_incidents": 22,
+        "duplicate_rate": 0.11,
+        "upi_duplicate_collision_rate": 0.07368421052631578,
+        "avg_contacts_used": 0.0,
+        "avg_time_to_recovery_hours": 28.305084745762713,
+        "avg_case_inr": 2858.270828778381,
+        "seed": 42
+      },
+      {
+        "policy": "always_payment_link",
+        "episodes": 200,
+        "recovery_rate": 0.885,
+        "gross_recovered_value_inr": 406505.9523717405,
+        "communication_cost_inr": 151.05000000000013,
+        "duplicate_penalty_inr": 20934.08218189922,
+        "net_recovered_value_inr": 385420.82018984127,
+        "recovered_per_1000": 885.0,
+        "duplicate_incidents": 15,
+        "duplicate_rate": 0.075,
+        "upi_duplicate_collision_rate": 0.05434782608695652,
+        "avg_contacts_used": 0.0,
+        "avg_time_to_recovery_hours": 25.728813559322035,
+        "avg_case_inr": 2340.593713950056,
+        "seed": 1337
+      },
+      {
+        "policy": "always_payment_link",
+        "episodes": 200,
+        "recovery_rate": 0.88,
+        "gross_recovered_value_inr": 447046.8947458976,
+        "communication_cost_inr": 151.2000000000001,
+        "duplicate_penalty_inr": 20654.92398699728,
+        "net_recovered_value_inr": 426240.7707589003,
+        "recovered_per_1000": 880.0,
+        "duplicate_incidents": 14,
+        "duplicate_rate": 0.07,
+        "upi_duplicate_collision_rate": 0.08602150537634409,
+        "avg_contacts_used": 0.0,
+        "avg_time_to_recovery_hours": 25.704545454545453,
+        "avg_case_inr": 2638.013540908096,
+        "seed": 2025
+      }
+    ],
+    "DuelingDoubleDQN": [
+      {
+        "policy": "dueling_double_dqn",
+        "episodes": 200,
+        "recovery_rate": 0.845,
+        "gross_recovered_value_inr": 485977.437721728,
+        "communication_cost_inr": 1846.7000000000012,
+        "duplicate_penalty_inr": 7737.605912063469,
+        "net_recovered_value_inr": 476393.13180966454,
+        "recovered_per_1000": 845.0,
+        "duplicate_incidents": 5,
+        "duplicate_rate": 0.025,
+        "upi_duplicate_collision_rate": 0.010526315789473684,
+        "avg_contacts_used": 0.965,
+        "avg_time_to_recovery_hours": 33.0887573964497,
+        "avg_case_inr": 2858.270828778381,
+        "seed": 42
+      },
+      {
+        "policy": "dueling_double_dqn",
+        "episodes": 200,
+        "recovery_rate": 0.72,
+        "gross_recovered_value_inr": 356349.39685743226,
+        "communication_cost_inr": 1853.5499999999995,
+        "duplicate_penalty_inr": 804.3378375503491,
+        "net_recovered_value_inr": 353691.50901988195,
+        "recovered_per_1000": 720.0,
+        "duplicate_incidents": 2,
+        "duplicate_rate": 0.01,
+        "upi_duplicate_collision_rate": 0.010869565217391304,
+        "avg_contacts_used": 0.975,
+        "avg_time_to_recovery_hours": 30.458333333333332,
+        "avg_case_inr": 2340.593713950056,
+        "seed": 1337
+      },
+      {
+        "policy": "dueling_double_dqn",
+        "episodes": 200,
+        "recovery_rate": 0.795,
+        "gross_recovered_value_inr": 446000.60142392875,
+        "communication_cost_inr": 1800.9999999999993,
+        "duplicate_penalty_inr": 8733.95492348495,
+        "net_recovered_value_inr": 435465.6465004438,
+        "recovered_per_1000": 795.0,
+        "duplicate_incidents": 6,
+        "duplicate_rate": 0.03,
+        "upi_duplicate_collision_rate": 0.03225806451612903,
+        "avg_contacts_used": 0.805,
+        "avg_time_to_recovery_hours": 31.056603773584907,
+        "avg_case_inr": 2638.013540908096,
+        "seed": 2025
+      }
+    ],
+    "StandardDQN": [
+      {
+        "policy": "standard_dqn",
+        "episodes": 200,
+        "recovery_rate": 0.705,
+        "gross_recovered_value_inr": 401208.985431359,
+        "communication_cost_inr": 90.79999999999997,
+        "duplicate_penalty_inr": 12922.653103486035,
+        "net_recovered_value_inr": 388195.53232787293,
+        "recovered_per_1000": 705.0,
+        "duplicate_incidents": 11,
+        "duplicate_rate": 0.055,
+        "upi_duplicate_collision_rate": 0.031578947368421054,
+        "avg_contacts_used": 0.0,
+        "avg_time_to_recovery_hours": 31.23404255319149,
+        "avg_case_inr": 2858.270828778381,
+        "seed": 42
+      },
+      {
+        "policy": "standard_dqn",
+        "episodes": 200,
+        "recovery_rate": 0.7,
+        "gross_recovered_value_inr": 316583.933323445,
+        "communication_cost_inr": 99.34999999999987,
+        "duplicate_penalty_inr": 12097.356175177,
+        "net_recovered_value_inr": 304387.227148268,
+        "recovered_per_1000": 700.0,
+        "duplicate_incidents": 10,
+        "duplicate_rate": 0.05,
+        "upi_duplicate_collision_rate": 0.010869565217391304,
+        "avg_contacts_used": 0.0,
+        "avg_time_to_recovery_hours": 29.357142857142858,
+        "avg_case_inr": 2340.593713950056,
+        "seed": 1337
+      },
+      {
+        "policy": "standard_dqn",
+        "episodes": 200,
+        "recovery_rate": 0.71,
+        "gross_recovered_value_inr": 360637.78064693994,
+        "communication_cost_inr": 95.3,
+        "duplicate_penalty_inr": 13712.159093110866,
+        "net_recovered_value_inr": 346830.32155382907,
+        "recovered_per_1000": 710.0,
+        "duplicate_incidents": 12,
+        "duplicate_rate": 0.06,
+        "upi_duplicate_collision_rate": 0.053763440860215055,
+        "avg_contacts_used": 0.0,
+        "avg_time_to_recovery_hours": 30.211267605633804,
+        "avg_case_inr": 2638.013540908096,
+        "seed": 2025
+      }
+    ]
+  },
+  "summary": {
+    "HeuristicFailureRules": {
+      "net_recovered_inr_total": 934393.1882288938,
+      "net_recovered_inr_per_seed": 311464.3960762979,
+      "gross_recovery_rate_pct": 61.16666666666667,
+      "avg_trust_budget_spent": 1.4183333333333332,
+      "upi_duplicate_collision_rate_pct": 1.0640732265446227,
+      "avg_time_to_recovery_hours": 28.288402036049433
+    },
+    "AlwaysPaymentLink": {
+      "net_recovered_inr_total": 1275922.866536294,
+      "net_recovered_inr_per_seed": 425307.6221787647,
+      "gross_recovery_rate_pct": 88.33333333333333,
+      "avg_trust_budget_spent": 0.0,
+      "upi_duplicate_collision_rate_pct": 7.135118066320547,
+      "avg_time_to_recovery_hours": 26.579481253210066
+    },
+    "DuelingDoubleDQN": {
+      "net_recovered_inr_total": 1265550.2873299904,
+      "net_recovered_inr_per_seed": 421850.09577666345,
+      "gross_recovery_rate_pct": 78.66666666666666,
+      "avg_trust_budget_spent": 0.915,
+      "upi_duplicate_collision_rate_pct": 1.7884648507664673,
+      "avg_time_to_recovery_hours": 31.53456483445598
+    },
+    "StandardDQN": {
+      "net_recovered_inr_total": 1039413.08102997,
+      "net_recovered_inr_per_seed": 346471.02700999,
+      "gross_recovery_rate_pct": 70.5,
+      "avg_trust_budget_spent": 0.0,
+      "upi_duplicate_collision_rate_pct": 3.207065114867581,
+      "avg_time_to_recovery_hours": 30.26748433865605
+    },
+    "acceptance": {
+      "dueling_beats_rules_seeds": 3,
+      "dueling_beats_rules_total_seeds": 3,
+      "passes_10_of_10": false,
+      "incremental_net_vs_rules": 110385.69970036554
+    }
+  }
+}

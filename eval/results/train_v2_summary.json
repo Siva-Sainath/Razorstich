@@ -1,0 +1,14 @@
+{
+  "episodes": 20000,
+  "seed": 42,
+  "milestones": "1000,4000,10000,15000,20000",
+  "completed_at": "2026-08-30T10:42:25.576986",
+  "hpo_trials_per_wedge": 6,
+  "hpo_episodes_per_trial": 1500,
+  "regressions_restored_to_v1": ["cart_abandon", "subscription_failed"],
+  "v2_kept": ["checkout_failed"],
+  "checkout_failed_improvement_pct": 1.73,
+  "checkout_failed_v2_mean_inr": 516614,
+  "checkout_failed_v1_mean_inr": 507836,
+  "notes": "checkout_failed v2 beats v1 on 10-seed benchmark (+1.7%). cart_abandon and subscription_failed regressed and were auto-restored to v1 weights. invoice_overdue trained but inference parity gate needs follow-up."
+}

@@ -142,6 +142,7 @@ async def get_wedges_catalog():
                     "tick_hours": wedge["tick_hours"],
                     "max_steps": wedge["max_steps"],
                     "policy_version": wedge.get("policy_version"),
+                    "model": summary.get("model"),
                     "training_curve": summary.get("training_curve", []),
                     "manifest": summary.get("manifest", []),
                     "hpo": summary.get("hpo", {}),
@@ -159,6 +160,7 @@ async def get_wedges_catalog():
                         "episodes_per_seed": b.get("episodes_per_seed"),
                         "seeds": b.get("seeds"),
                         "acceptance": b.get("acceptance"),
+                        "model": b.get("model") or summary.get("model"),
                     },
                 }
             )

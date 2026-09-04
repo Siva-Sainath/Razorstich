@@ -183,8 +183,8 @@ export const STACK_LAYERS = [
 ];
 
 export const PROOF_METRICS = [
-  { label: 'Checkout recovery lift', value: '+61%', sub: 'vs basic retry rules', mono: true },
-  { label: 'Scenarios passed', value: '10/10', sub: 'failed checkout tests', mono: true },
-  { label: 'Training runs', value: '20k', sub: 'per recovery type', mono: true },
-  { label: 'Tuning rounds', value: '24', sub: 'across all scenarios', mono: true },
+  { label: 'Checkout net lift', value: '+61.2%', sub: 'vs failure-rules · 10×200 simulator', mono: true },
+  { label: 'Seeds beaten', value: '10/10', sub: 'checkout_failed gate', mono: true },
+  { label: 'Checkout mean net', value: '₹5.17L', sub: 'vs ₹3.21L rules / seed', mono: true },
+  { label: 'HPO trials', value: '24', sub: '6 × 4 wedges · 1.5k ep', mono: true },
 ];

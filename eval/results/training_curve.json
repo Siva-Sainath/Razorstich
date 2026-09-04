@@ -1,0 +1,20 @@
+[
+  {
+    "episode": 200,
+    "mean_train_reward": 799.7405741606216,
+    "epsilon": 1.0,
+    "val_net_recovered_value_inr": 24857.066773491377,
+    "val_recovery_rate": 0.04,
+    "val_duplicate_incidents": 0,
+    "architecture": "standard"
+  },
+  {
+    "episode": 400,
+    "mean_train_reward": 689.1910593687738,
+    "epsilon": 0.89751875,
+    "val_net_recovered_value_inr": 324362.7112844306,
+    "val_recovery_rate": 0.67,
+    "val_duplicate_incidents": 12,
+    "architecture": "standard"
+  }
+]

@@ -17,7 +17,6 @@ apps/web/.next/
 apps/web/node_modules/
 *.egg-info/
 eval/checkpoints/*.pt
-eval/results/*.json
 *.ipynb_checkpoints/
 eval/logs/
 data/leads.json

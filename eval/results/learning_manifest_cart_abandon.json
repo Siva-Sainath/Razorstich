@@ -1,0 +1,37 @@
+[
+  {
+    "episode": 1000,
+    "checkpoint": "eval/checkpoints/milestones/cart_abandon_ep1000.pt",
+    "val_net_inr": 5395.65,
+    "rollout_net_inr": 249667.36243670032,
+    "epsilon": 0.963406
+  },
+  {
+    "episode": 4000,
+    "checkpoint": "eval/checkpoints/milestones/cart_abandon_ep4000.pt",
+    "val_net_inr": 5390.5,
+    "rollout_net_inr": 273966.30597454996,
+    "epsilon": 0.796795
+  },
+  {
+    "episode": 10000,
+    "checkpoint": "eval/checkpoints/milestones/cart_abandon_ep10000.pt",
+    "val_net_inr": 5395.55,
+    "rollout_net_inr": 233449.04541489034,
+    "epsilon": 0.4443640000000001
+  },
+  {
+    "episode": 15000,
+    "checkpoint": "eval/checkpoints/milestones/cart_abandon_ep15000.pt",
+    "val_net_inr": 5395.45,
+    "rollout_net_inr": 272946.9592151272,
+    "epsilon": 0.196357
+  },
+  {
+    "episode": 20000,
+    "checkpoint": "eval/checkpoints/milestones/cart_abandon_ep20000.pt",
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 269697.98750730744,
+    "epsilon": 0.050000000000000044
+  }
+]

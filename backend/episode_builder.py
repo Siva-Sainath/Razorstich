@@ -24,6 +24,7 @@ from packages.policy.verify_inference import ts_forward_from_weights
 from packages.simulator.actions import ACTION_NAMES, RecoveryAction
 from packages.simulator.tasks.scenarios import load_val_scenarios
 from packages.simulator.wedges.registry import make_env
+from eval_stats import load_shipped_benchmark, shipped_model
 
 REASON_TO_SOURCE = {
     "insufficient_funds": "customer",
@@ -193,11 +194,13 @@ def _rollout_policy(wedge: str, scenario: dict, seed: int, policy) -> dict:
     last_action = int(RecoveryAction.WAIT)
     while step_idx < max_steps:
         mask = info["action_mask"]
+        q_values = None
+        legal_actions = [ACTION_NAMES[i] for i, ok in enumerate(mask) if ok]
         if policy != "dqn":
             action = policy.select_action(obs, mask, info)
         else:
             weights = _load_weights(wedge)
-            action, _ = _select_from_weights(weights, obs, mask)
+            action, q_values = _select_from_weights(weights, obs, mask)
 
         obs, _, done, trunc, info = env.step(action)
         step_idx += 1
@@ -224,18 +227,20 @@ def _rollout_policy(wedge: str, scenario: dict, seed: int, policy) -> dict:
         curve.append({"t": round(t_norm, 4), "p": round(p_belief, 3)})
 
         ui_action = _rl_action_to_ui(action, method)
-        steps.append(
-            {
-                "step": step_idx,
-                "rl_action": ACTION_NAMES[action],
-                "ui_action": ui_action,
-                "hours": hours,
-                "t": t_norm,
-                "contacts": contacts,
-                "recovered": recovered,
-                "belief_p": round(p_belief, 3),
-            }
-        )
+        step_row = {
+            "step": step_idx,
+            "rl_action": ACTION_NAMES[action],
+            "ui_action": ui_action,
+            "hours": hours,
+            "t": t_norm,
+            "contacts": contacts,
+            "recovered": recovered,
+            "belief_p": round(p_belief, 3),
+            "legal_actions": legal_actions,
+        }
+        if q_values is not None:
+            step_row["q_values"] = {k: round(v, 4) for k, v in q_values.items()}
+        steps.append(step_row)
         if done or trunc:
             break
 
@@ -255,25 +260,22 @@ def _rollout_policy(wedge: str, scenario: dict, seed: int, policy) -> dict:
     }
 
 
-def _ghost_reason(policy_name: str, recovered: bool, chosen: bool) -> str:
+def _ghost_reason(policy_name: str, recovered: bool, chosen: bool, contacts: int, steps: int) -> str:
+    outcome = "Recovered in simulator" if recovered else "Did not recover in simulator"
     if chosen:
-        return "Selected — max net value under trust, dedupe and margin constraints."
-    reasons = {
-        "immediate_retry": "Ruled out — retry burst burns issuer trust early in the window.",
-        "wait": "Ruled out — passive wait leaves too much recovery value on the table.",
-        "failure_rules": "Ruled out — static rules miss wedge-specific timing.",
-        "always_payment_link": "Ruled out — link spam erodes trust before peak conversion ticks.",
-    }
-    base = reasons.get(policy_name, "Ruled out — lower net recovery under simulator benchmark.")
-    if recovered:
-        return base + " (still recovered in sim, but lower expected value)."
-    return base
+        return f"{outcome} — shipped DQN on this validation seed · {steps} ticks · {contacts} contacts."
+    return f"{outcome} — same seed as DQN · {policy_name} · {steps} ticks · {contacts} contacts."
 
 
-def _build_ghost_runs(wedge: str, scenario: dict, seed: int, chosen_curve: list, chosen_prob: float) -> list[dict]:
+def _build_ghost_runs(
+    wedge: str,
+    scenario: dict,
+    seed: int,
+    chosen_rollout: dict,
+) -> list[dict]:
     baselines = [
-        ("gr-dqn", "Chosen DQN policy", True, None),
-        ("gr-retry", "Retry burst at T+0", False, ImmediateRetryPolicy()),
+        ("gr-dqn", "Shipped DQN", True, None),
+        ("gr-retry", "Immediate retry baseline", False, ImmediateRetryPolicy()),
         ("gr-wait", "Wait-only baseline", False, AlwaysWaitPolicy()),
         ("gr-rules", "Failure-rules heuristic", False, FailureRulesPolicy()),
         ("gr-link", "Always payment link", False, AlwaysPaymentLinkPolicy()),
@@ -281,22 +283,29 @@ def _build_ghost_runs(wedge: str, scenario: dict, seed: int, chosen_curve: list,
     runs = []
     for run_id, label, is_chosen, policy in baselines:
         if is_chosen:
-            prob = chosen_prob
-            points = chosen_curve
+            result = chosen_rollout
             policy_name = "dqn"
         else:
-            result = _rollout_policy(wedge, scenario, seed + 17, policy)
-            prob = result["final_prob"] if result["recovered"] else max(0.12, result["final_prob"] * 0.55)
-            points = result["curve"]
+            result = _rollout_policy(wedge, scenario, seed, policy)
             policy_name = policy.name
+        recovered = bool(result["recovered"])
         runs.append(
             {
                 "id": run_id,
                 "label": label,
-                "prob": round(prob, 3),
+                "prob": round(float(result["final_prob"]), 3),
+                "recovered": recovered,
+                "contacts": int(result.get("contacts") or 0),
+                "steps": len(result.get("steps") or []),
                 "chosen": is_chosen,
-                "reason": _ghost_reason(policy_name, prob > 0.7, is_chosen),
-                "points": points,
+                "reason": _ghost_reason(
+                    policy_name,
+                    recovered,
+                    is_chosen,
+                    int(result.get("contacts") or 0),
+                    len(result.get("steps") or []),
+                ),
+                "points": result["curve"],
             }
         )
     return runs
@@ -336,7 +345,15 @@ def _build_events(wedge: str, scenario: dict, rollout: dict) -> list[dict]:
                 "type": "policy_eval",
                 "severity": "info",
                 "label": f"Tick {tick} · DQN chose {ui}",
-                "detail": f"RL action {step['rl_action']} · T+{int(step['hours'])}h.",
+                "detail": (
+                    f"RL action {step['rl_action']} · T+{int(step['hours'])}h"
+                    + (
+                        f" · Q({step['rl_action']})={step['q_values'][step['rl_action']]:.2f}"
+                        if step.get("q_values") and step["rl_action"] in step["q_values"]
+                        else ""
+                    )
+                    + "."
+                ),
             }
         )
         if ui not in ("wait", "stop"):
@@ -516,12 +533,16 @@ def build_case_payload(wedge: str, scenario: dict, seed: int = 42) -> dict:
             "agentId": wedge,
             "agentName": agent["name"],
             "policyVersion": weights.get("policy_version"),
+            "modelGen": shipped_model(wedge)["gen"],
+            "modelShipped": shipped_model(wedge)["shipped"],
             "recoveredAt": recovered_at,
             "scenarioSeed": seed,
         },
         "events": _build_events(wedge, scenario, rollout),
         "recoveryCurve": rollout["curve"],
-        "ghostRuns": _build_ghost_runs(wedge, scenario, seed, rollout["curve"], rollout["final_prob"]),
+        "ghostRuns": _build_ghost_runs(wedge, scenario, seed, rollout),
+        "benchmark": load_shipped_benchmark(wedge),
+        "model": shipped_model(wedge),
         "stages": _build_stages(rollout),
         "interventions": _build_interventions(wedge, scenario, rollout),
         "trustLedger": _build_trust_ledger(rollout),

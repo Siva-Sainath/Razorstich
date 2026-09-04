@@ -1,0 +1,20 @@
+{
+  "architecture": "dueling",
+  "hidden": 256,
+  "lr": 0.002,
+  "gamma": 0.99,
+  "epsilon_start": 1.0,
+  "epsilon_end": 0.05,
+  "epsilon_decay_steps": 50000,
+  "buffer_size": 100000,
+  "batch_size": 64,
+  "warmup_steps": 2000,
+  "target_update": 0,
+  "polyak_tau": 0.005,
+  "use_per": true,
+  "per_alpha": 0.7,
+  "per_beta_start": 0.4,
+  "per_beta_frames": 200000,
+  "train_steps": 100000,
+  "use_cosine_lr": true
+}

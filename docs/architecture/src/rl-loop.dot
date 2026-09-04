@@ -1,0 +1,36 @@
+digraph rlloop {
+  rankdir=TB;
+  bgcolor="#0f1419";
+  fontname="Helvetica";
+  node [fontname="Helvetica", fontsize=13, style="filled,rounded", color="#94a3b8", fontcolor="#0f1419"];
+  edge [fontname="Helvetica", fontsize=11, color="#cbd5e1", fontcolor="#e2e8f0"];
+
+  subgraph cluster_offline {
+    label="Offline training";
+    color="#6d28d9";
+    fontcolor="#e9d5ff";
+    hpo [label="HPO: 6 × 1.5k ep × 4 wedges", fillcolor="#ddd6fe"];
+    train [label="Dueling DDQN\n10k v1 / 20k v2", fillcolor="#c4b5fd"];
+    gate [label="10 seeds × 200 ep\nvs FailureRulesPolicy", fillcolor="#a5b4fc"];
+    ship [label="Keep or restore v1\nexport JSON weights", fillcolor="#86efac"];
+  }
+
+  subgraph cluster_online {
+    label="Demo / inference — no gradient";
+    color="#0f766e";
+    fontcolor="#ccfbf1";
+    case [label="val_scenarios.json\nheld-out cases", fillcolor="#99f6e4"];
+    replay [label="episode_builder\nDQN + 4 baselines, same seed", fillcolor="#5eead4"];
+    ui [label="Theater scrubber\nQ-bars + 10-seed proof strip", fillcolor="#7dd3fc"];
+  }
+
+  red [label="Not this product:\nno online RL on Razorpay webhooks", fillcolor="#fda4af", shape=box];
+
+  hpo -> train;
+  train -> gate;
+  gate -> ship;
+  ship -> replay [style=dashed, label="next process start"];
+  case -> replay;
+  replay -> ui;
+  ui -> red [style=invis];
+}

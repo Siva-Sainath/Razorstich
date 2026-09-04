@@ -1,18 +1,21 @@
-"""Read-only learning artifacts used by the Learning Lab."""
+"""Read-only learning artifacts used by the Learning Lab and theater."""
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 from agents_registry import get_agent
 from episode_builder import build_all_cases
-
-ROOT = Path(__file__).resolve().parents[1]
-RESULTS = ROOT / "eval" / "results"
-CHECKPOINTS = ROOT / "eval" / "checkpoints"
-BASELINE_RESULTS = ROOT / "eval" / "baselines" / "v1" / "results"
-BASELINE_MANIFEST = ROOT / "eval" / "baselines" / "v1" / "manifest.json"
+from eval_stats import (
+    load_baseline_benchmark,
+    load_baseline_manifest,
+    load_hpo_results,
+    load_hpo_summary,
+    load_shipped_benchmark,
+    load_shipped_manifest,
+    load_shipped_training_curve,
+    load_trained_benchmark,
+    load_train_v2_summary,
+    shipped_model,
+)
 
 
 def _validate_wedge(wedge: str) -> None:
@@ -20,47 +23,15 @@ def _validate_wedge(wedge: str) -> None:
 
 
 def load_training_curve(wedge: str) -> list[dict]:
-    _validate_wedge(wedge)
-    path = RESULTS / f"training_curve_{wedge}.json"
-    return json.loads(path.read_text()) if path.exists() else []
+    return load_shipped_training_curve(wedge)
 
 
 def load_benchmark_stats(wedge: str) -> dict:
-    _validate_wedge(wedge)
-    path = RESULTS / f"benchmark_{wedge}_stats.json"
-    return json.loads(path.read_text()) if path.exists() else {}
-
-
-def load_baseline_benchmark(wedge: str) -> dict:
-    _validate_wedge(wedge)
-    path = BASELINE_RESULTS / f"benchmark_{wedge}_stats.json"
-    return json.loads(path.read_text()) if path.exists() else {}
-
-
-def load_baseline_manifest() -> dict:
-    return json.loads(BASELINE_MANIFEST.read_text()) if BASELINE_MANIFEST.exists() else {}
-
-
-def load_hpo_results(wedge: str) -> dict:
-    _validate_wedge(wedge)
-    path = RESULTS / f"hpo_{wedge}.json"
-    return json.loads(path.read_text()) if path.exists() else {}
-
-
-def load_hpo_summary() -> dict:
-    path = RESULTS / "hpo_summary.json"
-    return json.loads(path.read_text()) if path.exists() else {}
-
-
-def load_train_v2_summary() -> dict:
-    path = RESULTS / "train_v2_summary.json"
-    return json.loads(path.read_text()) if path.exists() else {}
+    return load_shipped_benchmark(wedge)
 
 
 def load_learning_manifest(wedge: str) -> list[dict]:
-    _validate_wedge(wedge)
-    path = RESULTS / f"learning_manifest_{wedge}.json"
-    return json.loads(path.read_text()) if path.exists() else []
+    return load_shipped_manifest(wedge)
 
 
 def rank_validation_cases(wedge: str) -> list[dict]:
@@ -74,8 +45,6 @@ def rank_validation_cases(wedge: str) -> list[dict]:
         rollout = payload.get("rollout", [])
         recovered = case["status"] == "recovered"
         amount = float(case["amount"])
-        # The case payload is generated from the same DQN rollout used by Theater.
-        # This is a deterministic ranking signal, not a new model score.
         net_inr = amount if recovered else 0.0
         rows.append(
             {
@@ -110,12 +79,14 @@ def learning_summary(wedge: str = "checkout_failed") -> dict:
         "wedge": wedge,
         "anchor_case_id": featured["case_id"],
         "featured": featured,
-        "training_curve": load_training_curve(wedge),
-        "benchmark": load_benchmark_stats(wedge),
+        "training_curve": load_shipped_training_curve(wedge),
+        "benchmark": load_shipped_benchmark(wedge),
+        "trained_benchmark": load_trained_benchmark(wedge),
         "baseline_benchmark": load_baseline_benchmark(wedge),
-        "manifest": load_learning_manifest(wedge),
+        "manifest": load_shipped_manifest(wedge),
         "hpo": load_hpo_results(wedge),
         "train_v2": load_train_v2_summary(),
+        "model": shipped_model(wedge),
     }
 
 

@@ -1,0 +1,45 @@
+digraph system {
+  rankdir=LR;
+  bgcolor="#0f1419";
+  fontname="Helvetica";
+  node [fontname="Helvetica", fontsize=13, style="filled,rounded", color="#94a3b8", fontcolor="#0f1419"];
+  edge [fontname="Helvetica", fontsize=11, color="#cbd5e1", fontcolor="#e2e8f0"];
+
+  subgraph cluster_human {
+    label="Merchant / judge";
+    color="#334155";
+    fontcolor="#e2e8f0";
+    merchant [label="Browser\nTheater + landing", fillcolor="#7dd3fc", shape=box];
+  }
+
+  subgraph cluster_app {
+    label="RazorStitch";
+    color="#334155";
+    fontcolor="#e2e8f0";
+    spa [label="frontend/\nCRA Operating Theater", fillcolor="#a5b4fc", shape=box];
+    api [label="backend/\nFastAPI :8000", fillcolor="#c4b5fd", shape=box];
+    weights [label="packages/policy/weights\nJSON Q-network", fillcolor="#86efac", shape=box];
+    evalj [label="eval/results\n10-seed stats", fillcolor="#fde68a", shape=box];
+  }
+
+  subgraph cluster_train {
+    label="Offline (not on webhook)";
+    color="#334155";
+    fontcolor="#e2e8f0";
+    sim [label="packages/simulator\nRecovery MDP", fillcolor="#fdba74", shape=box];
+    train [label="Dueling DDQN\ntrain + HPO", fillcolor="#fda4af", shape=box];
+  }
+
+  rzp [label="Razorpay\nTest Mode", fillcolor="#5eead4", shape=box];
+
+  merchant -> spa [label="HTTP"];
+  spa -> api [label="/api/case\n/api/policy\n/api/wedges/catalog"];
+  api -> weights [label="forward pass"];
+  api -> evalj [label="shipped benchmark"];
+  api -> sim [label="episode replay"];
+  train -> sim [label="env.step"];
+  train -> weights [label="export JSON"];
+  train -> evalj [label="write stats"];
+  spa -> rzp [label="checkout.js\n(pricing only)"];
+  api -> rzp [label="orders + webhooks"];
+}

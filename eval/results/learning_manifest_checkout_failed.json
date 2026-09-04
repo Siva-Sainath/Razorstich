@@ -1,0 +1,37 @@
+[
+  {
+    "episode": 1000,
+    "checkpoint": "eval/checkpoints/milestones/checkout_failed_ep1000.pt",
+    "val_net_inr": 11643.866989432174,
+    "rollout_net_inr": 234032.0624102876,
+    "epsilon": 0.971177
+  },
+  {
+    "episode": 4000,
+    "checkpoint": "eval/checkpoints/milestones/checkout_failed_ep4000.pt",
+    "val_net_inr": 6699.786962870838,
+    "rollout_net_inr": 182903.95942463013,
+    "epsilon": 0.8239745
+  },
+  {
+    "episode": 10000,
+    "checkpoint": "eval/checkpoints/milestones/checkout_failed_ep10000.pt",
+    "val_net_inr": 12488.686316007925,
+    "rollout_net_inr": 218628.0625112305,
+    "epsilon": 0.5236415
+  },
+  {
+    "episode": 15000,
+    "checkpoint": "eval/checkpoints/milestones/checkout_failed_ep15000.pt",
+    "val_net_inr": 13708.137358105481,
+    "rollout_net_inr": 245876.3443163798,
+    "epsilon": 0.2942545
+  },
+  {
+    "episode": 20000,
+    "checkpoint": "eval/checkpoints/milestones/checkout_failed_ep20000.pt",
+    "val_net_inr": 13707.387358105481,
+    "rollout_net_inr": 255559.6048517439,
+    "epsilon": 0.08952950000000004
+  }
+]

@@ -1,0 +1,526 @@
+{
+  "wedge": "invoice_overdue",
+  "created_at": "2026-08-30T04:27:02.469129+00:00",
+  "episodes_per_trial": 1500,
+  "validate_every": 300,
+  "seed": 42,
+  "search_space": {
+    "lr": [
+      0.0005,
+      0.001,
+      0.002
+    ],
+    "batch_size": [
+      64,
+      128,
+      256
+    ],
+    "gamma": [
+      0.96,
+      0.98,
+      0.99
+    ],
+    "warmup_steps": [
+      2000,
+      4000
+    ],
+    "per_alpha": [
+      0.5,
+      0.6,
+      0.7
+    ]
+  },
+  "trials": [
+    {
+      "trial_id": 0,
+      "params": {
+        "lr": 0.002,
+        "batch_size": 64,
+        "gamma": 0.96,
+        "warmup_steps": 4000,
+        "per_alpha": 0.5
+      },
+      "config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.002,
+        "gamma": 0.96,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 64,
+        "warmup_steps": 4000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.5,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "metrics": {
+        "peak_val_net_inr": 66345.0,
+        "peak_episode": 1200,
+        "final_val_net_inr": 66345.0,
+        "final_rollout_net_inr": 121355.74758720741,
+        "overfit_penalty": 0.0,
+        "score": 66345.0
+      },
+      "curve": [
+        {
+          "episode": 300,
+          "train_reward": -0.005146774468612895,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 0.0,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 600,
+          "train_reward": 4360.092900619657,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 0.0,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 900,
+          "train_reward": -3.090779583275696e-05,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 0.0,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 1200,
+          "train_reward": 3740.3016004503497,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 143411.09458261516,
+          "epsilon": 0.999449
+        },
+        {
+          "episode": 1500,
+          "train_reward": -0.006281839198954604,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 121355.74758720741,
+          "epsilon": 0.97986
+        }
+      ],
+      "checkpoint": "/Users/siva/Documents/Recovery_agent/eval/results/hpo_trials/invoice_overdue/trial_0/dueling_invoice_overdue_best.pt",
+      "gradient_steps": 1060
+    },
+    {
+      "trial_id": 1,
+      "params": {
+        "lr": 0.0005,
+        "batch_size": 64,
+        "gamma": 0.99,
+        "warmup_steps": 2000,
+        "per_alpha": 0.7
+      },
+      "config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.0005,
+        "gamma": 0.99,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 64,
+        "warmup_steps": 2000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.7,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "metrics": {
+        "peak_val_net_inr": 66345.0,
+        "peak_episode": 600,
+        "final_val_net_inr": 66345.0,
+        "final_rollout_net_inr": 125643.516360892,
+        "overfit_penalty": 0.0,
+        "score": 66345.0
+      },
+      "curve": [
+        {
+          "episode": 300,
+          "train_reward": 2571.018788949604,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 36828.603072999394,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 600,
+          "train_reward": 2899.215231365617,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 140273.4231800851,
+          "epsilon": 0.999791
+        },
+        {
+          "episode": 900,
+          "train_reward": 2865.309383566734,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 141620.5026645726,
+          "epsilon": 0.980259
+        },
+        {
+          "episode": 1200,
+          "train_reward": -0.011243640996651162,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 142644.48052580812,
+          "epsilon": 0.96086
+        },
+        {
+          "episode": 1500,
+          "train_reward": -3.408573786486236e-05,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 125643.516360892,
+          "epsilon": 0.942221
+        }
+      ],
+      "checkpoint": "/Users/siva/Documents/Recovery_agent/eval/results/hpo_trials/invoice_overdue/trial_1/dueling_invoice_overdue_best.pt",
+      "gradient_steps": 3041
+    },
+    {
+      "trial_id": 2,
+      "params": {
+        "lr": 0.002,
+        "batch_size": 256,
+        "gamma": 0.96,
+        "warmup_steps": 4000,
+        "per_alpha": 0.5
+      },
+      "config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.002,
+        "gamma": 0.96,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 256,
+        "warmup_steps": 4000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.5,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "metrics": {
+        "peak_val_net_inr": 66345.0,
+        "peak_episode": 1200,
+        "final_val_net_inr": 66345.0,
+        "final_rollout_net_inr": 124114.28232654609,
+        "overfit_penalty": 0.0,
+        "score": 66345.0
+      },
+      "curve": [
+        {
+          "episode": 300,
+          "train_reward": 860.3711174789129,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 36828.603072999394,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 600,
+          "train_reward": -0.0046309394531321504,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 45365.51541950793,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 900,
+          "train_reward": -0.0011552485201615742,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 27027.885177548233,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 1200,
+          "train_reward": -0.01509603713660131,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 142528.44987719445,
+          "epsilon": 0.995896
+        },
+        {
+          "episode": 1500,
+          "train_reward": 0.0,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 124114.28232654609,
+          "epsilon": 0.976364
+        }
+      ],
+      "checkpoint": "/Users/siva/Documents/Recovery_agent/eval/results/hpo_trials/invoice_overdue/trial_2/dueling_invoice_overdue_best.pt",
+      "gradient_steps": 1244
+    },
+    {
+      "trial_id": 3,
+      "params": {
+        "lr": 0.0005,
+        "batch_size": 64,
+        "gamma": 0.96,
+        "warmup_steps": 2000,
+        "per_alpha": 0.7
+      },
+      "config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.0005,
+        "gamma": 0.96,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 64,
+        "warmup_steps": 2000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.7,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "metrics": {
+        "peak_val_net_inr": 66345.0,
+        "peak_episode": 300,
+        "final_val_net_inr": 66345.0,
+        "final_rollout_net_inr": 125041.94806868756,
+        "overfit_penalty": 0.0,
+        "score": 66345.0
+      },
+      "curve": [
+        {
+          "episode": 300,
+          "train_reward": -0.009413799479259013,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 154380.50662401458,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 600,
+          "train_reward": -0.006779331923574446,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 138818.07435919935,
+          "epsilon": 0.99924
+        },
+        {
+          "episode": 900,
+          "train_reward": -0.00659545620761243,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 140291.16579478802,
+          "epsilon": 0.979195
+        },
+        {
+          "episode": 1200,
+          "train_reward": -0.007760922686547846,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 140928.3106233815,
+          "epsilon": 0.959853
+        },
+        {
+          "episode": 1500,
+          "train_reward": -0.0034292377608117434,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 125041.94806868756,
+          "epsilon": 0.941195
+        }
+      ],
+      "checkpoint": "/Users/siva/Documents/Recovery_agent/eval/results/hpo_trials/invoice_overdue/trial_3/dueling_invoice_overdue_best.pt",
+      "gradient_steps": 3095
+    },
+    {
+      "trial_id": 4,
+      "params": {
+        "lr": 0.002,
+        "batch_size": 64,
+        "gamma": 0.99,
+        "warmup_steps": 2000,
+        "per_alpha": 0.7
+      },
+      "config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.002,
+        "gamma": 0.99,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 64,
+        "warmup_steps": 2000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.7,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "metrics": {
+        "peak_val_net_inr": 66345.0,
+        "peak_episode": 300,
+        "final_val_net_inr": 66345.0,
+        "final_rollout_net_inr": 126050.9139754102,
+        "overfit_penalty": 0.0,
+        "score": 66345.0
+      },
+      "curve": [
+        {
+          "episode": 300,
+          "train_reward": -0.014991844790522818,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 147800.76839859504,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 600,
+          "train_reward": -0.005112718340291445,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 140433.99744453919,
+          "epsilon": 0.999354
+        },
+        {
+          "episode": 900,
+          "train_reward": -0.00436299111496234,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 138488.22311190466,
+          "epsilon": 0.980677
+        },
+        {
+          "episode": 1200,
+          "train_reward": -0.003384113447844132,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 140828.59822328508,
+          "epsilon": 0.961411
+        },
+        {
+          "episode": 1500,
+          "train_reward": -0.01528224331686805,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 126050.9139754102,
+          "epsilon": 0.94338
+        }
+      ],
+      "checkpoint": "/Users/siva/Documents/Recovery_agent/eval/results/hpo_trials/invoice_overdue/trial_4/dueling_invoice_overdue_best.pt",
+      "gradient_steps": 2980
+    },
+    {
+      "trial_id": 5,
+      "params": {
+        "lr": 0.002,
+        "batch_size": 256,
+        "gamma": 0.99,
+        "warmup_steps": 4000,
+        "per_alpha": 0.5
+      },
+      "config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.002,
+        "gamma": 0.99,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 256,
+        "warmup_steps": 4000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.5,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "metrics": {
+        "peak_val_net_inr": 66345.0,
+        "peak_episode": 1200,
+        "final_val_net_inr": 66345.0,
+        "final_rollout_net_inr": 129143.50224693144,
+        "overfit_penalty": 0.0,
+        "score": 66345.0
+      },
+      "curve": [
+        {
+          "episode": 300,
+          "train_reward": 3210.8896790421845,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 4690.639283387625,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 600,
+          "train_reward": 2038.4976192341849,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 4153.912362690227,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 900,
+          "train_reward": 4425.644743064911,
+          "val_net_inr": 0.0,
+          "rollout_net_inr": 8753.41814511293,
+          "epsilon": 1.0
+        },
+        {
+          "episode": 1200,
+          "train_reward": 2944.706371002068,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 139188.3681365694,
+          "epsilon": 0.998613
+        },
+        {
+          "episode": 1500,
+          "train_reward": 0.0,
+          "val_net_inr": 66345.0,
+          "rollout_net_inr": 129143.50224693144,
+          "epsilon": 0.97967
+        }
+      ],
+      "checkpoint": "/Users/siva/Documents/Recovery_agent/eval/results/hpo_trials/invoice_overdue/trial_5/dueling_invoice_overdue_best.pt",
+      "gradient_steps": 1070
+    }
+  ],
+  "best_trial_id": 5,
+  "best_config": {
+    "architecture": "dueling",
+    "hidden": 256,
+    "lr": 0.002,
+    "gamma": 0.99,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.05,
+    "epsilon_decay_steps": 50000,
+    "buffer_size": 100000,
+    "batch_size": 256,
+    "warmup_steps": 4000,
+    "target_update": 0,
+    "polyak_tau": 0.005,
+    "use_per": true,
+    "per_alpha": 0.5,
+    "per_beta_start": 0.4,
+    "per_beta_frames": 200000,
+    "train_steps": 100000,
+    "use_cosine_lr": true
+  },
+  "best_metrics": {
+    "peak_val_net_inr": 66345.0,
+    "peak_episode": 1200,
+    "final_val_net_inr": 66345.0,
+    "final_rollout_net_inr": 129143.50224693144,
+    "overfit_penalty": 0.0,
+    "score": 66345.0
+  }
+}

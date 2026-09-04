@@ -1,13 +1,14 @@
-# RazorStitch Multi-Seed Benchmark
+# RazorStitch 10-seed shipped benchmark
 
-_Simulated recovery — net economic value primary metric_
+_Simulated recovery — net economic value. See `eval/results/benchmark_*_stats.json`._
 
+| Scenario | Policy | Net ₹/seed | vs rules | Seeds |
+|---|---|---:|---:|---|
+| checkout_failed | Dueling DDQN v2 | 516,614 | +61.2% | 10/10 |
+| cart_abandon | Dueling DDQN v1 | 558,302 | +210.6% | 10/10 |
+| subscription_failed | Dueling DDQN v1 | 453,353 | +72.6% | 10/10 |
+| invoice_overdue | Dueling DDQN v2* | 497,263 | +127.4% | 10/10 |
 
-| Policy | Net Recovered ₹/seed | Gross Recovery % | Avg Trust Spent | UPI Dup % | TTR (hrs) |
-|---|---:|---:|---:|---:|---:|
-| AlwaysPaymentLink | 425,308 | 88.3% | 0.00 | 7.14% | 26.6 |
-| DuelingDoubleDQN | 421,850 | 78.7% | 0.92 | 1.79% | 31.5 |
-| StandardDQN | 346,471 | 70.5% | 0.00 | 3.21% | 30.3 |
-| HeuristicFailureRules | 311,464 | 61.2% | 1.42 | 1.06% | 28.3 |
+\*invoice v2 held for inference parity; demo still replays those weights with a review badge.
 
-**Dueling beats rules on 3/3 seeds** (incremental net ₹/seed: 110,386)
+Always-payment-link can beat DQN on **gross** recovery rate. The training objective is **net** INR (comms cost, friction, UPI duplicate penalty).

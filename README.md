@@ -1,106 +1,72 @@
 # RazorStitch
 
-RazorStitch helps Razorpay merchants recover money when payments fail. A customer tries to pay, checkout fails, and most shops either send too many reminders or stop trying. Both options lose revenue and annoy customers. RazorStitch trains separate recovery agents for each common failure type, tests them in a simulator, and shows exactly what the agent would do next. Merchants pay only when money actually comes back.
+RazorStitch is an RL payment-recovery system for Razorpay merchants. Four Dueling Double-DQN agents decide when to wait, send a payment link, nudge, or stop after a failed checkout, abandoned cart, failed subscription, or overdue invoice. Training happens in a simulator. The website replays the **shipped** checkpoints on held-out validation cases and shows the **10-seed benchmark** from `eval/results` (not decorated marketing numbers).
 
-**Live demo:** [https://razorstitch.vercel.app/checkout?record=1](https://razorstitch.vercel.app/checkout?record=1)
+GitHub: [https://github.com/Siva-Sainath/Razorstich](https://github.com/Siva-Sainath/Razorstich)
 
-## The problem
+## What it solves
 
-A failed payment is not one decision. Should you wait, send a payment link, text the customer, or stop? That depends on how much is at risk, how long ago it failed, why it failed, and how many times you already contacted them. Simple retry rules cannot learn that timing. Recovery rate alone is also misleading: sending payment links to everyone recovers more payments but wastes money on duplicates and hurts trust.
+A failed payment is a sequence, not a retry button. Blast SMS and you burn trust and duplicate UPI collections. Do nothing and the rupees never come back. RazorStitch optimizes **net recovered INR** under a three-contact trust budget, then lets a merchant watch the same policy decide on a real validation episode.
 
-RazorStitch limits how often you can contact someone (typically three touches per case) and optimizes for **net money in the bank**, not a vanity recovery percentage.
+## Shipped simulator results
 
-## How it works
+Protocol: **10 seeds (42–51) × 200 episodes**, Dueling DDQN vs `FailureRulesPolicy`. Metric: mean net recovered INR. These are simulator figures, not live merchant uplift.
 
-```
-Payment fails on Razorpay (or a practice scenario in the demo)
-        |
-        v
-Read the situation (amount, time, contacts left, decline reason)
-        |
-        v
-Recovery agent picks the best allowed next step
-        |
-        v
-Action: wait, payment link, SMS, escalate, or stop
-        |
-        v
-Customer pays (or the window closes)
-```
+| Scenario | Shipped model | Mean net ₹/seed | Failure-rules ₹/seed | Lift | Seeds |
+|---|---|---:|---:|---:|---|
+| Checkout failed (72h) | v2 | 516,614 | 320,532 | **+61.2%** | 10/10 |
+| Cart abandon (48h) | v1 (v2 rolled back) | 558,302 | 179,763 | **+210.6%** | 10/10 |
+| Subscription failed (14d) | v1 (v2 rolled back) | 453,353 | 262,697 | **+72.6%** | 10/10 |
+| Invoice overdue (30d) | v2, parity review | 497,263 | 218,627 | **+127.4%** | 10/10 |
 
-### Four recovery scenarios
+Checkout 95% CI does not overlap the rules baseline (policy ₹515,369–517,939 vs rules ₹319,363–321,456). HPO was 6 × 1,500-episode trials per wedge (24 total) before the 20k v2 train. Cart and subscription v2 lost to v1, so `train_all_wedges.py` restored v1 weights — the demo displays those restored numbers.
 
-| Scenario | Time window | What it covers |
-|----------|-------------|----------------|
-| Checkout failed | 72 hours | Card and UPI declines at checkout |
-| Cart abandon | 48 hours | Shoppers who leave without paying |
-| Subscription failed | 14 days | Failed subscription renewals |
-| Invoice overdue | 30 days | Late B2B invoice collection |
+Artifacts: [`eval/results/tables.md`](eval/results/tables.md), [`eval/results/benchmark_*_stats.json`](eval/results/), [`eval/baselines/v1/`](eval/baselines/v1/).
 
-Each scenario has its own trained agent and practice environment. Checkout is the strongest benchmark today: about 61% more net revenue vs basic retry rules in our simulator tests.
+## Architecture
 
-### Training and evaluation
+![System containers](docs/architecture/system.png)
 
-- Agents learn offline in a simulator (millions of practice runs, no live customer messages during training).
-- Before shipping weights, we run 10 random test batches and compare against a simple retry-rules baseline.
-- The demo replays fixed test cases and shows live scores for each possible action.
-- Razorpay Test Mode on the pricing page proves checkout and webhooks work. It does not train the agents.
+![Offline RL loop](docs/architecture/rl-loop.png)
 
-## Repository layout
+- **Theater (`frontend/`)** — CRA demo: scrubber, Policy Brain Q-bars, ghost baselines, research dashboard.
+- **API (`backend/`)** — FastAPI. `/api/case/{id}` builds a replay from the shipped JSON weights. `/api/policy/recommend` scores the current tick. `/api/wedges/catalog` exposes the 10-seed stats the landing page prints.
+- **Simulator (`packages/simulator/`)** — MDP gym. Hidden customer-response model. Action masks (UPI cooldown, trust budget).
+- **Policy (`packages/policy/`)** — Dueling DDQN train/eval, JSON weight export. Node/TS matmul for serverless inference.
+- **Razorpay Test Mode** — proves checkout.js + webhooks. **Not** the training gym.
 
-```
-frontend/           Website, interactive demo, pricing, research pages (Vercel)
-backend/            API for cases, policy recommendations, Razorpay Test checkout
-packages/simulator/ Practice environments and customer behavior models
-packages/policy/    Agent training, benchmarks, exported model weights
-eval/results/       Training curves and benchmark numbers (committed)
-apps/web/           Alternate integration prototype (not the main demo)
-docs/               Deploy guides, pitch scripts, research notes
-scripts/            Deploy helpers, training scripts, Vercel tunnel helper
-```
+Sources: [`docs/architecture/src/system.dot`](docs/architecture/src/system.dot), [`docs/architecture/src/rl-loop.dot`](docs/architecture/src/rl-loop.dot).
 
-### Key paths
-
-| Path | Role |
-|------|------|
-| `frontend/src/components/stage/TheaterStage.jsx` | Main demo replay UI |
-| `frontend/src/lib/timelineContext.js` | Loads cases, scrubber, live policy scores |
-| `backend/episode_builder.py` | Builds replay timelines and comparison baselines |
-| `backend/policy_bridge.py` | Runs the trained model and applies safety rules |
-| `packages/policy/train/run.py` | Train and benchmark a scenario agent |
-| `packages/policy/weights/*.json` | Model weights used in production inference |
-| `docs/pitch/PRESENTATION_PACKAGE.md` | Two-minute demo script |
-
-## Run locally
-
-### 1. Backend (port 8000)
+## Demo (replay)
 
 ```bash
+# API
 cd backend
 python3 -m venv ../.venv && source ../.venv/bin/activate
 pip install -r requirements.txt
 uvicorn server:app --reload --port 8000
-```
 
-Warm the case cache once before a demo:
-
-```bash
+# first case warms the DQN rollout cache
 curl http://localhost:8000/api/case/VAL-CHK-004
-```
 
-### 2. Frontend (port 3000)
-
-```bash
-cd frontend
-cp .env.example .env
-# REACT_APP_BACKEND_URL=http://localhost:8000
+# site
+cd ../frontend
+cp .env.example .env   # REACT_APP_BACKEND_URL=http://localhost:8000
 npm install
 npm start
 ```
 
-Open [http://localhost:3000/checkout?record=1](http://localhost:3000/checkout?record=1). Press **Space** to play. Press **G** to compare against basic retry rules.
+Open [http://localhost:3000/checkout?record=1](http://localhost:3000/checkout?record=1).
 
-### 3. Train an agent (optional)
+| Key | Action |
+|-----|--------|
+| Space | Play / pause |
+| ← → | Step events |
+| G | Overlay baseline paths (same seed as DQN) |
+
+The proof strip, landing cards, and research walkthrough read `acceptance.mean_improvement_pct` and per-seed nets from the eval JSON. Ghost paths are actual baseline rollouts on **that validation seed**, not scaled probabilities.
+
+## Train (optional)
 
 ```bash
 source .venv/bin/activate
@@ -108,40 +74,26 @@ pip install -e .
 python -m packages.policy.train.run --wedge checkout_failed --train --benchmark --seed 42
 ```
 
-The `--wedge` flag names the scenario (for example `checkout_failed`). See [`docs/TRAINING.md`](docs/TRAINING.md) and [`notebooks/`](notebooks/) for more.
+See [`docs/TRAINING.md`](docs/TRAINING.md) and [`docs/RL_ARCHITECTURE.md`](docs/RL_ARCHITECTURE.md).
 
-## Deploy
+## Layout
 
-| Component | Host | Notes |
-|-----------|------|-------|
-| `frontend/` | Vercel | Set `REACT_APP_BACKEND_URL` to your API URL |
-| `backend/` | Render | Use [`render.yaml`](render.yaml) Blueprint |
-
-Full guide: [`docs/DEPLOY.md`](docs/DEPLOY.md)
-
-**Production site:** [https://razorstitch.vercel.app](https://razorstitch.vercel.app)
-
-For demos on Vercel without a hosted API, run `./scripts/run-backend-for-vercel.sh` on your laptop. It starts the API and a temporary public tunnel, then tells you what URL to set in Vercel before redeploying.
-
-```bash
-./scripts/deploy-vercel.sh
-./scripts/deploy-check.sh https://YOUR-API.onrender.com https://razorstitch.vercel.app
+```
+frontend/              Operating Theater, landing, /research, pricing
+backend/               FastAPI: cases, policy, Razorpay Test checkout
+packages/simulator/    Recovery MDPs + val_scenarios.json
+packages/policy/       DQN, baselines, exported weights
+eval/results/          10-seed stats, curves, HPO, train_v2_summary.json
+eval/baselines/v1/     Restored checkpoints for cart + subscription
+docs/architecture/     Diagrams
 ```
 
-## Documentation
+## Honesty
 
-| Document | Contents |
-|----------|----------|
-| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Vercel + Render deployment |
-| [`docs/TRAINING.md`](docs/TRAINING.md) | How agents are trained |
-| [`docs/pitch/PRESENTATION_PACKAGE.md`](docs/pitch/PRESENTATION_PACKAGE.md) | Demo script and talk track |
-| [`docs/JUDGE_READINESS.md`](docs/JUDGE_READINESS.md) | Demo checklist |
-| [`docs/research/README.md`](docs/research/README.md) | What we can and cannot claim |
-
-## Pricing
-
-Growth: 2.5% per recovered payment (2.0% on annual billing). Sandbox is free with Razorpay Test checkout on the pricing page. Details in [`frontend/src/config/pricingPlans.js`](frontend/src/config/pricingPlans.js).
+- Lift numbers are **simulator** vs failure-rules. Do not quote them as production GMV lift.
+- Always-payment-link can win on gross recovery %; the agents optimize **net** INR (comms, friction, duplicate penalty).
+- Razorpay Test Mode captures are a separate label from simulated recovery.
 
 ## License
 
-See repository license file if present. Razorpay and third-party SDK usage remain subject to their respective terms.
+Razorpay and third-party SDKs remain under their own terms.

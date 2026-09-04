@@ -65,7 +65,8 @@ export const GhostCompareCard = ({ delay = 0 }) => {
   const rules = runs.find((r) => r.id === 'gr-rules');
   if (!dqn) return null;
 
-  const delta = rules ? Math.round((dqn.prob - rules.prob) * 100) : 0;
+  const dqnPct = Math.round((dqn.prob || 0) * 100);
+  const rulesPct = rules ? Math.round((rules.prob || 0) * 100) : null;
 
   return (
     <GlassCard
@@ -79,14 +80,14 @@ export const GhostCompareCard = ({ delay = 0 }) => {
           <div className="flex justify-between type-micro mb-1.5 text-white/55">
             <span>RazorStitch agent</span>
             <span className="font-mono tabular-nums text-white/80">
-              {Math.round(dqn.prob * 100)}%
+              {dqn.recovered ? 'recovered' : `${dqnPct}% belief`}
             </span>
           </div>
           <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
             <motion.div
               className="h-full bg-primary/70 rounded-full"
               initial={{ width: 0 }}
-              animate={{ width: `${dqn.prob * 100}%` }}
+              animate={{ width: `${dqnPct}%` }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
@@ -95,21 +96,22 @@ export const GhostCompareCard = ({ delay = 0 }) => {
           <div>
             <div className="flex justify-between type-micro mb-1.5 text-white/55">
               <span>Basic retry rules</span>
-              <span className="font-mono tabular-nums">{Math.round(rules.prob * 100)}%</span>
+              <span className="font-mono tabular-nums">{rules.recovered ? 'recovered' : `${rulesPct}% belief`}</span>
             </div>
             <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
               <motion.div
                 className="h-full bg-white/25 rounded-full"
                 initial={{ width: 0 }}
-                animate={{ width: `${rules.prob * 100}%` }}
+                animate={{ width: `${rulesPct}%` }}
                 transition={{ duration: 0.5, delay: 0.08 }}
               />
             </div>
           </div>
         )}
-        {delta > 0 && (
+        {dqn && rules && (
           <p className="type-meta text-white/60">
-            +{delta}% better odds of recovery on this example
+            Same validation seed · DQN {dqn.recovered ? 'recovered' : 'missed'} · rules{' '}
+            {rules.recovered ? 'recovered' : 'missed'}
           </p>
         )}
       </div>

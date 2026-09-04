@@ -3,62 +3,43 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTimeline } from '@/lib/timelineContext';
 import { GlassCard } from '../GlassCard';
+import { formatInr, resolveBenchmark, RL_RUN_PROTOCOL } from '@/config/rlRunStats';
 
-const MODEL_STATUS = {
-  checkout_failed: { gen: 'v2', label: '20k HPO-tuned', shipped: true },
-  cart_abandon: { gen: 'v1', label: 'stable baseline', shipped: true },
-  subscription_failed: { gen: 'v1', label: 'stable baseline', shipped: true },
-  invoice_overdue: { gen: 'v2', label: 'trained · parity review', shipped: false },
-};
-
-/**
- * Post-training validation gate — mirrors train_all_wedges.py acceptance + regression checks.
- */
 export const ValidationGateCard = ({ delay = 0 }) => {
   const { wedgeSummary, caseData } = useTimeline();
-  const wedge = caseData?.case?.wedge || wedgeSummary?.wedge;
-  const b = wedgeSummary?.benchmark;
-  const acc = b?.acceptance;
-  const model = MODEL_STATUS[wedge] || { gen: 'v1', label: 'checkpoint', shipped: true };
-  const trainV2 = wedgeSummary?.train_v2;
-
-  if (!b?.policy_mean_net_inr) {
-    return (
-      <GlassCard testId="validation-gate" variant="training" title="Validation gate" delay={delay}>
-        <p className="type-body text-white/45">Loading benchmark acceptance…</p>
-      </GlassCard>
-    );
-  }
-
-  const passed = acc?.pass !== false;
-  const seedsBeaten = b.seeds_beaten || `${acc?.policy?.seeds_beaten ?? 0}/${acc?.policy?.seeds_total ?? 10}`;
-  const lift = acc?.mean_improvement_pct;
+  const wedge = caseData?.case?.wedge || wedgeSummary?.wedge || 'checkout_failed';
+  const resolved = resolveBenchmark(
+    { benchmark: caseData?.benchmark || wedgeSummary?.benchmark, model: caseData?.model || wedgeSummary?.model },
+    wedge
+  );
+  const acc = resolved.acceptance;
+  const passed = acc?.pass !== false && resolved.shipped;
   const ciOverlap = acc?.ci_non_overlap;
 
   const checks = [
     {
       id: 'seeds',
-      label: '10-seed benchmark',
-      ok: String(seedsBeaten).startsWith('10'),
-      detail: `${seedsBeaten} seeds beat rules baseline`,
+      label: `${RL_RUN_PROTOCOL.seeds}-seed benchmark`,
+      ok: String(resolved.seedsBeaten).startsWith('10'),
+      detail: `${resolved.seedsBeaten} seeds beat failure-rules`,
     },
     {
       id: 'lift',
       label: 'Mean net INR lift',
-      ok: lift > 0,
-      detail: lift != null ? `+${lift.toFixed(1)}% vs failure-rules` : '—',
+      ok: resolved.liftPct > 0,
+      detail: `${resolved.liftLabel} vs failure-rules`,
     },
     {
       id: 'ci',
       label: '95% CI non-overlap',
       ok: ciOverlap !== false,
-      detail: ciOverlap ? 'Policy CI above baseline' : 'CIs overlap — marginal',
+      detail: ciOverlap === false ? 'CIs overlap — marginal' : 'Policy CI above baseline',
     },
     {
       id: 'model',
-      label: `Model ${model.gen}`,
-      ok: model.shipped,
-      detail: model.label,
+      label: `Model ${resolved.gen}`,
+      ok: resolved.shipped,
+      detail: resolved.label,
     },
   ];
 
@@ -66,20 +47,16 @@ export const ValidationGateCard = ({ delay = 0 }) => {
     <GlassCard
       testId="validation-gate"
       title="Deploy gate"
-      subtitle="Benchmark acceptance before ship"
+      subtitle="Shipped checkpoint vs 10-seed acceptance"
       delay={delay}
     >
       <div className="flex items-center justify-between gap-3 mb-4">
-        <p className="type-meta text-white/60">
-          {passed && model.shipped ? 'Ready to ship' : model.shipped ? 'Passed · under review' : 'On hold'}
-        </p>
+        <p className="type-meta text-white/60">{passed ? 'Ready to ship' : resolved.shipped ? 'Passed' : 'On hold'}</p>
         <div className="text-right">
-          <span className="type-micro font-mono text-white/40">{model.gen}</span>
-          {trainV2?.episodes && (
-            <p className="type-micro text-white/35 mt-0.5">
-              {trainV2.episodes.toLocaleString()} ep · seed {trainV2.seed ?? 42}
-            </p>
-          )}
+          <span className="type-micro font-mono text-white/40">{resolved.gen}</span>
+          <p className="type-micro text-white/35 mt-0.5">
+            {formatInr(resolved.policyMeanNetInr)} / seed
+          </p>
         </div>
       </div>
 

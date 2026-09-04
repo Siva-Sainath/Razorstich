@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTimeline } from '@/lib/timelineContext';
 import { smoothPath, projectPoints } from '@/lib/svg';
 import { Panel } from './Panel';
+import { resolveBenchmark } from '@/config/rlRunStats';
 
 const W = 680;
 const H = 240;
@@ -24,13 +25,20 @@ export const GhostRuns = ({ className }) => {
   const playheadX = PAD.padL + t * PLOT_W;
   const info = hovered ? runs.find((r) => r.id === hovered) : runs.find((r) => r.chosen);
   const chosen = runs.find((r) => r.chosen);
-  const bestGhost = Math.max(...runs.filter((r) => !r.chosen).map((r) => r.prob));
-  const lift = Math.round((chosen.prob - bestGhost) * 100);
+  const rules = runs.find((r) => r.id === 'gr-rules');
+  const wedge = caseData?.case?.wedge;
+  const resolved = resolveBenchmark(
+    { benchmark: caseData?.benchmark, model: caseData?.model },
+    wedge
+  );
+  const sameSeedNote = chosen && rules
+    ? `This seed: DQN ${chosen.recovered ? 'recovered' : 'missed'} · rules ${rules.recovered ? 'recovered' : 'missed'}.`
+    : 'Same validation seed for every path.';
 
   return (
     <Panel
-      title="Paths the AI compared"
-      subtitle={`The chosen path beats the best alternative by +${lift}% — hover a path to see why it lost.`}
+      title="Paths compared on this seed"
+      subtitle={`${sameSeedNote} Wedge gate: ${resolved.liftLabel} mean net vs failure-rules (${resolved.seedsBeaten} seeds × ${resolved.episodesPerSeed} ep, simulator).`}
       testId="ghost-runs"
       className={className}
       bodyClassName="flex flex-col justify-center"
@@ -105,7 +113,7 @@ export const GhostRuns = ({ className }) => {
                 fontFamily="IBM Plex Mono, monospace"
                 fill={run.chosen ? 'rgba(43,138,247,0.95)' : isHover ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)'}
               >
-                {`${Math.round(run.prob * 100)}%`}
+                {run.recovered ? '✓' : '○'} {`${Math.round(run.prob * 100)}%`}
               </text>
             </g>
           );

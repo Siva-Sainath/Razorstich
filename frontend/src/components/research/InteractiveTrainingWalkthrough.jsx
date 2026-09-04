@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SCENARIO_CHART_ACCENT } from '@/config/trainingNarrative';
 import { recoveryScenarioLabel } from '@/config/consumerCopy';
+import { formatInr, resolveBenchmark } from '@/config/rlRunStats';
 
 const inr = (n) => `₹${Math.round(n || 0).toLocaleString('en-IN')}`;
 
@@ -14,6 +15,11 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
   const [scrubEp, setScrubEp] = useState(10000);
 
   const checkout = catalog?.find((w) => w.wedge === 'checkout_failed');
+  const cart = catalog?.find((w) => w.wedge === 'cart_abandon');
+  const sub = catalog?.find((w) => w.wedge === 'subscription_failed');
+  const checkoutStats = resolveBenchmark(checkout, 'checkout_failed');
+  const cartStats = resolveBenchmark(cart, 'cart_abandon');
+  const subStats = resolveBenchmark(sub, 'subscription_failed');
   const curve = checkout?.training_curve || [];
   const milestones = checkout?.manifest || [];
 
@@ -63,7 +69,7 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
       id: 'prove',
       fig: '§5',
       title: 'Prove it before you ship',
-      body: '10 seeds × 200 rollout episodes. Dueling DDQN vs failure-rules baseline. Acceptance = mean net INR lift with non-overlapping 95% CI. checkout_failed v2 beat v1 (+1.7%) and crushed the rules baseline (+61%). cart_abandon and subscription_failed regressed — we auto-restored v1 weights.',
+      body: `10 seeds × 200 rollout episodes. Dueling DDQN vs failure-rules. Checkout v2 ${checkoutStats.liftLabel} mean net (${formatInr(checkoutStats.policyMeanNetInr)} vs ${formatInr(checkoutStats.baselineMeanNetInr)}, ${checkoutStats.seedsBeaten} seeds). Cart shipped v1 ${cartStats.liftLabel}; subscription shipped v1 ${subStats.liftLabel} — v2 for those two was auto-restored after regression.`,
       aside: 'Regressions are not silent. train_all_wedges.py restores baselines automatically.',
     },
     {
@@ -114,7 +120,7 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
             <ul className="space-y-2 type-micro text-white/60">
               <li className="flex justify-between gap-2">
                 <span>{recoveryScenarioLabel('checkout_failed')} benchmark</span>
-                <span className="font-mono text-success tabular-nums">+61% vs rules</span>
+                <span className="font-mono text-success tabular-nums">{checkoutStats.liftLabel} vs rules</span>
               </li>
               <li className="flex justify-between gap-2">
                 <span>v2 vs v1 (checkout)</span>
@@ -122,7 +128,7 @@ export const InteractiveTrainingWalkthrough = ({ catalog, meta }) => {
               </li>
               <li className="flex justify-between gap-2">
                 <span>Seeds beaten</span>
-                <span className="font-mono tabular-nums text-white/75">10/10</span>
+                <span className="font-mono tabular-nums text-white/75">{checkoutStats.seedsBeaten}</span>
               </li>
               <li className="flex justify-between gap-2">
                 <span>Episodes trained</span>

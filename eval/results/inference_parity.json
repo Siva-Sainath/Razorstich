@@ -1,0 +1,13 @@
+{
+  "vectors_tested": 1000,
+  "relative_tolerance": 0.0001,
+  "absolute_tolerance": 0.001,
+  "max_v_diff": 0.001953125,
+  "max_a_diff": 0.0029296875,
+  "max_q_diff": 0.0029296875,
+  "failures": 54,
+  "pass": false,
+  "python_mirror_p50_ms": 2.0722289991681464,
+  "node_parity": null,
+  "weights_path": "/tmp/parity_weights.json"
+}

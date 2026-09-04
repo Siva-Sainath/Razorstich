@@ -1,0 +1,37 @@
+[
+  {
+    "episode": 1000,
+    "checkpoint": "eval/checkpoints/milestones/invoice_overdue_ep1000.pt",
+    "val_net_inr": 0.0,
+    "rollout_net_inr": 25346.173807883988,
+    "epsilon": 1.0
+  },
+  {
+    "episode": 4000,
+    "checkpoint": "eval/checkpoints/milestones/invoice_overdue_ep4000.pt",
+    "val_net_inr": 66345.0,
+    "rollout_net_inr": 275885.6785498406,
+    "epsilon": 0.9087715
+  },
+  {
+    "episode": 10000,
+    "checkpoint": "eval/checkpoints/milestones/invoice_overdue_ep10000.pt",
+    "val_net_inr": 66345.0,
+    "rollout_net_inr": 244366.1570231378,
+    "epsilon": 0.6922855000000001
+  },
+  {
+    "episode": 15000,
+    "checkpoint": "eval/checkpoints/milestones/invoice_overdue_ep15000.pt",
+    "val_net_inr": 66345.0,
+    "rollout_net_inr": 261395.0811614405,
+    "epsilon": 0.48232600000000003
+  },
+  {
+    "episode": 20000,
+    "checkpoint": "eval/checkpoints/milestones/invoice_overdue_ep20000.pt",
+    "val_net_inr": 66345.0,
+    "rollout_net_inr": 251585.20463395058,
+    "epsilon": 0.2096475000000001
+  }
+]

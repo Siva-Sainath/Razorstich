@@ -1,0 +1,131 @@
+{
+  "created_at": "2026-08-30T04:15:33.909154+00:00",
+  "trials_per_wedge": 6,
+  "episodes_per_trial": 1500,
+  "wedges": {
+    "checkout_failed": {
+      "best_trial_id": 4,
+      "best_config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.002,
+        "gamma": 0.99,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 64,
+        "warmup_steps": 2000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.7,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "best_metrics": {
+        "peak_val_net_inr": 10676.908561897577,
+        "peak_episode": 1200,
+        "final_val_net_inr": 10661.858561897576,
+        "final_rollout_net_inr": 100360.79388563309,
+        "overfit_penalty": 0.0,
+        "score": 10676.908561897577
+      }
+    },
+    "cart_abandon": {
+      "best_trial_id": 4,
+      "best_config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.002,
+        "gamma": 0.99,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 64,
+        "warmup_steps": 2000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.7,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "best_metrics": {
+        "peak_val_net_inr": 5395.65,
+        "peak_episode": 1500,
+        "final_val_net_inr": 5395.65,
+        "final_rollout_net_inr": 94400.91858720689,
+        "overfit_penalty": 0.0,
+        "score": 5395.65
+      }
+    },
+    "subscription_failed": {
+      "best_trial_id": 3,
+      "best_config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.0005,
+        "gamma": 0.96,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 64,
+        "warmup_steps": 2000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.7,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "best_metrics": {
+        "peak_val_net_inr": 2682.0,
+        "peak_episode": 1200,
+        "final_val_net_inr": 1396.6499999999999,
+        "final_rollout_net_inr": 89199.47909982479,
+        "overfit_penalty": 0.0,
+        "score": 2682.0
+      }
+    },
+    "invoice_overdue": {
+      "best_trial_id": 5,
+      "best_config": {
+        "architecture": "dueling",
+        "hidden": 256,
+        "lr": 0.002,
+        "gamma": 0.99,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 50000,
+        "buffer_size": 100000,
+        "batch_size": 256,
+        "warmup_steps": 4000,
+        "target_update": 0,
+        "polyak_tau": 0.005,
+        "use_per": true,
+        "per_alpha": 0.5,
+        "per_beta_start": 0.4,
+        "per_beta_frames": 200000,
+        "train_steps": 100000,
+        "use_cosine_lr": true
+      },
+      "best_metrics": {
+        "peak_val_net_inr": 66345.0,
+        "peak_episode": 1200,
+        "final_val_net_inr": 66345.0,
+        "final_rollout_net_inr": 129143.50224693144,
+        "overfit_penalty": 0.0,
+        "score": 66345.0
+      }
+    }
+  }
+}

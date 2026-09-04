@@ -1,0 +1,282 @@
+[
+  {
+    "episode": 500,
+    "train_reward": 2100.287551739168,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 268982.47396814195,
+    "epsilon": 0.990291
+  },
+  {
+    "episode": 1000,
+    "train_reward": -0.015216796763455213,
+    "val_net_inr": 5395.65,
+    "rollout_net_inr": 249667.36243670032,
+    "epsilon": 0.963406
+  },
+  {
+    "episode": 1500,
+    "train_reward": -0.003685632332026588,
+    "val_net_inr": 5385.65,
+    "rollout_net_inr": 249907.2407524094,
+    "epsilon": 0.9369105
+  },
+  {
+    "episode": 2000,
+    "train_reward": 0.0,
+    "val_net_inr": 5395.55,
+    "rollout_net_inr": 133263.7258304315,
+    "epsilon": 0.906786
+  },
+  {
+    "episode": 2500,
+    "train_reward": 0.0,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 253952.5361942417,
+    "epsilon": 0.8784
+  },
+  {
+    "episode": 3000,
+    "train_reward": 2426.008502312354,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 275700.6143899864,
+    "epsilon": 0.8499760000000001
+  },
+  {
+    "episode": 3500,
+    "train_reward": 792.091202656736,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 286629.2752533057,
+    "epsilon": 0.8229105
+  },
+  {
+    "episode": 4000,
+    "train_reward": 1743.6444445067116,
+    "val_net_inr": 5390.5,
+    "rollout_net_inr": 273966.30597454996,
+    "epsilon": 0.796795
+  },
+  {
+    "episode": 4500,
+    "train_reward": 4385.848235415134,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 277294.37111378583,
+    "epsilon": 0.770347
+  },
+  {
+    "episode": 5000,
+    "train_reward": 1500.601531250485,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 266725.7899615904,
+    "epsilon": 0.7434335000000001
+  },
+  {
+    "episode": 5500,
+    "train_reward": 3620.6900500755796,
+    "val_net_inr": 5395.15,
+    "rollout_net_inr": 268582.145838166,
+    "epsilon": 0.7160545
+  },
+  {
+    "episode": 6000,
+    "train_reward": 4391.449836668371,
+    "val_net_inr": 5395.45,
+    "rollout_net_inr": 254359.2636412824,
+    "epsilon": 0.6878775
+  },
+  {
+    "episode": 6500,
+    "train_reward": -0.07912664307814538,
+    "val_net_inr": 5395.15,
+    "rollout_net_inr": 272443.4784419107,
+    "epsilon": 0.660508
+  },
+  {
+    "episode": 7000,
+    "train_reward": -0.015131286366188447,
+    "val_net_inr": 5390.6,
+    "rollout_net_inr": 255996.11457890505,
+    "epsilon": 0.631305
+  },
+  {
+    "episode": 7500,
+    "train_reward": 0.0,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 255345.71463631646,
+    "epsilon": 0.6028905
+  },
+  {
+    "episode": 8000,
+    "train_reward": 3679.927044333438,
+    "val_net_inr": 5390.5,
+    "rollout_net_inr": 268723.61296589393,
+    "epsilon": 0.574438
+  },
+  {
+    "episode": 8500,
+    "train_reward": 4478.957386908718,
+    "val_net_inr": 5395.25,
+    "rollout_net_inr": 289206.1103034295,
+    "epsilon": 0.548313
+  },
+  {
+    "episode": 9000,
+    "train_reward": 1307.675835266052,
+    "val_net_inr": 5385.45,
+    "rollout_net_inr": 195596.03774825265,
+    "epsilon": 0.5176185
+  },
+  {
+    "episode": 9500,
+    "train_reward": 3593.4468469030185,
+    "val_net_inr": 5395.15,
+    "rollout_net_inr": 219372.5839561834,
+    "epsilon": 0.4816039999999999
+  },
+  {
+    "episode": 10000,
+    "train_reward": 835.0644438571392,
+    "val_net_inr": 5395.55,
+    "rollout_net_inr": 233449.04541489034,
+    "epsilon": 0.4443640000000001
+  },
+  {
+    "episode": 10500,
+    "train_reward": 1212.9250148580993,
+    "val_net_inr": 5395.25,
+    "rollout_net_inr": 256739.11321907234,
+    "epsilon": 0.41407800000000006
+  },
+  {
+    "episode": 11000,
+    "train_reward": 810.0224741736123,
+    "val_net_inr": 5395.25,
+    "rollout_net_inr": 242807.41130713647,
+    "epsilon": 0.38858950000000003
+  },
+  {
+    "episode": 11500,
+    "train_reward": 3452.8133854874595,
+    "val_net_inr": 5395.25,
+    "rollout_net_inr": 280126.8610704474,
+    "epsilon": 0.3600135
+  },
+  {
+    "episode": 12000,
+    "train_reward": 1009.1191978080562,
+    "val_net_inr": 5395.25,
+    "rollout_net_inr": 268519.12528974336,
+    "epsilon": 0.33625400000000005
+  },
+  {
+    "episode": 12500,
+    "train_reward": 4042.0286790531372,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 265030.4952068206,
+    "epsilon": 0.31266550000000004
+  },
+  {
+    "episode": 13000,
+    "train_reward": 2366.3805546919975,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 248805.5565624385,
+    "epsilon": 0.2884975000000001
+  },
+  {
+    "episode": 13500,
+    "train_reward": 3989.8481800510062,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 285087.3124487797,
+    "epsilon": 0.265023
+  },
+  {
+    "episode": 14000,
+    "train_reward": 2017.0432665475919,
+    "val_net_inr": 5395.3,
+    "rollout_net_inr": 266940.87942793645,
+    "epsilon": 0.24272650000000007
+  },
+  {
+    "episode": 14500,
+    "train_reward": 1299.6587725515078,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 278509.31970915815,
+    "epsilon": 0.21987900000000005
+  },
+  {
+    "episode": 15000,
+    "train_reward": 2608.583942851315,
+    "val_net_inr": 5395.45,
+    "rollout_net_inr": 272946.9592151272,
+    "epsilon": 0.196357
+  },
+  {
+    "episode": 15500,
+    "train_reward": 3103.1097407232155,
+    "val_net_inr": 5395.65,
+    "rollout_net_inr": 300887.89708429907,
+    "epsilon": 0.17387050000000004
+  },
+  {
+    "episode": 16000,
+    "train_reward": 4317.858875684665,
+    "val_net_inr": 5395.5,
+    "rollout_net_inr": 271232.1067805175,
+    "epsilon": 0.14975950000000005
+  },
+  {
+    "episode": 16500,
+    "train_reward": 1791.6550026630498,
+    "val_net_inr": 5395.4,
+    "rollout_net_inr": 277375.64928272105,
+    "epsilon": 0.12490750000000006
+  },
+  {
+    "episode": 17000,
+    "train_reward": 1568.867866571656,
+    "val_net_inr": 5390.5,
+    "rollout_net_inr": 280513.48044862336,
+    "epsilon": 0.09426999999999996
+  },
+  {
+    "episode": 17500,
+    "train_reward": 2620.051041786538,
+    "val_net_inr": 5395.3,
+    "rollout_net_inr": 277787.81297134253,
+    "epsilon": 0.0725245000000001
+  },
+  {
+    "episode": 18000,
+    "train_reward": 911.815201488691,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 272488.72358628095,
+    "epsilon": 0.05042749999999996
+  },
+  {
+    "episode": 18500,
+    "train_reward": 3358.6801674102735,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 268916.11975754076,
+    "epsilon": 0.050000000000000044
+  },
+  {
+    "episode": 19000,
+    "train_reward": 2712.9850324455647,
+    "val_net_inr": 5395.5,
+    "rollout_net_inr": 285350.35004932916,
+    "epsilon": 0.050000000000000044
+  },
+  {
+    "episode": 19500,
+    "train_reward": -0.20937142472720643,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 259539.1364877242,
+    "epsilon": 0.050000000000000044
+  },
+  {
+    "episode": 20000,
+    "train_reward": 4404.270893889296,
+    "val_net_inr": 5395.35,
+    "rollout_net_inr": 269697.98750730744,
+    "epsilon": 0.050000000000000044
+  }
+]

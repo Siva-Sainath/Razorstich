@@ -477,6 +477,19 @@ export const TimelineProvider = ({ children, initialSpeed = 1 }) => {
     return idx >= 0 ? idx : 0;
   }, [rolloutSteps, currentRolloutStep]);
 
+  const replayPolicy = useMemo(() => {
+    if (livePolicy?.q_values) return livePolicy;
+    const q = currentRolloutStep?.q_values;
+    if (!q) return livePolicy;
+    return {
+      q_values: q,
+      selected_action: currentRolloutStep.rl_action,
+      legal_actions: currentRolloutStep.legal_actions || Object.keys(q),
+      agent_name: caseMeta?.agentName,
+      source: 'episode_rollout',
+    };
+  }, [livePolicy, currentRolloutStep, caseMeta]);
+
   const stageMode = useMemo(() => {
     if (t >= recoveredAt - 0.001) return 'outcome';
     const type = activeEvent?.type;
@@ -489,10 +502,10 @@ export const TimelineProvider = ({ children, initialSpeed = 1 }) => {
   }, [activeEvent, recoveredAt, t]);
 
   const brainSelectedAction = useMemo(() => {
-    if (livePolicy?.selected_action) return livePolicy.selected_action;
+    if (replayPolicy?.selected_action) return replayPolicy.selected_action;
     if (currentRolloutStep?.ui_action) return currentRolloutStep.ui_action;
     return '';
-  }, [livePolicy, currentRolloutStep]);
+  }, [replayPolicy, currentRolloutStep]);
 
   const brainGuardrailActive = useMemo(() => {
     const enforced = livePolicy?.guardrails?.filter((g) => g.status === 'enforced') || [];
@@ -637,7 +650,7 @@ export const TimelineProvider = ({ children, initialSpeed = 1 }) => {
     maxContacts,
     trustRemaining,
     intervention,
-    livePolicy,
+    livePolicy: replayPolicy,
     scriptedIntervention,
     recovered,
     recoveredAt,
